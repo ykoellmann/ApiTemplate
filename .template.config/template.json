@@ -1,0 +1,17 @@
+{
+    "author": "yannikkoellmann",
+    "classifications": [
+        "AspNetCore",
+        "Solution",
+        "Api"
+    ],
+    "name": "ASP.NET Api with Domain Driven Design",
+    "identity": "WebApi.I.DomainDriven",
+    "shortName": "WebApiDD",
+    "tags": {
+        "language": "C#",
+        "type":"solution"
+    },
+    "sourceName": "ApiTemplate",
+    "preferNameDirectory": "true"
+}
