@@ -13,6 +13,8 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
     {
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
+            .HasConversion(id => id.Value,
+                value => IdObject<TId>.Create(value))
             .IsRequired();
         
         builder.Property(e => e.CreatedBy)

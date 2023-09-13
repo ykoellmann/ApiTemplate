@@ -6,6 +6,9 @@ namespace ApiTemplate.Domain.Models;
 public class Entity<TId> : IEquatable<Entity<TId>>
     where TId : IdObject<TId>
 {
+    [Column(Order = 0)]
+    public TId Id { get; set; }
+    
     [Column(Order = 9996)]
     public virtual UserId CreatedBy { get; set; }
     
@@ -25,9 +28,6 @@ public class Entity<TId> : IEquatable<Entity<TId>>
     {
         Id = id;
     }
-
-    [Column(Order = 0)]
-    public TId Id { get; set; }
 
     public bool Equals(Entity<TId>? other)
     {
