@@ -4,6 +4,7 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.User;
+using ApiTemplate.Domain.User.ValueObjects;
 using ErrorOr;
 using MediatR;
 

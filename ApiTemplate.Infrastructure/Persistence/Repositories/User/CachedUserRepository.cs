@@ -5,34 +5,37 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
-public class CachedUserRepository : IUserRepository
+public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, IUserRepository
 {
     private readonly IUserRepository _decorated;
     private readonly IMemoryCache _cache;
 
-    public CachedUserRepository(IUserRepository decorated, IMemoryCache cache)
+    public CachedUserRepository(IUserRepository decorated, IMemoryCache cache) : base(decorated, cache)
     {
         _decorated = decorated;
         _cache = cache;
     }
 
-    public Task<List<ApiTemplate.Domain.User.User>> Get() => _decorated.Get();
-    public Task<ApiTemplate.Domain.User.User> GetById(UserId id)
+
+    public async Task<Domain.User.User> Add(Domain.User.User entity)
     {
-        var cacheKey = $"userId-{id}";
+        var getCacheKey = $"{typeof(Domain.User.User).Name}-get";
+        var getByIdCacheKey = $"{typeof(UserId).Name}-{entity.Id}";
         
-        return _cache.GetOrCreateAsync(cacheKey, entry =>
+        _cache.Remove(getCacheKey);
+        _cache.Remove(getByIdCacheKey);
+        
+        var addedEntity = await _decorated.Add(entity);
+        var cacheKey = $"{typeof(UserId).Name}-{addedEntity.Id}";
+        
+        return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
             
-            return _decorated.GetById(id);
+            return addedEntity;
         });
     }
 
-    public Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity, UserId userId) => _decorated.Add(entity, userId);
-    public Task<ApiTemplate.Domain.User.User> Update(ApiTemplate.Domain.User.User entity) => _decorated.Update(entity);
-    public Task<Deleted> Delete(UserId id) => _decorated.Delete(id);
-    public Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity) => _decorated.Add(entity);
     public Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
     {
         var cacheKey = $"userEMail-{email}";
