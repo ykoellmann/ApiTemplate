@@ -17,8 +17,6 @@ public class AuthenticationMapping : IRegister
             .MapToConstructor(true);
 
         config.NewConfig<AuthenticationResult, AuthenticationResponse>()
-            .Map(dest => dest.Id , src => src.User.Id.Value)
-            .Map(dest => dest, src => src.User)
             .Map(dest => dest.Token, src => src.Token)
             .MapToConstructor(true);
     }

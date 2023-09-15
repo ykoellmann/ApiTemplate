@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
@@ -12,11 +13,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenProvider jwtTokenProvider)
+    public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenProvider jwtTokenProvider, IRefreshTokenRepository refreshTokenRepository)
     {
         _userRepository = userRepository;
         _jwtTokenProvider = jwtTokenProvider;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command,
@@ -32,7 +35,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
+        
+        var refreshToken = Domain.User.RefreshToken.Create(
+            Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
+            DateTime.Now,
+            user.Id);
 
-        return new AuthenticationResult(user, token);
+        refreshToken = await _refreshTokenRepository.Add(refreshToken, user.Id);
+
+        return new AuthenticationResult(token, refreshToken);
     }
 }

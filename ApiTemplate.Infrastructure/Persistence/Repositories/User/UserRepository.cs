@@ -14,7 +14,7 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         _dbContext = dbContext;
     }
     
-    public async Task<ErrorOr<ApiTemplate.Domain.User.User>> Add(ApiTemplate.Domain.User.User entity)
+    public async Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
@@ -30,7 +30,7 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         throw new NotImplementedException();
     }
 
-    public async Task<ErrorOr<ApiTemplate.Domain.User.User>?> GetByEmail(string email)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
     {
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
     }

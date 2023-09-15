@@ -8,13 +8,13 @@ public interface IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
 {
-    public Task<ErrorOr<List<TEntity>>> Get();
+    public Task<List<TEntity>> Get();
     
-    public Task<ErrorOr<TEntity>> GetById(TId id);
+    public Task<TEntity> GetById(TId id);
 
-    public Task<ErrorOr<TEntity>> Add(TEntity entity, UserId userId);
+    public Task<TEntity> Add(TEntity entity, UserId userId);
     
-    public Task<ErrorOr<TEntity>> Update(TEntity entity);
+    public Task<TEntity> Update(TEntity entity);
     
-    public Task<ErrorOr<Deleted>> Delete(TId id);
+    public Task<Deleted> Delete(TId id);
 }

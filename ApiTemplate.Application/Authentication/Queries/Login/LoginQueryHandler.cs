@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
@@ -12,16 +13,18 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository)
+    public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         _jwtTokenProvider = jwtTokenProvider;
         _userRepository = userRepository;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        if (_userRepository.GetByEmail(query.Email).Result.Value.Value is not User user) 
+        if (_userRepository.GetByEmail(query.Email).Result is not User user) 
             return Errors.Authentication.InvalidCredentials;
 
         if (!user.Password.Equals(query.Password)) 
@@ -29,6 +32,13 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
 
         var token = _jwtTokenProvider.GenerateToken(user);
 
-        return new AuthenticationResult(user, token);
+        var refreshToken = RefreshToken.Create(
+            Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
+            DateTime.Now,
+            user.Id);
+
+        refreshToken = await _refreshTokenRepository.Add(refreshToken, user.Id);
+
+        return new AuthenticationResult(token, refreshToken);
     }
 }

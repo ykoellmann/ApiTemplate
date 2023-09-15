@@ -52,6 +52,7 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
         builder.HasMany(u => u.RefreshTokens)
             .WithOne(rt => rt.User)
             .HasForeignKey(rt => rt.UserId);
+        
         builder.Metadata.FindNavigation(nameof(User.RefreshTokens))
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }

@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using ApiTemplate.Application.Authentication.Commands.RefreshToken;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Queries.Login;
 using ApiTemplate.Contracts.Authentication;
 using ApiTemplate.Domain.Common.Errors;
+using ApiTemplate.Domain.User;
 
 namespace ApiTemplate.Api.Controllers;
 
@@ -33,7 +35,11 @@ public class AuthenticationController : ApiController
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
 
         return authResult.Match(
-            authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+            authResult =>
+            {
+                SetRefreshToken(authResult.RefreshToken).Wait();
+                return Ok(_mapper.Map<AuthenticationResponse>(authResult));
+            },
             errors => Problem(errors));
     }
 
@@ -43,9 +49,49 @@ public class AuthenticationController : ApiController
         var query = _mapper.Map<LoginQuery>(loginRequest);
 
         var authResult = await _mediator.Send(query);
+        
+        if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
 
         return authResult.Match(
-            authResult => Ok(_mapper.Map<AuthenticationResponse>(authResult)),
+            authResult =>
+            {
+                SetRefreshToken(authResult.RefreshToken).Wait();
+                return Ok(_mapper.Map<AuthenticationResponse>(authResult));
+            },
             errors => Problem(errors));
+    }
+    
+    [HttpPost("token/refresh")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var tokenToRefresh = Request.Cookies["refreshToken"];
+        
+        if (string.IsNullOrEmpty(tokenToRefresh))
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: Errors.Authentication.InvalidRefreshToken.Description);
+
+        var authResult = await _mediator.Send(new RefreshTokenCommand(tokenToRefresh, UserId));
+
+        if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidRefreshToken)
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
+
+        return authResult.Match(
+            authResult =>
+            {
+                SetRefreshToken(authResult.RefreshToken).Wait();
+                return Ok(_mapper.Map<AuthenticationResponse>(authResult));
+            },
+            errors => Problem(errors));
+    }
+
+    private async Task SetRefreshToken(RefreshToken refreshToken)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = refreshToken.Expires,
+        };
+        
+        Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
     }
 }

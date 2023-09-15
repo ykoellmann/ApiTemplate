@@ -16,8 +16,8 @@ public class CachedUserRepository : IUserRepository
         _cache = cache;
     }
 
-    public Task<ErrorOr<List<ApiTemplate.Domain.User.User>>> Get() => _decorated.Get();
-    public Task<ErrorOr<ApiTemplate.Domain.User.User>> GetById(UserId id)
+    public Task<List<ApiTemplate.Domain.User.User>> Get() => _decorated.Get();
+    public Task<ApiTemplate.Domain.User.User> GetById(UserId id)
     {
         var cacheKey = $"userId-{id}";
         
@@ -29,11 +29,11 @@ public class CachedUserRepository : IUserRepository
         });
     }
 
-    public Task<ErrorOr<ApiTemplate.Domain.User.User>> Add(ApiTemplate.Domain.User.User entity, UserId userId) => _decorated.Add(entity, userId);
-    public Task<ErrorOr<ApiTemplate.Domain.User.User>> Update(ApiTemplate.Domain.User.User entity) => _decorated.Update(entity);
-    public Task<ErrorOr<Deleted>> Delete(UserId id) => _decorated.Delete(id);
-    public Task<ErrorOr<ApiTemplate.Domain.User.User>> Add(ApiTemplate.Domain.User.User entity) => _decorated.Add(entity);
-    public Task<ErrorOr<ApiTemplate.Domain.User.User>?> GetByEmail(string email)
+    public Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity, UserId userId) => _decorated.Add(entity, userId);
+    public Task<ApiTemplate.Domain.User.User> Update(ApiTemplate.Domain.User.User entity) => _decorated.Update(entity);
+    public Task<Deleted> Delete(UserId id) => _decorated.Delete(id);
+    public Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity) => _decorated.Add(entity);
+    public Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
     {
         var cacheKey = $"userEMail-{email}";
         
