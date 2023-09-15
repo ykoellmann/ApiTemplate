@@ -36,10 +36,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, E
             return Errors.Authentication.InvalidRefreshToken;
         
         
-        var newRefreshToken = Domain.User.RefreshToken.Create(
-            Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
-            DateTime.Now.AddMinutes(1),
-            user.Id);
+        var newRefreshToken = Domain.User.RefreshToken.Create(user.Id);
         
         newRefreshToken = await _refreshTokenRepository.Add(newRefreshToken, user.Id);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);

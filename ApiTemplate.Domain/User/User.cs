@@ -23,7 +23,7 @@ public class User : AggregateRoot<UserId>
     public string LastName { get; set; } = null!;
     public DateOnly BirthDate { get; set; }
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
-    public RefreshToken? ActiveRefreshToken => _refreshTokens.FirstOrDefault(rt => rt.Disabled || rt.Expires < DateTime.UtcNow);
+    public RefreshToken? ActiveRefreshToken => _refreshTokens.FirstOrDefault(rt => !rt.Expired);
     [NotMapped]
     public override UserId CreatedBy { get; set; }
     [NotMapped]

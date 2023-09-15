@@ -13,7 +13,14 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
     {
         _dbContext = dbContext;
     }
-    
+
+    public override async Task<Domain.User.User> GetById(UserId id)
+    {
+        return await _dbContext.Users
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
     public async Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
@@ -25,7 +32,7 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public Task<ErrorOr<ApiTemplate.Domain.User.User>> Add(ApiTemplate.Domain.User.User entity, UserId userId)
+    public override Task<Domain.User.User> Add(Domain.User.User entity, UserId userId)
     {
         throw new NotImplementedException();
     }

@@ -36,10 +36,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
         
-        var refreshToken = Domain.User.RefreshToken.Create(
-            Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
-            DateTime.Now,
-            user.Id);
+        var refreshToken = Domain.User.RefreshToken.Create(user.Id);
 
         refreshToken = await _refreshTokenRepository.Add(refreshToken, user.Id);
 

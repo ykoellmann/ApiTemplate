@@ -17,17 +17,17 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         _dbContext = dbContext;
     }
 
-    public async Task<List<TEntity>> Get()
+    public virtual async Task<List<TEntity>> Get()
     {
         return await _dbContext.Set<TEntity>().ToListAsync();
     }
 
-    public async Task<TEntity> GetById(TId id)
+    public virtual async Task<TEntity> GetById(TId id)
     {
         return await _dbContext.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task<TEntity> Add(TEntity entity, UserId userId)
+    public virtual async Task<TEntity> Add(TEntity entity, UserId userId)
     {
         entity.CreatedBy = userId;
         entity.CreatedAt = DateTime.UtcNow;
@@ -39,7 +39,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         return entity;
     }
 
-    public async Task<TEntity> Update(TEntity entity)
+    public virtual async Task<TEntity> Update(TEntity entity)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;
         _dbContext.SaveChangesAsync();
@@ -47,7 +47,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         return entity;
     }
 
-    public async Task<Deleted> Delete(TId id)
+    public virtual async Task<Deleted> Delete(TId id)
     {
         _dbContext.Set<TEntity>().Remove(_dbContext.Set<TEntity>().Find(id));
         _dbContext.SaveChangesAsync();
