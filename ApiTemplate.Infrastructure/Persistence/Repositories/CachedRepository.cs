@@ -10,9 +10,9 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
 {
+    public readonly TimeSpan CacheExpiration;
     private readonly IRepository<TEntity, TId> _decorated;
     private readonly IMemoryCache _cache;
-    private readonly TimeSpan _cacheExpiration;
     private string EntityName => typeof(TEntity).Name;
     private string IdName => typeof(TId).Name;
     private string CacheKeyGet => $"{EntityName}-get";
@@ -21,32 +21,32 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     {
         _decorated = decorated;
         _cache = cache;
-        _cacheExpiration = TimeSpan.FromMinutes(cacheExpirationMinutes);
+        CacheExpiration = TimeSpan.FromMinutes(cacheExpirationMinutes);
     }
 
-    public async Task<List<TEntity>> Get()
+    public virtual async Task<List<TEntity>> Get()
     {
         return await _cache.GetOrCreateAsync(CacheKeyGet, async entry =>
         {
-            entry.SetAbsoluteExpiration(_cacheExpiration);
+            entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.Get();
         });
     }
 
-    public async Task<TEntity> GetById(TId id)
+    public virtual async Task<TEntity> GetById(TId id)
     {
         var cacheKey = await GetCacheKey(id);
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            entry.SetAbsoluteExpiration(_cacheExpiration);
+            entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.GetById(id);
         });
     }
 
-    public async Task<TEntity> Add(TEntity entity, UserId userId)
+    public virtual async Task<TEntity> Add(TEntity entity, UserId userId)
     {
         var getByIdCacheKey = await GetCacheKey(entity.Id);
         
@@ -58,13 +58,13 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            entry.SetAbsoluteExpiration(_cacheExpiration);
+            entry.SetAbsoluteExpiration(CacheExpiration);
             
             return addedEntity;
         });
     }
 
-    public async Task<TEntity> Update(TEntity entity)
+    public virtual async Task<TEntity> Update(TEntity entity)
     {
         var getByIdCacheKey = await GetCacheKey(entity.Id);
         
@@ -76,13 +76,13 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            entry.SetAbsoluteExpiration(_cacheExpiration);
+            entry.SetAbsoluteExpiration(CacheExpiration);
             
             return updatedEntity;
         });
     }
 
-    public async Task<Deleted> Delete(TId id)
+    public virtual async Task<Deleted> Delete(TId id)
     {
         var getByIdCacheKey = await GetCacheKey(id);
         

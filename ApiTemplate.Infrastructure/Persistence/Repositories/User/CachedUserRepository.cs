@@ -16,6 +16,10 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         _cache = cache;
     }
 
+    public override Task<Domain.User.User> Add(Domain.User.User entity, UserId userId)
+    {
+        throw new NotImplementedException();
+    }
 
     public async Task<Domain.User.User> Add(Domain.User.User entity)
     {
@@ -30,7 +34,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+            entry.SetAbsoluteExpiration(CacheExpiration);
             
             return addedEntity;
         });
@@ -42,7 +46,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         
         return _cache.GetOrCreateAsync(cacheKey, entry =>
         {
-            entry.SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
+            entry.SetAbsoluteExpiration(CacheExpiration);
             
             return _decorated.GetByEmail(email);
         });
