@@ -23,14 +23,16 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
 
     public async Task<Domain.User.User> Add(Domain.User.User entity)
     {
-        var getCacheKey = $"{typeof(Domain.User.User).Name}-get";
-        var getByIdCacheKey = $"{typeof(UserId).Name}-{entity.Id}";
+        var getCacheKey = $"{EntityName}-get";
+        var getByIdCacheKey = $"{IdName}-{entity.Id}";
+        var emailCacheKey = $"userEMail-{entity.Email}";
         
         _cache.Remove(getCacheKey);
         _cache.Remove(getByIdCacheKey);
+        _cache.Remove(emailCacheKey);
         
         var addedEntity = await _decorated.Add(entity);
-        var cacheKey = $"{typeof(UserId).Name}-{addedEntity.Id}";
+        var cacheKey = $"{IdName}-{addedEntity.Id}";
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
@@ -38,6 +40,14 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
             
             return addedEntity;
         });
+    }
+
+    public override Task<Domain.User.User> Update(Domain.User.User entity)
+    {
+        var emailCacheKey = $"userEMail-{entity.Email}";
+        _cache.Remove(emailCacheKey);
+        
+        return base.Update(entity);
     }
 
     public async Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)

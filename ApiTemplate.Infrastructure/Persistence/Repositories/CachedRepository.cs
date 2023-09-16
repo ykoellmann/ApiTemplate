@@ -13,9 +13,9 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     public readonly TimeSpan CacheExpiration;
     private readonly IRepository<TEntity, TId> _decorated;
     private readonly IMemoryCache _cache;
-    private string EntityName => typeof(TEntity).Name;
-    private string IdName => typeof(TId).Name;
-    private string CacheKeyGet => $"{EntityName}-get";
+    public string EntityName => typeof(TEntity).Name;
+    public string IdName => typeof(TId).Name;
+    public string CacheKeyGet => $"{EntityName}-get";
 
     public CachedRepository(IRepository<TEntity, TId> decorated, IMemoryCache cache, int cacheExpirationMinutes = 5)
     {
