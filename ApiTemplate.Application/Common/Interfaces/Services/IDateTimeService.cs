@@ -1,6 +1,6 @@
 ﻿namespace ApiTemplate.Application.Common.Interfaces.Services;
 
-public interface IDateTimeProvider
+public interface IDateTimeService
 {
     DateTime UtcNow { get; }
 }

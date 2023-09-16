@@ -2,7 +2,7 @@
 
 namespace ApiTemplate.Infrastructure.Services;
 
-public class DateTimeProvider : IDateTimeProvider
+public class DateTimeService : IDateTimeService
 {
     public DateTime UtcNow => DateTime.UtcNow;
 }

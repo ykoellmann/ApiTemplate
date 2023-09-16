@@ -24,7 +24,7 @@ public static class DependencyInjection
     {
         services.AddAuth(configuration);
 
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IDateTimeService, DateTimeService>();
         services.AddDbContext<ApiTemplateDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnection")));
         services.AddRepositories();
 
@@ -87,6 +87,18 @@ public static class DependencyInjection
             
         });
 
+        return collection;
+    }
+
+    private static IServiceCollection AddHttpClient(this IServiceCollection collection)
+    {
+        collection.AddHttpClient<ExampleHttpService>((provider, client) =>
+        {
+            client.BaseAddress = new Uri("https://example.com");
+            //Add headers, etc.
+        });
+        collection.AddTransient<IExampleHttpService, ExampleHttpService>();
+        
         return collection;
     }
 }

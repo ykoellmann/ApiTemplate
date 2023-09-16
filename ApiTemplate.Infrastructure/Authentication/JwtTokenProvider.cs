@@ -11,12 +11,12 @@ namespace ApiTemplate.Infrastructure.Authentication;
 
 public class JwtTokenProvider : IJwtTokenProvider
 {
-    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IDateTimeService _dateTimeService;
     private readonly JwtSettings _jwtSettings;
 
-    public JwtTokenProvider(IDateTimeProvider dateTimeProvider, IOptions<JwtSettings> jwtSettings)
+    public JwtTokenProvider(IDateTimeService dateTimeService, IOptions<JwtSettings> jwtSettings)
     {
-        _dateTimeProvider = dateTimeProvider;
+        _dateTimeService = dateTimeService;
         _jwtSettings = jwtSettings.Value;
     }
 
@@ -37,7 +37,7 @@ public class JwtTokenProvider : IJwtTokenProvider
         var securityToken = new JwtSecurityToken(
             _jwtSettings.Issuer,
             _jwtSettings.Audience,
-            expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+            expires: _dateTimeService.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
             claims: claims,
             signingCredentials: signingCredentials);
 
