@@ -17,7 +17,7 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     private string IdName => typeof(TId).Name;
     private string CacheKeyGet => $"{EntityName}-get";
 
-    public CachedRepository(IRepository<TEntity, TId> decorated, IMemoryCache cache, int cacheExpirationMinutes = 2)
+    public CachedRepository(IRepository<TEntity, TId> decorated, IMemoryCache cache, int cacheExpirationMinutes = 5)
     {
         _decorated = decorated;
         _cache = cache;
