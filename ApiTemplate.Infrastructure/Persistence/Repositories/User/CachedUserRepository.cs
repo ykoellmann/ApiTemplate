@@ -40,15 +40,15 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
     {
         var cacheKey = $"userEMail-{email}";
         
-        return _cache.GetOrCreateAsync(cacheKey, entry =>
+        return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.SetAbsoluteExpiration(CacheExpiration);
             
-            return _decorated.GetByEmail(email);
+            return await _decorated.GetByEmail(email);
         });
     }
 }
