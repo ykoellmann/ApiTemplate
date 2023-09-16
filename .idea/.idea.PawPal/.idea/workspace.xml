@@ -11,11 +11,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="887048e4-9662-4b5e-8e12-76ab6993a9a3" name="Changes" comment="feat: rm" />
+    <list default="true" id="887048e4-9662-4b5e-8e12-76ab6993a9a3" name="Changes" comment="feat: remove unecessary generic controller">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.PawPal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PawPal/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/yanko/RiderProjects/ApiTemplate/ApiTemplate.Api/Controllers/AuthenticationController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/yanko/RiderProjects/ApiTemplate/ApiTemplate.Api/Controllers/AuthenticationController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ApiTemplate.Infrastructure/Persistence/Configurations/BaseConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -91,12 +98,29 @@
       <option name="project" value="LOCAL" />
       <updated>1693762850925</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: remove unecessary generic controller">
+      <option name="closed" value="true" />
+      <created>1693765435358</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1693765435358</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat: remove unecessary generic controller">
+      <option name="closed" value="true" />
+      <created>1693765452698</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1693765452698</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: rm" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: rm" />
+    <MESSAGE value="feat: remove unecessary generic controller" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: remove unecessary generic controller" />
   </component>
 </project>
