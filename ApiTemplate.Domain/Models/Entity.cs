@@ -3,9 +3,12 @@ using ApiTemplate.Domain.User.ValueObjects;
 
 namespace ApiTemplate.Domain.Models;
 
-public class Entity<TId> : IEquatable<Entity<TId>>
+public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     where TId : IdObject<TId>
 {
+    private readonly List<IDomainEvent> _domainEvents = new();
+    
+    
     [Column(Order = 0)]
     public TId Id { get; set; }
     
@@ -21,12 +24,23 @@ public class Entity<TId> : IEquatable<Entity<TId>>
     [Column(Order = 9999)]
     public virtual DateTime UpdatedAt { get; set; }
     
+    
     public virtual User.User CreatedByUser { get; set; }
     public virtual User.User UpdatedByUser { get; set; }
-    
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public async Task ClearDomainEventsAsync()
+    {
+        _domainEvents.Clear();
+    }
+
     protected Entity(TId id)
     {
         Id = id;
+    }
+    
+    public async Task AddDomainEventAsync(IDomainEvent eventItem)
+    {
+        _domainEvents.Add(eventItem);
     }
 
     public bool Equals(Entity<TId>? other)
