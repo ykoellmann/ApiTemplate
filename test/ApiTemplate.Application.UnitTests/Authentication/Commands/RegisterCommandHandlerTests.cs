@@ -2,7 +2,6 @@
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
-using Moq;
 
 namespace ApiTemplate.Application.UnitTests.Authentication.Commands;
 
