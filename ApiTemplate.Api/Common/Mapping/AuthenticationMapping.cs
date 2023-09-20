@@ -6,7 +6,7 @@ using ApiTemplate.Contracts.Authentication;
 
 namespace ApiTemplate.Api.Common.Mapping;
 
-public class AuthenticationMapping : IRegister
+internal class AuthenticationMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {

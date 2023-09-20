@@ -5,6 +5,7 @@ using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Infrastructure.Authentication;
 using ApiTemplate.Infrastructure.Persistence;
+using ApiTemplate.Infrastructure.Persistence.Interceptors;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +26,7 @@ public static class DependencyInjection
         services.AddAuth(configuration);
 
         services.AddSingleton<IDateTimeService, DateTimeService>();
+        services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddDbContext<ApiTemplateDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnection")));
         services.AddRepositories();
 

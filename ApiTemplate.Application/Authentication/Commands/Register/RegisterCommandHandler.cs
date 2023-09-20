@@ -9,7 +9,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
+internal sealed class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;

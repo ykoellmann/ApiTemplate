@@ -10,13 +10,13 @@ using MediatR;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
 
-public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
+internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
+    internal LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         _jwtTokenProvider = jwtTokenProvider;
         _userRepository = userRepository;

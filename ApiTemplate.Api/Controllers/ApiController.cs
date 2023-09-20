@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using ApiTemplate.Api.Common.Http;
+﻿using ApiTemplate.Api.Common.Http;
 using ApiTemplate.Domain.User.ValueObjects;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;

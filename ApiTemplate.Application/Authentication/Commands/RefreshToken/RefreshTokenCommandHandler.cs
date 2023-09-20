@@ -8,7 +8,7 @@ using ErrorOr;
 
 namespace ApiTemplate.Application.Authentication.Commands.RefreshToken;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ErrorOr<AuthenticationResult>>
+internal class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;
