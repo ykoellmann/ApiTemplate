@@ -16,7 +16,7 @@ internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authentic
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    internal LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
+    public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         _jwtTokenProvider = jwtTokenProvider;
         _userRepository = userRepository;
@@ -25,7 +25,7 @@ internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authentic
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        if (_userRepository.GetByEmail(query.Email).Result is not User user) 
+        if (_userRepository.GetByEmailAsync(query.Email).Result is not User user) 
             return Errors.Authentication.InvalidCredentials;
 
         if (!user.Password.Equals(query.Password)) 
@@ -35,7 +35,7 @@ internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authentic
 
         var refreshToken = RefreshToken.Create(user.Id);
 
-        refreshToken = await _refreshTokenRepository.Add(refreshToken, user.Id);
+        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id);
 
         return new AuthenticationResult(token, refreshToken);
     }

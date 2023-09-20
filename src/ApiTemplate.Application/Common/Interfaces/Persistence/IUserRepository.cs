@@ -6,6 +6,7 @@ namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository : IRepository<User, UserId>
 {
-    Task<User> Add(User entity);
-    Task<User?> GetByEmail(string email);
+    Task<User> AddAsync(User entity);
+    Task<User?> GetByEmailAsync(string email);
+    Task<bool> IsEmailUniqueAsync(string email);
 }

@@ -4,7 +4,7 @@ namespace ApiTemplate.Application.Authentication.Commands.RefreshToken;
 
 internal class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
 {
-    internal RefreshTokenCommandValidator()
+    public RefreshTokenCommandValidator()
     {
         RuleFor(x => x.UserID)
             .NotEmpty();

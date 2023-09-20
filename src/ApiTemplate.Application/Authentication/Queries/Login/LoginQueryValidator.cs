@@ -4,7 +4,7 @@ namespace ApiTemplate.Application.Authentication.Queries.Login;
 
 internal class LoginQueryValidator : AbstractValidator<LoginQuery>
 {
-    internal LoginQueryValidator()
+    public LoginQueryValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty()

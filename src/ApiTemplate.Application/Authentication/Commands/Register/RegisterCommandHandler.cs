@@ -26,19 +26,19 @@ internal sealed class RegisterCommandHandler : IRequestHandler<RegisterCommand, 
         CancellationToken cancellationToken)
     {
         //Check if user exists
-        if (await _userRepository.GetByEmail(command.Email) is not null) 
+        if (await _userRepository.GetByEmailAsync(command.Email) is not null) 
             return Errors.User.UserWithGivenEmailAlreadyExists;
 
         //Create user
         var user = User.Create(command.FirstName, command.LastName, command.Email, command.Password);
-        await _userRepository.Add(user);
+        await _userRepository.AddAsync(user);
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
         
         var refreshToken = Domain.User.RefreshToken.Create(user.Id);
 
-        refreshToken = await _refreshTokenRepository.Add(refreshToken, user.Id);
+        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id);
 
         return new AuthenticationResult(token, refreshToken);
     }

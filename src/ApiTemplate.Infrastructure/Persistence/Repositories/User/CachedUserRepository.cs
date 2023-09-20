@@ -16,22 +16,24 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         _cache = cache;
     }
 
-    public override Task<Domain.User.User> Add(Domain.User.User entity, UserId userId)
+    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Domain.User.User> Add(Domain.User.User entity)
+    public async Task<Domain.User.User> AddAsync(Domain.User.User entity)
     {
         var getCacheKey = $"{EntityName}-get";
         var getByIdCacheKey = $"{IdName}-{entity.Id}";
         var emailCacheKey = $"userEMail-{entity.Email}";
+        var emailIsUniqueCacheKey = $"userEMailUnique-{entity.Email}";
         
         _cache.Remove(getCacheKey);
         _cache.Remove(getByIdCacheKey);
         _cache.Remove(emailCacheKey);
+        _cache.Remove(emailIsUniqueCacheKey);
         
-        var addedEntity = await _decorated.Add(entity);
+        var addedEntity = await _decorated.AddAsync(entity);
         var cacheKey = $"{IdName}-{addedEntity.Id}";
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
@@ -42,15 +44,15 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public override Task<Domain.User.User> Update(Domain.User.User entity)
+    public override Task<Domain.User.User> UpdateAsync(Domain.User.User entity)
     {
         var emailCacheKey = $"userEMail-{entity.Email}";
         _cache.Remove(emailCacheKey);
         
-        return base.Update(entity);
+        return base.UpdateAsync(entity);
     }
 
-    public async Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email)
     {
         var cacheKey = $"userEMail-{email}";
         
@@ -58,7 +60,19 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         {
             entry.SetAbsoluteExpiration(CacheExpiration);
             
-            return await _decorated.GetByEmail(email);
+            return await _decorated.GetByEmailAsync(email);
+        });
+    }
+
+    public async Task<bool> IsEmailUniqueAsync(string email)
+    {
+        var cacheKey = $"userEMailUnique-{email}";
+        
+        return await _cache.GetOrCreateAsync(cacheKey, async entry =>
+        {
+            entry.SetAbsoluteExpiration(CacheExpiration);
+            
+            return await _decorated.IsEmailUniqueAsync(email);
         });
     }
 }

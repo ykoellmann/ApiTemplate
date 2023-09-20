@@ -14,14 +14,14 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         _dbContext = dbContext;
     }
 
-    public override async Task<Domain.User.User> GetById(UserId id)
+    public override async Task<Domain.User.User> GetByIdAsync(UserId id)
     {
         return await _dbContext.Users
             .Include(u => u.RefreshTokens)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<ApiTemplate.Domain.User.User> Add(ApiTemplate.Domain.User.User entity)
+    public async Task<ApiTemplate.Domain.User.User> AddAsync(ApiTemplate.Domain.User.User entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
@@ -32,13 +32,18 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override Task<Domain.User.User> Add(Domain.User.User entity, UserId userId)
+    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<ApiTemplate.Domain.User.User?> GetByEmail(string email)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email)
     {
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
+    public async Task<bool> IsEmailUniqueAsync(string email)
+    {
+        return await _dbContext.Users.AnyAsync(u => u.Email == email);
     }
 }
