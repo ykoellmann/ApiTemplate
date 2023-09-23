@@ -17,40 +17,40 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         _dbContext = dbContext;
     }
 
-    public virtual async Task<List<TEntity>> GetAsync()
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Set<TEntity>().ToListAsync();
+        return await _dbContext.Set<TEntity>().ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity> GetByIdAsync(TId id)
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Set<TEntity>().FindAsync(id);
+        return await _dbContext.Set<TEntity>().FindAsync(new object?[] { id }, cancellationToken);
     }
 
-    public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId)
+    public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)
     {
         entity.CreatedBy = userId;
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedBy = userId;
         entity.UpdatedAt = DateTime.UtcNow;
-        await _dbContext.AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.AddAsync(entity, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         return entity;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
     }
 
-    public virtual async Task<Deleted> DeleteAsync(TId id)
+    public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)
     {
         _dbContext.Set<TEntity>().Remove(_dbContext.Set<TEntity>().Find(id));
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new Deleted();
     }

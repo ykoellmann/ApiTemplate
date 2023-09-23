@@ -38,7 +38,7 @@ internal sealed class RegisterCommandHandler : IRequestHandler<RegisterCommand, 
         
         var refreshToken = Domain.User.RefreshToken.Create(user.Id);
 
-        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id);
+        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 
         return new AuthenticationResult(token, refreshToken);
     }

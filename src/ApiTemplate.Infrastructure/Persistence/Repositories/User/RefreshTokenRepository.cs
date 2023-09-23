@@ -14,13 +14,13 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>, 
         _dbContext = dbContext;
     }
 
-    public async Task<RefreshToken> AddAsync(RefreshToken entity, UserId userId)
+    public async Task<RefreshToken> AddAsync(RefreshToken entity, UserId userId, CancellationToken cancellationToken)
     {
         await _dbContext.RefreshTokens
             .Where(rt => rt.UserId == userId)
-            .ExecuteUpdateAsync(s => s.SetProperty(rt => rt.Disabled, true));
-        await _dbContext.SaveChangesAsync();
+            .ExecuteUpdateAsync(s => s.SetProperty(rt => rt.Disabled, true), cancellationToken: cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
-        return await base.AddAsync(entity, userId);
+        return await base.AddAsync(entity, userId, cancellationToken);
     }
 }

@@ -8,13 +8,13 @@ public interface IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
 {
-    public Task<List<TEntity>> GetAsync();
+    public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken);
     
-    public Task<TEntity> GetByIdAsync(TId id);
+    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken);
 
-    public Task<TEntity> AddAsync(TEntity entity, UserId userId);
+    public Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken);
     
-    public Task<TEntity> UpdateAsync(TEntity entity);
+    public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
     
-    public Task<Deleted> DeleteAsync(TId id);
+    public Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken);
 }

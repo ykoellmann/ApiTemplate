@@ -15,6 +15,11 @@ public class User : AggregateRoot<UserId>
         Password = password;
     }
     
+    //Used for Json serialization
+    private User() : base()
+    {
+    }
+    
     private readonly List<RefreshToken> _refreshTokens = new();
     
     public string Email { get; set; } = null!;
@@ -25,13 +30,16 @@ public class User : AggregateRoot<UserId>
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
     public RefreshToken? ActiveRefreshToken => _refreshTokens.FirstOrDefault(rt => !rt.Expired);
     [NotMapped]
-    public override UserId CreatedBy { get; set; }
+    public override UserId CreatedBy { get; set; } = null!;
+
     [NotMapped]
-    public override User CreatedByUser { get; set; }
+    public override User CreatedByUser { get; set; } = null!;
+
     [NotMapped]
-    public override UserId UpdatedBy { get; set; }
+    public override UserId UpdatedBy { get; set; } = null!;
+
     [NotMapped]
-    public override User UpdatedByUser { get; set; }
+    public override User UpdatedByUser { get; set; } = null!;
 
     public static User Create(string firstName, string lastName, string email, string password)
     {

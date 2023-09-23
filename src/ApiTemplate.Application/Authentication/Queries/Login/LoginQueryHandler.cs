@@ -35,7 +35,7 @@ internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authentic
 
         var refreshToken = RefreshToken.Create(user.Id);
 
-        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id);
+        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 
         return new AuthenticationResult(token, refreshToken);
     }

@@ -1,26 +1,28 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Infrastructure.Extensions;
 using ErrorOr;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
 public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, IUserRepository
 {
     private readonly IUserRepository _decorated;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCache _cache;
 
-    public CachedUserRepository(IUserRepository decorated, IMemoryCache cache) : base(decorated, cache)
+    public CachedUserRepository(IUserRepository decorated, IDistributedCache cache) : base(decorated, cache)
     {
         _decorated = decorated;
         _cache = cache;
     }
 
-    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId)
+    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
+        CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-
+ 
     public async Task<Domain.User.User> AddAsync(Domain.User.User entity)
     {
         var getCacheKey = $"{EntityName}-get";
@@ -44,12 +46,12 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public override Task<Domain.User.User> UpdateAsync(Domain.User.User entity)
+    public override Task<Domain.User.User> UpdateAsync(Domain.User.User entity, CancellationToken cancellationToken)
     {
         var emailCacheKey = $"userEMail-{entity.Email}";
         _cache.Remove(emailCacheKey);
         
-        return base.UpdateAsync(entity);
+        return base.UpdateAsync(entity, cancellationToken);
     }
 
     public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email)

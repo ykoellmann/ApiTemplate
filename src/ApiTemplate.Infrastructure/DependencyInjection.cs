@@ -10,7 +10,7 @@ using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -30,7 +30,10 @@ public static class DependencyInjection
         services.AddDbContext<ApiTemplateDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnection")));
         services.AddRepositories();
 
-        services.AddMemoryCache();
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetConnectionString("Redis");
+        });
 
         return services;
     }
@@ -68,7 +71,7 @@ public static class DependencyInjection
         var repositories = assembly
             .GetTypes()
             .Where(x => x.GetInterface(typeof(IRepository<,>).Name) is not null && x != typeof(Repository<,>))
-            .OrderBy(repo => repo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Any(field => field.FieldType == typeof(IMemoryCache)))
+            .OrderBy(repo => repo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Any(field => field.FieldType == typeof(IDistributedCache)))
             .ToList();
         
         repositories.ForEach(repository =>
@@ -77,7 +80,7 @@ public static class DependencyInjection
 
             if (repositoryInterface is not null)
             {
-                if (repository.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Any(field => field.FieldType == typeof(IMemoryCache)))
+                if (repository.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Any(field => field.FieldType == typeof(IDistributedCache)))
                 {
                     collection.Decorate(repositoryInterface, repository);
                 }

@@ -25,11 +25,11 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("register"), EnableRateLimiting("sliding"), AllowAnonymous]
-    public async Task<IActionResult> Register(RegisterRequest registerRequest)
+    public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<RegisterCommand>(registerRequest);
 
-        var authResult = await _mediator.Send(command);
+        var authResult = await _mediator.Send(command, cancellationToken);
 
         if (authResult.IsError && authResult.FirstError == Errors.User.UserWithGivenEmailAlreadyExists)
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
@@ -44,11 +44,11 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("login"), AllowAnonymous]
-    public async Task<IActionResult> Login(LoginRequest loginRequest)
+    public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<LoginQuery>(loginRequest);
 
-        var authResult = await _mediator.Send(query);
+        var authResult = await _mediator.Send(query, cancellationToken);
         
         if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);

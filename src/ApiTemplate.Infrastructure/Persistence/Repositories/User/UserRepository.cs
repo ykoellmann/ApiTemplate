@@ -14,7 +14,7 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         _dbContext = dbContext;
     }
 
-    public override async Task<Domain.User.User> GetByIdAsync(UserId id)
+    public override async Task<Domain.User.User> GetByIdAsync(UserId id, CancellationToken cancellationToken)
     {
         return await _dbContext.Users
             .Include(u => u.RefreshTokens)
@@ -32,7 +32,8 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId)
+    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
+        CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
