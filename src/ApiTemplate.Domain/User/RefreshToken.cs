@@ -13,6 +13,11 @@ public class RefreshToken : Entity<RefreshTokenId>
         UserId = userId;
     }
     
+    //Used for Json serialization
+    private RefreshToken() : base()
+    {
+    }
+    
     public string Token { get; set; } = null!;
     public DateTime Expires { get; set; }
     public bool Disabled { get; set; } = false;

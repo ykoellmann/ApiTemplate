@@ -28,6 +28,8 @@ internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authentic
         if (_userRepository.GetByEmailAsync(query.Email).Result is not User user) 
             return Errors.Authentication.InvalidCredentials;
 
+        var tmp = await _userRepository.GetListAsync(cancellationToken);
+
         if (!user.Password.Equals(query.Password)) 
             return Errors.Authentication.InvalidCredentials;
 

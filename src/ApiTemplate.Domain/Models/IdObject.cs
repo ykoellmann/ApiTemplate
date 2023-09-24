@@ -9,6 +9,11 @@ public class IdObject<TIdObject> : ValueObject
     {
         Value = value;
     }
+    
+    //Used for Json serialization
+    protected IdObject()
+    {
+    }
 
     public Guid Value { get; set; }
 

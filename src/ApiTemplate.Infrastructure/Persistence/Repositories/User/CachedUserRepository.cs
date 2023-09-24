@@ -17,6 +17,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         _cache = cache;
     }
 
+    [Obsolete("This method is replaced by its overload")]
     public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
         CancellationToken cancellationToken)
     {
@@ -25,41 +26,36 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
  
     public async Task<Domain.User.User> AddAsync(Domain.User.User entity)
     {
-        var getCacheKey = $"{EntityName}-get";
-        var getByIdCacheKey = $"{IdName}-{entity.Id}";
-        var emailCacheKey = $"userEMail-{entity.Email}";
-        var emailIsUniqueCacheKey = $"userEMailUnique-{entity.Email}";
-        
-        _cache.Remove(getCacheKey);
-        _cache.Remove(getByIdCacheKey);
-        _cache.Remove(emailCacheKey);
-        _cache.Remove(emailIsUniqueCacheKey);
+        await ClearCacheAsync(entity);
         
         var addedEntity = await _decorated.AddAsync(entity);
-        var cacheKey = $"{IdName}-{addedEntity.Id}";
+        var cacheKey = $"{CacheKeyPrefix}-{addedEntity.Id}";
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
+            CacheKeys.Add(cacheKey);
+            
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return addedEntity;
         });
     }
 
-    public override Task<Domain.User.User> UpdateAsync(Domain.User.User entity, CancellationToken cancellationToken)
+    public override async Task<Domain.User.User> UpdateAsync(Domain.User.User entity, CancellationToken cancellationToken)
     {
-        var emailCacheKey = $"userEMail-{entity.Email}";
-        _cache.Remove(emailCacheKey);
+        await ClearCacheAsync(entity);
         
-        return base.UpdateAsync(entity, cancellationToken);
+        return await base.UpdateAsync(entity, cancellationToken);
     }
 
     public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email)
     {
-        var cacheKey = $"userEMail-{email}";
+        var cacheKey = $"{CacheKeyPrefix}-{email}";
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
+            CacheKeys.Add(cacheKey);
+            
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.GetByEmailAsync(email);
@@ -68,13 +64,26 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
 
     public async Task<bool> IsEmailUniqueAsync(string email)
     {
-        var cacheKey = $"userEMailUnique-{email}";
+        var cacheKey = $"{CacheKeyPrefix}-isUnique-{email}";
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
+            CacheKeys.Add(cacheKey);
+            
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.IsEmailUniqueAsync(email);
         });
+    }
+
+    protected override async Task ClearCacheAsync(Domain.User.User user)
+    {
+        var emailCacheKey = $"{CacheKeyPrefix}-{user.Email}";
+        var isUniqueCacheKey = $"{CacheKeyPrefix}-isUnique-{user.Email}";
+        
+        await _cache.RemoveAsync(emailCacheKey);
+        await _cache.RemoveAsync(isUniqueCacheKey);
+        
+        await base.ClearCacheAsync(user);
     }
 }
