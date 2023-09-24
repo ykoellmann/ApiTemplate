@@ -1,0 +1,36 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  apitemplate.api:
+    build:
+      context: "C:\\Users\\yanko\\RiderProjects\\ApiTemplate"
+      dockerfile: "src/apitemplate.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-x64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\yanko\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\yanko\\.nuget\\packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "apitemplate.api:dev"
+    ports:
+    - "127.0.0.1:57025:57100"
+    - "127.0.0.1:57225:57300"
+    volumes:
+    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
+    - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
+    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.2.1\\\
+      Linux64:/riderDebugger"
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\232.9559.61/bin:/riderLogsConf"
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.2\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2023_9_24_19_15_06:/riderLogs:rw"
+    working_dir: "/app"

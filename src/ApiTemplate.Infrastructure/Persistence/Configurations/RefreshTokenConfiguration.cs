@@ -9,7 +9,7 @@ public class RefreshTokenConfiguration : BaseConfiguration<RefreshToken, Refresh
 {
     public override void ConfigureEntity(EntityTypeBuilder<RefreshToken> builder)
     {
-        builder.ToTable("RefreshToken");
+        builder.ToTable("RefreshTokens");
 
         builder.Property(rt => rt.UserId)
             .HasConversion(userId => userId.Value,

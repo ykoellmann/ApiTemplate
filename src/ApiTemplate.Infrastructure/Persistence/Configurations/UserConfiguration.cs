@@ -29,7 +29,7 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
 
     public override void ConfigureEntity(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("User");
+        builder.ToTable("Users");
 
         builder.Property(u => u.Email)
             .IsRequired()

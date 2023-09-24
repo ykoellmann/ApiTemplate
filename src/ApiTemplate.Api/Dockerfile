@@ -5,14 +5,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["ApiTemplate.Api/ApiTemplate.Api.csproj", "ApiTemplate.Api/"]
-COPY ["ApiTemplate.Application/ApiTemplate.Application.csproj", "ApiTemplate.Application/"]
-COPY ["ApiTemplate.Domain/ApiTemplate.Domain.csproj", "ApiTemplate.Domain/"]
-COPY ["ApiTemplate.Contracts/ApiTemplate.Contracts.csproj", "ApiTemplate.Contracts/"]
-COPY ["ApiTemplate.Infrastructure/ApiTemplate.Infrastructure.csproj", "ApiTemplate.Infrastructure/"]
-RUN dotnet restore "ApiTemplate.Api/ApiTemplate.Api.csproj"
+COPY ["src/ApiTemplate.Api/ApiTemplate.Api.csproj", "src/ApiTemplate.Api/"]
+COPY ["src/ApiTemplate.Domain/ApiTemplate.Domain.csproj", "src/ApiTemplate.Domain/"]
+COPY ["src/ApiTemplate.Application/ApiTemplate.Application.csproj", "src/ApiTemplate.Application/"]
+COPY ["src/ApiTemplate.Contracts/ApiTemplate.Contracts.csproj", "src/ApiTemplate.Contracts/"]
+COPY ["src/ApiTemplate.Infrastructure/ApiTemplate.Infrastructure.csproj", "src/ApiTemplate.Infrastructure/"]
+RUN dotnet restore "src/ApiTemplate.Api/ApiTemplate.Api.csproj"
 COPY . .
-WORKDIR "/src/ApiTemplate.Api"
+WORKDIR "/src/src/ApiTemplate.Api"
 RUN dotnet build "ApiTemplate.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

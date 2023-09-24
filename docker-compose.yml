@@ -1,0 +1,37 @@
+﻿networks:
+  apitemplate-backend:
+    name: apitemplate-backend
+    driver: bridge
+
+services:
+  apitemplate.redis:
+    container_name: apitemplate.redis
+    image: redis:latest
+    ports:
+      - 8003:6379
+    networks:
+      - apitemplate-backend
+  apitemplate.db:
+    container_name: apitemplate.db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: apitemplate
+    ports:
+      - 8002:5432
+    networks:
+      - apitemplate-backend
+  apitemplate.api:
+    container_name: apitemplate.api
+    image: apitemplate.api
+    build:
+      context: .
+      dockerfile: src/apitemplate.Api/Dockerfile
+    ports:
+      - 8001:80
+    depends_on:
+      - apitemplate.db
+      - apitemplate.redis
+    networks:
+      - apitemplate-backend
