@@ -30,7 +30,7 @@ public class RefreshToken : Entity<RefreshTokenId>
         return new RefreshToken(
             RefreshTokenId.CreateUnique(), 
             Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
-            DateTime.Now.AddMinutes(1), 
+            DateTime.UtcNow.AddMinutes(1), 
             userId);
     }
 }

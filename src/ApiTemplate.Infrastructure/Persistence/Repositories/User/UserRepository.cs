@@ -1,10 +1,14 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Application.User.Events;
+using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Infrastructure.Attributes;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
+[CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UserUpdatedEventHandler))]
 public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
@@ -14,19 +18,19 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         _dbContext = dbContext;
     }
 
-    public override async Task<Domain.User.User> GetByIdAsync(UserId id, CancellationToken cancellationToken)
+    public override async Task<Domain.User.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken)
     {
         return await _dbContext.Users
             .Include(u => u.RefreshTokens)
-            .FirstOrDefaultAsync(u => u.Id == id);
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
     }
 
-    public async Task<ApiTemplate.Domain.User.User> AddAsync(ApiTemplate.Domain.User.User entity)
+    public async Task<ApiTemplate.Domain.User.User> AddAsync(ApiTemplate.Domain.User.User entity, CancellationToken cancellationToken = default)
     {
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
-        await _dbContext.AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.AddAsync(entity, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         return entity;
     }
@@ -38,13 +42,13 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         throw new NotImplementedException();
     }
 
-    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: cancellationToken);
     }
 
-    public async Task<bool> IsEmailUniqueAsync(string email)
+    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Users.AnyAsync(u => u.Email == email);
+        return await _dbContext.Users.AnyAsync(u => u.Email == email, cancellationToken: cancellationToken);
     }
 }

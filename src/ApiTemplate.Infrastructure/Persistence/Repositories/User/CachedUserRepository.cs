@@ -24,16 +24,16 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         throw new NotImplementedException();
     }
  
-    public async Task<Domain.User.User> AddAsync(Domain.User.User entity)
+    public async Task<Domain.User.User> AddAsync(Domain.User.User entity, CancellationToken cancellationToken = default)
     {
-        await ClearCacheAsync(entity);
+        await ClearCacheAsync();
         
-        var addedEntity = await _decorated.AddAsync(entity);
-        var cacheKey = $"{CacheKeyPrefix}-{addedEntity.Id}";
+        var addedEntity = await _decorated.AddAsync(entity, cancellationToken);
+        var cacheKey = await EntityValueCacheKey(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeys.Add(cacheKey);
+            CacheKeysEntityValue.Add(cacheKey);
             
             entry.SetAbsoluteExpiration(CacheExpiration);
             
@@ -41,20 +41,13 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public override async Task<Domain.User.User> UpdateAsync(Domain.User.User entity, CancellationToken cancellationToken)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        await ClearCacheAsync(entity);
-        
-        return await base.UpdateAsync(entity, cancellationToken);
-    }
-
-    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email)
-    {
-        var cacheKey = $"{CacheKeyPrefix}-{email}";
+        var cacheKey = await EntityValueCacheKey(nameof(GetByEmailAsync), email);
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeys.Add(cacheKey);
+            CacheKeysEntityValue.Add(cacheKey);
             
             entry.SetAbsoluteExpiration(CacheExpiration);
             
@@ -62,28 +55,17 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public async Task<bool> IsEmailUniqueAsync(string email)
+    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
     {
-        var cacheKey = $"{CacheKeyPrefix}-isUnique-{email}";
+        var cacheKey = await EntityValueCacheKey(nameof(IsEmailUniqueAsync), email);
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeys.Add(cacheKey);
+            CacheKeysEntityValue.Add(cacheKey);
             
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.IsEmailUniqueAsync(email);
         });
-    }
-
-    protected override async Task ClearCacheAsync(Domain.User.User user)
-    {
-        var emailCacheKey = $"{CacheKeyPrefix}-{user.Email}";
-        var isUniqueCacheKey = $"{CacheKeyPrefix}-isUnique-{user.Email}";
-        
-        await _cache.RemoveAsync(emailCacheKey);
-        await _cache.RemoveAsync(isUniqueCacheKey);
-        
-        await base.ClearCacheAsync(user);
     }
 }

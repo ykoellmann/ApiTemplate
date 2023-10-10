@@ -12,7 +12,7 @@ COPY ["src/ApiTemplate.Contracts/ApiTemplate.Contracts.csproj", "src/ApiTemplate
 COPY ["src/ApiTemplate.Infrastructure/ApiTemplate.Infrastructure.csproj", "src/ApiTemplate.Infrastructure/"]
 RUN dotnet restore "src/ApiTemplate.Api/ApiTemplate.Api.csproj"
 COPY . .
-WORKDIR "/src/src/ApiTemplate.Api"
+WORKDIR "/src/ApiTemplate.Api"
 RUN dotnet build "ApiTemplate.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

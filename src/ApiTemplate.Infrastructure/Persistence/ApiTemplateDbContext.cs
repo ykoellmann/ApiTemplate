@@ -31,6 +31,6 @@ public class ApiTemplateDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
     }
 
-    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<User?> Users { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 }

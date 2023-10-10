@@ -19,7 +19,7 @@ public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
     {
         _logger.Information("Request started {@RequestName}, {@DateTimeNow} {@Request}", 
             typeof(TRequest).Name, 
-            DateTime.Now, 
+            DateTime.UtcNow, 
             request);
         
         var result = await next();
@@ -29,12 +29,12 @@ public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
             _logger.Error("Request failure {@RequestName}, {@Error}, {@DateTimeNow}", 
                 typeof(TRequest).Name, 
                 result.Errors,
-                DateTime.Now);
+                DateTime.UtcNow);
         }
         
         _logger.Information("Request finished {@RequestName}, {@DateTimeNow} {@Request}", 
             typeof(TRequest).Name, 
-            DateTime.Now, 
+            DateTime.UtcNow, 
             request);
         
         return result;

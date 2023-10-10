@@ -19,7 +19,10 @@ public static class DistributedCacheExtensions
         var entry = new DistributedCacheEntryOptions();
         var created = await factory(entry);
         
-        await cache.SetStringAsync(key, JsonConvert.SerializeObject(created), entry);
+        await cache.SetStringAsync(key, JsonConvert.SerializeObject(created, settings: new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        }), entry);
         
         return created;
     }

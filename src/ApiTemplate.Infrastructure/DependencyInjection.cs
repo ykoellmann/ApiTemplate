@@ -1,13 +1,17 @@
 ﻿using System.Reflection;
 using System.Text;
+using ApiTemplate.Application.Common.EventHandlers;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Services;
+using ApiTemplate.Domain.Common.Events;
+using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Authentication;
 using ApiTemplate.Infrastructure.Persistence;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.Infrastructure.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -27,7 +31,11 @@ public static class DependencyInjection
 
         services.AddSingleton<IDateTimeService, DateTimeService>();
         services.AddScoped<PublishDomainEventsInterceptor>();
-        services.AddDbContext<ApiTemplateDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DbConnection")));
+        var t = configuration.GetConnectionString("DbConnection");
+
+        services.AddDbContext<ApiTemplateDbContext>(options =>
+            options.UseNpgsql(t));
+
         services.AddRepositories();
 
         services.AddStackExchangeRedisCache(options =>
@@ -71,26 +79,82 @@ public static class DependencyInjection
         var repositories = assembly
             .GetTypes()
             .Where(x => x.GetInterface(typeof(IRepository<,>).Name) is not null && x != typeof(Repository<,>))
-            .OrderBy(repo => repo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Any(field => field.FieldType == typeof(IDistributedCache)))
+            .OrderBy(repo => repo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Any(field => field.FieldType == typeof(IDistributedCache)))
             .ToList();
-        
+
         repositories.ForEach(repository =>
         {
-            var repositoryInterface = repository.GetInterfaces().FirstOrDefault(x => x.Name != typeof(IRepository<,>).Name);
+            var repositoryInterface =
+                repository.GetInterfaces().FirstOrDefault(x => x.Name != typeof(IRepository<,>).Name);
 
-            if (repositoryInterface is not null)
+            if (repositoryInterface is null) return;
+
+            if (repository.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Any(field => field.FieldType == typeof(IDistributedCache)))
             {
-                if (repository.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Any(field => field.FieldType == typeof(IDistributedCache)))
+                collection.Decorate(repositoryInterface, repository);
+            }
+            else
+            {
+                collection.AddTransient(repositoryInterface, repository);
+                collection.AddCacheEventHandlers(repositoryInterface, repository);
+            }
+
+        });
+
+        return collection;
+    }
+
+    private static IServiceCollection AddCacheEventHandlers(this IServiceCollection collection, Type repositoryInterface, Type repository)
+    {
+        var domainEvents = repository
+            .GetCustomAttributes<CacheDomainEventAttribute>()
+            .OrderBy(domainEvent => domainEvent.EventHandlerType == typeof(UpdatedEventHandler<,,,>) ||
+                                     domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,>))
+            .ToList();
+
+        var clearedDomainEvents = new List<CacheDomainEventAttribute>();
+        foreach (var domainEvent in domainEvents)
+        { 
+            if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name &&
+                domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name)
+            {
+                if (!clearedDomainEvents.Any(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name == domainEvent.EventHandlerType.Name))
                 {
-                    collection.Decorate(repositoryInterface, repository);
-                }
-                else
-                {
-                    collection.AddTransient(repositoryInterface, repository);
+                    clearedDomainEvents.Add(domainEvent);
                 }
             }
-            
-        });
+            else
+            {
+                clearedDomainEvents.Add(domainEvent);
+            }
+        }
+        
+        
+        var genericEventArguments = repository.GetInterface(typeof(IRepository<,>).Name).GetGenericArguments();
+        
+        clearedDomainEvents
+            .ForEach(domainEvent =>
+            {
+                if (domainEvent.EventType.IsGenericType)
+                {
+                    domainEvent.EventType = domainEvent.EventType.MakeGenericType(genericEventArguments);
+                }
+                
+                if (domainEvent.EventHandlerType.IsGenericType)
+                {
+                    domainEvent.EventHandlerType = domainEvent.EventHandlerType.MakeGenericType(repositoryInterface,
+                        genericEventArguments[0],
+                        genericEventArguments[1], domainEvent.EventType);
+                }
+            });
+
+        foreach (var domainEvent in clearedDomainEvents)
+        {
+            var interfaceType = typeof(INotificationHandler<>).MakeGenericType(domainEvent.EventType);
+            collection.AddTransient(interfaceType, domainEvent.EventHandlerType);
+        }
 
         return collection;
     }
@@ -103,7 +167,7 @@ public static class DependencyInjection
             //Add headers, etc.
         });
         collection.AddTransient<IExampleHttpService, ExampleHttpService>();
-        
+
         return collection;
     }
 }

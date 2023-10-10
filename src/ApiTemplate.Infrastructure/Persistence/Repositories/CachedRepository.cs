@@ -13,23 +13,29 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 {
     public readonly TimeSpan CacheExpiration;
     private readonly IRepository<TEntity, TId> _decorated;
-    protected static readonly List<string> CacheKeys = new();
+    
+    protected static readonly List<string> CacheKeysEntity = new();
+    protected static readonly List<string> CacheKeysEntityValue = new();
+    
     protected readonly IDistributedCache Cache;
-    protected string CacheKeyPrefix => $"{typeof(TEntity).Name}";
-    protected string CacheKeyGet => $"{CacheKeyPrefix}-get";
 
-    public CachedRepository(IRepository<TEntity, TId> decorated, IDistributedCache cache, int cacheExpirationMinutes = 5)
+    protected async Task<string> EntityCacheKey(string usage) => $"{typeof(TEntity).Name}:{usage}";
+
+    public async Task<string> EntityValueCacheKey(string usage, string value) => $"{typeof(TEntity).Name}:{usage}:{value}";
+
+    public CachedRepository(IRepository<TEntity, TId> decorated, IDistributedCache cache, int cacheExpirationMinutes = 10)
     {
         _decorated = decorated;
         Cache = cache;
-        CacheExpiration = TimeSpan.FromMinutes(cacheExpirationMinutes);
+        CacheExpiration = TimeSpan.FromMinutes(cacheExpirationMinutes) + TimeSpan.FromSeconds(new Random().Next(0, 60));
     }
 
     public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken)
     {
-        return await Cache.GetOrCreateAsync(CacheKeyGet, async entry =>
+        var cacheKey = await EntityCacheKey(nameof(GetListAsync));
+        return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {        
-            CacheKeys.Add(CacheKeyGet);
+            CacheKeysEntity.Add(cacheKey);
 
             entry.SetAbsoluteExpiration(CacheExpiration);
             
@@ -39,11 +45,11 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
     {
-        var cacheKey = await GetCacheKey(id);
+        var cacheKey = await EntityValueCacheKey(nameof(GetByIdAsync), id.Value.ToString());
         
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeys.Add(cacheKey);
+            CacheKeysEntityValue.Add(cacheKey);
 
             entry.SetAbsoluteExpiration(CacheExpiration);
             
@@ -53,14 +59,14 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)
     {
-        await ClearCacheAsync(entity);
+        await ClearCacheAsync();
         
         var addedEntity = await _decorated.AddAsync(entity, userId, cancellationToken);
-        var cacheKey = await GetCacheKey(addedEntity.Id);
+        var cacheKey = await EntityValueCacheKey(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
         
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeys.Add(cacheKey);
+            CacheKeysEntityValue.Add(cacheKey);
 
             entry.SetAbsoluteExpiration(CacheExpiration);
             
@@ -70,14 +76,14 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        await ClearCacheAsync(entity);
+        await ClearCacheAsync();
         
         var updatedEntity = await _decorated.UpdateAsync(entity, cancellationToken);
-        var cacheKey = await GetCacheKey(updatedEntity.Id);
+        var cacheKey = await EntityValueCacheKey(nameof(GetByIdAsync), updatedEntity.Id.Value.ToString());
         
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeys.Add(cacheKey);
+            CacheKeysEntityValue.Add(cacheKey);
 
             entry.SetAbsoluteExpiration(CacheExpiration);
             
@@ -87,35 +93,27 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)
     {
-        await ClearCacheAsync(id.Value);
+        await ClearCacheAsync();
         
         return await _decorated.DeleteAsync(id, cancellationToken);
     }
     
-    protected async Task<string> GetCacheKey(TId id)
+    public async Task ClearCacheAsync(List<string> cacheKeys = null)
     {
-        return $"{CacheKeyPrefix}-{id.Value}";
-    }
-    
-    protected virtual async Task ClearCacheAsync(TEntity entity)
-    {
-        foreach (var cacheKey in CacheKeys.Where(ck => ck.Contains(entity.Id.Value.ToString())))
+        if (cacheKeys is not null)
         {
-            Cache.Remove(cacheKey);
-            CacheKeys.Remove(cacheKey);
+            foreach (var cacheKey in cacheKeys)
+            {
+                await Cache.RemoveAsync(cacheKey);
+            }
+            CacheKeysEntityValue.RemoveAll(k => cacheKeys.Contains(k));
         }
-
-        CacheKeys.Remove(CacheKeyGet);
-    }
-    
-    protected virtual async Task ClearCacheAsync(dynamic cacheKeyPart)
-    {
-        foreach (var cacheKey in CacheKeys.Where(ck => ck.Contains(cacheKeyPart.ToString())))
+        
+        var cacheKeysEntity = CacheKeysEntity.Where(cacheKey => cacheKey.Contains(typeof(TEntity).Name));
+        foreach (var cacheKey in cacheKeysEntity)
         {
-            Cache.Remove(cacheKey);
-            CacheKeys.Remove(cacheKey);
+            await Cache.RemoveAsync(cacheKey);
         }
-
-        CacheKeys.Remove(CacheKeyGet);
+        CacheKeysEntity.RemoveAll(k => k.Contains(typeof(TEntity).Name));
     }
 }

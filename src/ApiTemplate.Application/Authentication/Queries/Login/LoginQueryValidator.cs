@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
 
-internal class LoginQueryValidator : AbstractValidator<LoginQuery>
+public class LoginQueryValidator : AbstractValidator<LoginQuery>
 {
     public LoginQueryValidator()
     {

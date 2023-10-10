@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
 
-internal class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
     {

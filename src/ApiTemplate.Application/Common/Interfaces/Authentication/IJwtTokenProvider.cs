@@ -4,5 +4,5 @@ namespace ApiTemplate.Application.Common.Interfaces.Authentication;
 
 public interface IJwtTokenProvider
 {
-    string GenerateToken(User user);
+    string GenerateToken(Domain.User.User user);
 }

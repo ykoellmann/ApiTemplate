@@ -22,7 +22,7 @@ public class RegisterCommandHandlerTests
 
         _userRepository.Setup(repository => 
             repository.IsEmailUniqueAsync(
-                It.IsAny<string>()))
+                It.IsAny<string>(), new CancellationToken()))
             .ReturnsAsync(false);
         //Act
         var result = await handler.Handle(command, default);
@@ -43,7 +43,8 @@ public class RegisterCommandHandlerTests
 
         _userRepository.Setup(repository => 
                 repository.IsEmailUniqueAsync(
-                    It.IsAny<string>()))
+                    It.IsAny<string>(),
+                    new CancellationToken()))
             .ReturnsAsync(true);
         //Act
         var result = await handler.Handle(command, default);

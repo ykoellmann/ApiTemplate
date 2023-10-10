@@ -4,9 +4,9 @@ using ErrorOr;
 
 namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
-public interface IUserRepository : IRepository<User, UserId>
+public interface IUserRepository : IRepository<Domain.User.User, UserId>
 {
-    Task<User> AddAsync(User entity);
-    Task<User?> GetByEmailAsync(string email);
-    Task<bool> IsEmailUniqueAsync(string email);
+    Task<Domain.User.User> AddAsync(Domain.User.User entity, CancellationToken cancellationToken = default);
+    Task<Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default);
 }

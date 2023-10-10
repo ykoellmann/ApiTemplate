@@ -1,11 +1,16 @@
-﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
+﻿using ApiTemplate.Application.Common.EventHandlers;
+using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Infrastructure.Attributes;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
+[CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,>))]
+[CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,>))]
 public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
@@ -41,7 +46,8 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        _dbContext.Entry(entity).State = EntityState.Modified;
+        entity.AddDomainEventAsync(new UpdatedEvent<TEntity, TId>(entity));
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
@@ -49,9 +55,22 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)
     {
-        _dbContext.Set<TEntity>().Remove(_dbContext.Set<TEntity>().Find(id));
+        var entity = await _dbContext.Set<TEntity>().FindAsync(new object?[] { id }, cancellationToken: cancellationToken);
+        await entity.AddDomainEventAsync(new DeletedEvent<TEntity, TId>(entity));
+        
+        _dbContext.Set<TEntity>().Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new Deleted();
+    }
+
+    public Task ClearCacheAsync(List<string> cacheKeys = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<string> EntityValueCacheKey(string usage, string value)
+    {
+        throw new NotImplementedException();
     }
 }
