@@ -118,7 +118,7 @@ public static class DependencyInjection
         foreach (var domainEvent in domainEvents)
         { 
             if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name &&
-                domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name)
+                domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name)
             {
                 if (!clearedDomainEvents.Any(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name == domainEvent.EventHandlerType.Name))
                 {
