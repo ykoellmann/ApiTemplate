@@ -1,9 +1,11 @@
 ﻿using ApiTemplate.Application.Common.EventHandlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Events;
+using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.User.ValueObjects;
 using ApiTemplate.Infrastructure.Attributes;
+using ApiTemplate.Infrastructure.Extensions;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,14 +24,14 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         _dbContext = dbContext;
     }
 
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken)
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
     {
-        return await _dbContext.Set<TEntity>().ToListAsync(cancellationToken);
+        return await _dbContext.Set<TEntity>().ApplySpecification(specification).ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
     {
-        return await _dbContext.Set<TEntity>().FindAsync(new object?[] { id }, cancellationToken);
+        return await _dbContext.Set<TEntity>().ApplySpecification(specification).FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
     }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)

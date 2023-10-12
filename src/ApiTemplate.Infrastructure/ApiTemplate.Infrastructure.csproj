@@ -24,7 +24,7 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
-      <Folder Include="Persistence\Repositories\User\Specifications\" />
+      <Folder Include="Specification\" />
     </ItemGroup>
 
 

@@ -1,4 +1,5 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.User.ValueObjects;
 using ApiTemplate.Infrastructure.Extensions;
@@ -30,7 +31,7 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         CacheExpiration = TimeSpan.FromMinutes(cacheExpirationMinutes) + TimeSpan.FromSeconds(new Random().Next(0, 60));
     }
 
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken)
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
     {
         var cacheKey = await EntityCacheKey(nameof(GetListAsync));
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
@@ -39,11 +40,11 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
             entry.SetAbsoluteExpiration(CacheExpiration);
             
-            return await _decorated.GetListAsync(cancellationToken);
+            return await _decorated.GetListAsync(cancellationToken, specification);
         });
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
     {
         var cacheKey = await EntityValueCacheKey(nameof(GetByIdAsync), id.Value.ToString());
         
@@ -53,7 +54,7 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
             entry.SetAbsoluteExpiration(CacheExpiration);
             
-            return await _decorated.GetByIdAsync(id, cancellationToken);
+            return await _decorated.GetByIdAsync(id, cancellationToken, specification);
         });
     }
 

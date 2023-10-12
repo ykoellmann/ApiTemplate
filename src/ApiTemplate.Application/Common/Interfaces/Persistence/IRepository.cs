@@ -1,4 +1,5 @@
-﻿using ApiTemplate.Domain.Models;
+﻿using ApiTemplate.Domain.Common.Specification;
+using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.User.ValueObjects;
 using ErrorOr;
 
@@ -8,9 +9,9 @@ public interface IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
 {
-    public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken);
+    public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
     
-    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken);
+    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
 
     public Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken);
     
