@@ -24,7 +24,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         throw new NotImplementedException();
     }
  
-    public async Task<Domain.User.User> AddAsync(Domain.User.User entity, CancellationToken cancellationToken = default)
+    public async Task<Domain.User.User> AddAsync(Domain.User.User entity, CancellationToken cancellationToken)
     {
         await ClearCacheAsync();
         
@@ -41,7 +41,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var cacheKey = await EntityValueCacheKey(nameof(GetByEmailAsync), email);
         
@@ -51,11 +51,11 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
             
             entry.SetAbsoluteExpiration(CacheExpiration);
             
-            return await _decorated.GetByEmailAsync(email);
+            return await _decorated.GetByEmailAsync(email, cancellationToken);
         });
     }
 
-    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
     {
         var cacheKey = await EntityValueCacheKey(nameof(IsEmailUniqueAsync), email);
         
@@ -65,7 +65,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
             
             entry.SetAbsoluteExpiration(CacheExpiration);
             
-            return await _decorated.IsEmailUniqueAsync(email);
+            return await _decorated.IsEmailUniqueAsync(email, cancellationToken);
         });
     }
 }

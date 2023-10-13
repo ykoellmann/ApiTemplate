@@ -1,45 +1,18 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace ApiTemplate.Infrastructure.Extensions;
 
 public static class QueryableExtensions
 {
-    public static IQueryable<TEntity> ApplySpecification<TEntity, TId>(this IQueryable<TEntity> query, Specification<TEntity, TId> specification)
+    public static IQueryable<TEntity> Specificate<TEntity, TId>(this IQueryable<TEntity> query, Specification<TEntity, TId> specification)
         where TEntity : Entity<TId>
         where TId : IdObject<TId>
     {
-        if (specification is null)
-            return query;
-        
-        specification.Includes.ForEach(include =>
-        {
-            query = ApplyInclude(query, include);
-        });
-        
-        specification.OrderBy.ForEach(orderBy =>
-        {
-            query = ApplyOrderBy(query, orderBy);
-        });
-        
-        return query;
-    }
-    
-    private static IQueryable<TEntity> ApplyInclude<TEntity>(IQueryable<TEntity> query, IncludeSpecification includeSpecification) where TEntity : class
-    {
-        query = query.Include(includeSpecification.IncludeExpression as Expression<Func<TEntity, object>>);
-        return includeSpecification.ThenIncludes.Aggregate(query, (current, include) => ApplyInclude(current, include));
-    }
-
-    private static IQueryable<TEntity> ApplyOrderBy<TEntity>(IQueryable<TEntity> query,
-        OrderBySpecification orderBySpecification) where TEntity : class
-    {
-        query = orderBySpecification.Descending
-            ? query.OrderByDescending(orderBySpecification.OrderByExpression as Expression<Func<TEntity, object>>)
-            : query.OrderBy(orderBySpecification.OrderByExpression as Expression<Func<TEntity, object>>);
-        
-        return orderBySpecification.ThenBy.Aggregate(query, (current, orderBy) => ApplyOrderBy(current, orderBy));
+        return specification is null ? query : specification.Specificate(query);
     }
 }

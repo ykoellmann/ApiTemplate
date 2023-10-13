@@ -5,7 +5,6 @@ using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.User.ValueObjects;
 using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Extensions;
-using ApiTemplate.Infrastructure.Persistence.Repositories.User.Specifications;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,10 +20,10 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         _dbContext = dbContext;
     }
 
-    public override async Task<Domain.User.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Specification<Domain.User.User, UserId> specification = null)
+    public override async Task<Domain.User.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Domain.Common.Specification.Specification<Domain.User.User, UserId> specification = null)
     {
         return await _dbContext.Users
-            .ApplySpecification(specification)
+            .Specificate(specification)
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
     }
 
@@ -47,7 +46,6 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
 
     public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var t = new Test(_dbContext);
         return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: cancellationToken);
     }
 

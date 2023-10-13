@@ -3,6 +3,7 @@ using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
+using ApiTemplate.Domain.User.Specifications;
 using MediatR;
 using ErrorOr;
 
@@ -24,12 +25,13 @@ internal class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand,
     public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         //Get user with userId and check if given refresh token is users last refresh token. Only one can be valid for one user at a time.
-        var user = await _userRepository.GetByIdAsync(request.UserID, cancellationToken);
+        var user = await _userRepository.GetByIdAsync(request.UserID, cancellationToken,
+            new UserIncludeRefreshTokenSpecification());
 
         if (user is null)
             return Errors.User.UserDoesNotExist;
 
-        if (user.ActiveRefreshToken.Expired)
+        if (user.ActiveRefreshToken?.Expired ?? true)
             return Errors.Authentication.RefreshTokenExpired;
         
         if (user.ActiveRefreshToken.Token != request.TokenToRefresh)

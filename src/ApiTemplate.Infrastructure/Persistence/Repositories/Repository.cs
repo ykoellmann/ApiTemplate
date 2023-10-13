@@ -24,14 +24,18 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         _dbContext = dbContext;
     }
 
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Domain.Common.Specification.Specification<TEntity, TId> specification = null)
     {
-        return await _dbContext.Set<TEntity>().ApplySpecification(specification).ToListAsync(cancellationToken);
+        return await _dbContext.Set<TEntity>()
+            .Specificate(specification)
+            .ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Domain.Common.Specification.Specification<TEntity, TId> specification = null)
     {
-        return await _dbContext.Set<TEntity>().ApplySpecification(specification).FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
+        return await _dbContext.Set<TEntity>()
+            .Specificate(specification)
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
     }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)
