@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.User;
@@ -9,7 +10,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
 
-internal sealed class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
+internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, AuthenticationResult>
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;

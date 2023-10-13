@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.User;
@@ -10,7 +11,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
 
-internal class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
+internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResult>
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;

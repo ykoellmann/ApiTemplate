@@ -1,11 +1,12 @@
-﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
+﻿using ApiTemplate.Application.Common.Interfaces.Handlers;
+using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Models;
 using MediatR;
 
 namespace ApiTemplate.Application.Common.EventHandlers;
 
-public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : INotificationHandler<TDeleted> 
+public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : IEventHandler<TDeleted> 
     where TDeleted : DeletedEvent<TEntity, TId>
     where TIRepository : IRepository<TEntity, TId>
     where TEntity : Entity<TId>

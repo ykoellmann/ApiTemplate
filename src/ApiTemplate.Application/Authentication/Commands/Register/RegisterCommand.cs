@@ -1,4 +1,5 @@
 using ApiTemplate.Application.Authentication.Common;
+using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
 using ErrorOr;
 using MediatR;
 
@@ -8,4 +9,4 @@ public record RegisterCommand(
     string FirstName,
     string LastName,
     string Email,
-    string Password) : IRequest<ErrorOr<AuthenticationResult>>;
+    string Password) : ICommand<AuthenticationResult>;
