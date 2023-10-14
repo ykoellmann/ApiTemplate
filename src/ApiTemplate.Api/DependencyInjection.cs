@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
 using ApiTemplate.Api.Common.Mapping;
+using FluentValidation;
 
 namespace ApiTemplate.Api;
 

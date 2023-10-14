@@ -7,10 +7,14 @@ using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Authentication;
+using ApiTemplate.Infrastructure.Extensions;
 using ApiTemplate.Infrastructure.Persistence;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.Infrastructure.Services;
+using ApiTemplate.Infrastructure.Settings;
+using ApiTemplate.Infrastructure.Settings.Jwt;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -27,14 +31,15 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         ConfigurationManager configuration)
     {
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        
         services.AddAuth(configuration);
 
         services.AddSingleton<IDateTimeService, DateTimeService>();
         services.AddScoped<PublishDomainEventsInterceptor>();
-        var t = configuration.GetConnectionString("DbConnection");
 
         services.AddDbContext<ApiTemplateDbContext>(options =>
-            options.UseNpgsql(t));
+            options.UseNpgsql(configuration.GetConnectionString("DbConnection")));
 
         services.AddRepositories();
 
@@ -46,13 +51,13 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, ConfigurationManager configuration)
+    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSettings = new JwtSettings();
-        configuration.Bind(JwtSettings.SectionName, jwtSettings);
+        services.AddOptionsWithFluentValidation<JwtSettings>(JwtSettings.SectionName);
 
-        services.AddSingleton(Options.Create(jwtSettings));
         services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
+        
+        var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -120,7 +125,7 @@ public static class DependencyInjection
             if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name &&
                 domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name)
             {
-                if (!clearedDomainEvents.Any(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name == domainEvent.EventHandlerType.Name))
+                if (clearedDomainEvents.All(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
                 {
                     clearedDomainEvents.Add(domainEvent);
                 }

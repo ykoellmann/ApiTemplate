@@ -4,6 +4,7 @@ using System.Text;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Domain.User;
+using ApiTemplate.Infrastructure.Settings.Jwt;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

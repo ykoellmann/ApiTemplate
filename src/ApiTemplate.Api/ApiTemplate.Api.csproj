@@ -38,4 +38,9 @@
       </Content>
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="Common\Settings\" />
+    </ItemGroup>
+
 </Project>
