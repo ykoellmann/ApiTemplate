@@ -7,11 +7,12 @@ using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Extensions;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
+using ApiTemplate.Domain.User;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
 [CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UserUpdatedEventHandler))]
-public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, IUserRepository
+public class UserRepository : Repository<Domain.User.User, UserId>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
     
