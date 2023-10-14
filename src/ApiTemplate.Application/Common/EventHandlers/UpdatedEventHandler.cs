@@ -23,7 +23,7 @@ public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventH
     {
         var _cacheKeys = await GetCacheKeys(notification);
         
-        _cacheKeys.Add(await _repository.EntityValueCacheKey(nameof(_repository.GetByIdAsync), notification.Updated.Id.Value.ToString()));
+        _cacheKeys.Add(await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync), notification.Updated.Id.Value.ToString()));
         
         await _repository.ClearCacheAsync(_cacheKeys);
     }

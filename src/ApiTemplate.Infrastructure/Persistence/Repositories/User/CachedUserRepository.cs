@@ -18,7 +18,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
+    public override async Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -29,7 +29,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         await ClearCacheAsync();
         
         var addedEntity = await _decorated.AddAsync(entity, cancellationToken);
-        var cacheKey = await EntityValueCacheKey(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
+        var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
@@ -43,7 +43,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
 
     public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var cacheKey = await EntityValueCacheKey(nameof(GetByEmailAsync), email);
+        var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByEmailAsync), email);
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
@@ -57,7 +57,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
 
     public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
     {
-        var cacheKey = await EntityValueCacheKey(nameof(IsEmailUniqueAsync), email);
+        var cacheKey = await EntityValueCacheKeyAsync(nameof(IsEmailUniqueAsync), email);
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {

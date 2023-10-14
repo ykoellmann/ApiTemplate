@@ -24,14 +24,14 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         _dbContext = dbContext;
     }
 
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Domain.Common.Specification.Specification<TEntity, TId> specification = null)
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
             .ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Domain.Common.Specification.Specification<TEntity, TId> specification = null)
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
@@ -70,12 +70,12 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         return new Deleted();
     }
 
-    public Task ClearCacheAsync(List<string> cacheKeys = null)
+    public async Task ClearCacheAsync(List<string> cacheKeys = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task<string> EntityValueCacheKey(string usage, string value)
+    public async Task<string> EntityValueCacheKeyAsync(string usage, string value)
     {
         throw new NotImplementedException();
     }

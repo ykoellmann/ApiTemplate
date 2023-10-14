@@ -25,7 +25,7 @@ public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : IEventH
     {
         _cacheKeys ??= new List<string>();
         
-        _cacheKeys.Add(_repository.EntityValueCacheKey(nameof(_repository.GetByIdAsync), notification.Deleted.Id.Value.ToString()).Result);
+        _cacheKeys.Add(_repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync), notification.Deleted.Id.Value.ToString()).Result);
         
         return _repository.ClearCacheAsync(_cacheKeys);
     }

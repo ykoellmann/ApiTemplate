@@ -19,7 +19,7 @@ public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, Doma
     {
         return new List<string>
         {
-            await _userRepository.EntityValueCacheKey(nameof(_userRepository.GetByEmailAsync), notification.Updated.Email)
+            await _userRepository.EntityValueCacheKeyAsync(nameof(_userRepository.GetByEmailAsync), notification.Updated.Email)
         };
     }
 }

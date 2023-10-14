@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
 using ApiTemplate.Application.Common.Interfaces.Handlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
+using ApiTemplate.Application.UnitTests.Architecture.CustomRules;
+using ApiTemplate.Infrastructure.Persistence.Repositories;
 using MediatR;
 using Mono.Cecil;
 using NetArchTest.Rules;
 
-namespace ApiTemplate.Application.UnitTests;
+namespace ApiTemplate.Application.UnitTests.Architecture;
 
 public class ArchitectureTests
 {
@@ -86,6 +88,19 @@ public class ArchitectureTests
             .ImplementInterface(typeof(INotification))
             .Should()
             .HaveNameEndingWith("Event")
+            .GetResult();
+        
+        result.IsSuccessful.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IRepository_Should_HaveImplementedTypes_RepositoryAndCacheRepository()
+    {
+        var result = Types.InAssembly(_applicationAssembly)
+            .That()
+            .HaveNameEndingWith("Repository")
+            .Should()
+            .MeetCustomRule(new RuleIRepositoryHasRepositoryAndCache())
             .GetResult();
         
         result.IsSuccessful.Should().BeTrue();

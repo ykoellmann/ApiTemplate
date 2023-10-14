@@ -20,7 +20,7 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
         _dbContext = dbContext;
     }
 
-    public override async Task<Domain.User.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Domain.Common.Specification.Specification<Domain.User.User, UserId> specification = null)
+    public override async Task<Domain.User.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Specification<Domain.User.User, UserId> specification = null)
     {
         return await _dbContext.Users
             .Specificate(specification)
@@ -38,7 +38,7 @@ public class UserRepository : Repository<ApiTemplate.Domain.User.User, UserId>, 
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
+    public override async Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

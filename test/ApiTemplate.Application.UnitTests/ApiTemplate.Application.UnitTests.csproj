@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\ApiTemplate.Application\ApiTemplate.Application.csproj" />
+      <ProjectReference Include="..\..\src\ApiTemplate.Infrastructure\ApiTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
