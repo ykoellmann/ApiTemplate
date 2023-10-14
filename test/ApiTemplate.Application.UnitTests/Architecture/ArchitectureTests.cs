@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using ApiTemplate.Application.Common.Interfaces.Handlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
-using ApiTemplate.Application.UnitTests.Architecture.CustomRules;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
+using ApiTemplate.UnitTests.Rules;
+using FluentValidation;
 using MediatR;
 using Mono.Cecil;
 using NetArchTest.Rules;
@@ -100,7 +101,54 @@ public class ArchitectureTests
             .That()
             .HaveNameEndingWith("Repository")
             .Should()
-            .MeetCustomRule(new RuleIRepositoryHasRepositoryAndCache())
+            .MeetCustomRule(new IRepositoryHasRepositoryAndCacheRule())
+            .GetResult();
+        
+        result.IsSuccessful.Should().BeTrue();
+    }
+    
+    [Fact]
+    public void Validator_Should_HaveNameEndingWith_Validator()
+    {
+        var result = Types.InAssembly(_applicationAssembly)
+            .That()
+            .ImplementInterface(typeof(IValidator<>))
+            .Should()
+            .HaveNameEndingWith("Validator")
+            .GetResult();
+        
+        result.IsSuccessful.Should().BeTrue();
+    }
+    
+    [Fact]
+    public void IPipelineBehavior_Should_HaveNameEndingWith_Behaviour()
+    {
+        var result = Types.InAssembly(_applicationAssembly)
+            .That()
+            .ImplementInterface(typeof(IPipelineBehavior<,>))
+            .Should()
+            .HaveNameEndingWith("Behaviour`2")
+            .GetResult();
+        
+        result.IsSuccessful.Should().BeTrue();
+    }
+    
+    [Fact]
+    public void AsyncMethods_Should_HaveSuffix_Async()
+    {
+        var result = Types.InAssembly(_applicationAssembly)
+            .That()
+            .AreNotInterfaces()
+            .And()
+            .DoNotImplementInterface(typeof(IRequestHandler<,>))
+            .And()
+            .DoNotImplementInterface(typeof(IPipelineBehavior<,>))
+            .And()
+            .DoNotImplementInterface(typeof(IValidator<>))
+            .And()
+            .DoNotImplementInterface(typeof(INotificationHandler<>))
+            .Should()
+            .MeetCustomRule(new AsyncMethodsHaveSuffixAsyncRule())
             .GetResult();
         
         result.IsSuccessful.Should().BeTrue();

@@ -21,14 +21,14 @@ public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventH
     
     public async Task Handle(TUpdated notification, CancellationToken cancellationToken)
     {
-        var _cacheKeys = await GetCacheKeys(notification);
+        var _cacheKeys = await GetCacheKeysAsync(notification);
         
         _cacheKeys.Add(await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync), notification.Updated.Id.Value.ToString()));
         
         await _repository.ClearCacheAsync(_cacheKeys);
     }
 
-    public virtual async Task<List<string>> GetCacheKeys(TUpdated notification)
+    public virtual async Task<List<string>> GetCacheKeysAsync(TUpdated notification)
     {
         return new List<string>();
     }

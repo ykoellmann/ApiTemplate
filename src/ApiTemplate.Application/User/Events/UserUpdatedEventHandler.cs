@@ -15,7 +15,7 @@ public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, Doma
         _userRepository = userRepository;
     }
 
-    public override async Task<List<string>> GetCacheKeys(UpdatedEvent<Domain.User.User, UserId> notification)
+    public override async Task<List<string>> GetCacheKeysAsync(UpdatedEvent<Domain.User.User, UserId> notification)
     {
         return new List<string>
         {

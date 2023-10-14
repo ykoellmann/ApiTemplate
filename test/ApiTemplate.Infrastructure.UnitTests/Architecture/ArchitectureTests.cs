@@ -2,7 +2,7 @@
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Infrastructure.Persistence.Configurations;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
-using ApiTemplate.Infrastructure.UnitTests.Architecture.CustomRules;
+using ApiTemplate.UnitTests.Rules;
 using Microsoft.EntityFrameworkCore;
 using NetArchTest.Rules;
 

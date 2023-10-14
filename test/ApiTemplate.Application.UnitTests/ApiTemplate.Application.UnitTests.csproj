@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\ApiTemplate.Application\ApiTemplate.Application.csproj" />
       <ProjectReference Include="..\..\src\ApiTemplate.Infrastructure\ApiTemplate.Infrastructure.csproj" />
+      <ProjectReference Include="..\ApiTemplate.UnitTests.Rules\ApiTemplate.UnitTests.Rules.csproj" />
     </ItemGroup>
 
 </Project>

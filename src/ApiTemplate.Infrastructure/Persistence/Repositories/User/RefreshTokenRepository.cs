@@ -7,7 +7,7 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
 public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>, IRefreshTokenRepository
 {
-    private ApiTemplateDbContext _dbContext;
+    private readonly ApiTemplateDbContext _dbContext;
     
     public RefreshTokenRepository(ApiTemplateDbContext dbContext) : base(dbContext)
     {

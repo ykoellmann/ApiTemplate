@@ -3,10 +3,10 @@ using ApiTemplate.Infrastructure.Persistence.Repositories;
 using Mono.Cecil;
 using NetArchTest.Rules;
 
-namespace ApiTemplate.Application.UnitTests.Architecture.CustomRules;
+namespace ApiTemplate.UnitTests.Rules;
 
 
-public class RuleIRepositoryHasRepositoryAndCache : ICustomRule
+public class IRepositoryHasRepositoryAndCacheRule : ICustomRule
 {
     private readonly Assembly _infrastructureAssembly = typeof(Repository<,>).Assembly;
         

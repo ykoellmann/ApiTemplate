@@ -2,7 +2,7 @@
 using Mono.Cecil.Rocks;
 using NetArchTest.Rules;
 
-namespace ApiTemplate.Infrastructure.UnitTests.Architecture.CustomRules;
+namespace ApiTemplate.UnitTests.Rules;
 
 public class AsyncMethodsHaveSuffixAsyncRule : ICustomRule
 {

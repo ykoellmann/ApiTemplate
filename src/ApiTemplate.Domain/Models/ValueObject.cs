@@ -6,9 +6,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         return Equals((object?)other);
     }
-
-    public abstract IEnumerable<object> GetEqualityComponents();
-
+    
     public override bool Equals(object? obj)
     {
         if (obj is null || GetType() != obj.GetType())
@@ -18,6 +16,8 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
         return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
     }
+
+    public abstract IEnumerable<object> GetEqualityComponents();
 
     public static bool operator ==(ValueObject? left, ValueObject? right)
     {

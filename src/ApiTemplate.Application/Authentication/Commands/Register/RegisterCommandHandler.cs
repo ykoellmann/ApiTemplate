@@ -27,8 +27,8 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
         CancellationToken cancellationToken)
     {
         //Check if user exists
-        if (await _userRepository.GetByEmailAsync(command.Email, cancellationToken) is not null) 
-            return Errors.User.UserWithGivenEmailAlreadyExists;
+        if (!await _userRepository.IsEmailUniqueAsync(command.Email, cancellationToken)) 
+            return Errors.UserErrors.UserWithGivenEmailAlreadyExists;
 
         //Create user
         var user = Domain.User.User.Create(command.FirstName, command.LastName, command.Email, command.Password);
