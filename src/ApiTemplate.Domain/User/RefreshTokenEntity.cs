@@ -4,9 +4,9 @@ using ApiTemplate.Domain.User.ValueObjects;
 
 namespace ApiTemplate.Domain.User;
 
-public class RefreshToken : Entity<RefreshTokenId>
+public class RefreshTokenEntity : Entity<RefreshTokenId>
 {
-    private RefreshToken(RefreshTokenId id, string token, DateTime expires, UserId userId) : base(id)
+    private RefreshTokenEntity(RefreshTokenId id, string token, DateTime expires, UserId userId) : base(id)
     {
         Token = token;
         Expires = expires;
@@ -14,7 +14,7 @@ public class RefreshToken : Entity<RefreshTokenId>
     }
     
     //Used for Json serialization
-    private RefreshToken() : base()
+    private RefreshTokenEntity() : base()
     {
     }
     
@@ -23,11 +23,11 @@ public class RefreshToken : Entity<RefreshTokenId>
     public bool Disabled { get; set; } = false;
     public bool Expired => Disabled || Expires < DateTime.UtcNow;
     public UserId UserId { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
+    public virtual UserEntity UserEntity { get; set; } = null!;
 
-    public static RefreshToken Create(UserId userId)
+    public static RefreshTokenEntity Create(UserId userId)
     {
-        return new RefreshToken(
+        return new RefreshTokenEntity(
             RefreshTokenId.CreateUnique(), 
             Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
             DateTime.UtcNow.AddMinutes(1), 

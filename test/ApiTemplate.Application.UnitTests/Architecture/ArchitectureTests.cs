@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using ApiTemplate.Application.Common.Interfaces.Handlers;
+using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.UnitTests.Rules;

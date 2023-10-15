@@ -1,7 +1,6 @@
-﻿using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
-using MediatR;
+﻿using MediatR;
 
-namespace ApiTemplate.Application.Common.Interfaces.Handlers;
+namespace ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 
 public interface IEventHandler<in TEvent> : INotificationHandler<TEvent>
     where TEvent : INotification

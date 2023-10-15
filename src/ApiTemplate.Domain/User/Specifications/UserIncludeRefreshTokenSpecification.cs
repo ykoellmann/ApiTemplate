@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Domain.User.Specifications;
 
-public class UserIncludeRefreshTokenSpecification : Specification<User, UserId>
+public class UserIncludeRefreshTokenSpecification : Specification<UserEntity, UserId>
 {
-    public override IQueryable<User> Specificate(IQueryable<User> query)
+    public override IQueryable<UserEntity> Specificate(IQueryable<UserEntity> query)
     {
         return query.Include(u => u.RefreshTokens);
     }

@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
-public class UserConfiguration : BaseConfiguration<User, UserId>
+public class UserConfiguration : BaseConfiguration<UserEntity, UserId>
 {
-    public override void Configure(EntityTypeBuilder<User> builder)
+    public override void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
@@ -27,7 +27,7 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
         ConfigureEntity(builder);
     }
 
-    public override void ConfigureEntity(EntityTypeBuilder<User> builder)
+    public override void ConfigureEntity(EntityTypeBuilder<UserEntity> builder)
     {
         builder.ToTable("Users");
 
@@ -50,10 +50,10 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
             .IsRequired();
 
         builder.HasMany(u => u.RefreshTokens)
-            .WithOne(rt => rt.User)
+            .WithOne(rt => rt.UserEntity)
             .HasForeignKey(rt => rt.UserId);
         
-        builder.Metadata.FindNavigation(nameof(User.RefreshTokens))
+        builder.Metadata.FindNavigation(nameof(UserEntity.RefreshTokens))
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

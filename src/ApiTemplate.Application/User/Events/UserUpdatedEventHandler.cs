@@ -1,12 +1,12 @@
 ﻿using ApiTemplate.Application.Common.EventHandlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Events;
+using ApiTemplate.Domain.User;
 using ApiTemplate.Domain.User.ValueObjects;
-using MediatR;
 
 namespace ApiTemplate.Application.User.Events;
 
-public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, Domain.User.User, UserId, UpdatedEvent<Domain.User.User, UserId>>
+public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, UserEntity, UserId, UpdatedEvent<UserEntity, UserId>>
 {
     private readonly IUserRepository _userRepository;
 
@@ -15,7 +15,7 @@ public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, Doma
         _userRepository = userRepository;
     }
 
-    public override async Task<List<string>> GetCacheKeysAsync(UpdatedEvent<Domain.User.User, UserId> notification)
+    public override async Task<List<string>> GetCacheKeysAsync(UpdatedEvent<UserEntity, UserId> notification)
     {
         return new List<string>
         {

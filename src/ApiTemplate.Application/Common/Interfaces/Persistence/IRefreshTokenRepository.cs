@@ -3,7 +3,7 @@ using ApiTemplate.Domain.User.ValueObjects;
 
 namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
-public interface IRefreshTokenRepository : IRepository<RefreshToken, RefreshTokenId>
+public interface IRefreshTokenRepository : IRepository<RefreshTokenEntity, RefreshTokenId>
 {
     
 }

@@ -1,12 +1,10 @@
-using System.Security.Cryptography;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
-using ApiTemplate.Application.Common.Interfaces.Handlers;
+using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.User;
 using ErrorOr;
-using MediatR;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
 
@@ -28,16 +26,16 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
     {
         //Check if user exists
         if (!await _userRepository.IsEmailUniqueAsync(command.Email, cancellationToken)) 
-            return Errors.User.UserWithGivenEmailAlreadyExists;
+            return Errors.UserErrors.UserWithGivenEmailAlreadyExists;
 
         //Create user
-        var user = Domain.User.User.Create(command.FirstName, command.LastName, command.Email, command.Password);
+        var user = UserEntity.Create(command.FirstName, command.LastName, command.Email, command.Password);
         await _userRepository.AddAsync(user, cancellationToken);
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
         
-        var refreshToken = Domain.User.RefreshToken.Create(user.Id);
+        var refreshToken = RefreshTokenEntity.Create(user.Id);
 
         refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 

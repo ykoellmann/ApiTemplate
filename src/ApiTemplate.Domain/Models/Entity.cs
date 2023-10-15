@@ -25,8 +25,8 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     public virtual DateTime UpdatedAt { get; set; }
     
     
-    public virtual User.User CreatedByUser { get; set; }
-    public virtual User.User UpdatedByUser { get; set; }
+    public virtual User.UserEntity CreatedByUserEntity { get; set; }
+    public virtual User.UserEntity UpdatedByUserEntity { get; set; }
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     public async Task ClearDomainEventsAsync()
     {

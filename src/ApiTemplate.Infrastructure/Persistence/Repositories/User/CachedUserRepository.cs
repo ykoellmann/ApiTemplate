@@ -1,12 +1,12 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Domain.User;
 using ApiTemplate.Domain.User.ValueObjects;
 using ApiTemplate.Infrastructure.Extensions;
-using ErrorOr;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
-public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, IUserRepository
+public class CachedUserRepository : CachedRepository<UserEntity, UserId>, IUserRepository
 {
     private readonly IUserRepository _decorated;
     private readonly IDistributedCache _cache;
@@ -18,13 +18,13 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override async Task<Domain.User.User> AddAsync(Domain.User.User entity, UserId userId,
+    public override async Task<UserEntity> AddAsync(UserEntity entity, UserId userId,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
  
-    public async Task<Domain.User.User> AddAsync(Domain.User.User entity, CancellationToken cancellationToken)
+    public async Task<UserEntity> AddAsync(UserEntity entity, CancellationToken cancellationToken)
     {
         await ClearCacheAsync();
         
@@ -41,7 +41,7 @@ public class CachedUserRepository : CachedRepository<Domain.User.User, UserId>, 
         });
     }
 
-    public async Task<ApiTemplate.Domain.User.User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    public async Task<UserEntity?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByEmailAsync), email);
         

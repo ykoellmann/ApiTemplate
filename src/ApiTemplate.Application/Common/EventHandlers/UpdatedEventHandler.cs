@@ -1,4 +1,4 @@
-﻿using ApiTemplate.Application.Common.Interfaces.Handlers;
+﻿using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Models;

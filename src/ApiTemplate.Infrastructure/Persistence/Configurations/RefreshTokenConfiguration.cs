@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
-public class RefreshTokenConfiguration : BaseConfiguration<RefreshToken, RefreshTokenId>
+public class RefreshTokenConfiguration : BaseConfiguration<RefreshTokenEntity, RefreshTokenId>
 {
-    public override void ConfigureEntity(EntityTypeBuilder<RefreshToken> builder)
+    public override void ConfigureEntity(EntityTypeBuilder<RefreshTokenEntity> builder)
     {
         builder.ToTable("RefreshTokens");
 

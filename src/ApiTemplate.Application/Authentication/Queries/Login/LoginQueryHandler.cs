@@ -1,13 +1,10 @@
-using System.Security.Cryptography;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
-using ApiTemplate.Application.Common.Interfaces.Handlers;
+using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
 using ErrorOr;
-using MediatR;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
 
@@ -26,7 +23,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetByEmailAsync(query.Email, cancellationToken) is not Domain.User.User user) 
+        if (await _userRepository.GetByEmailAsync(query.Email, cancellationToken) is not UserEntity user) 
             return Errors.Authentication.InvalidCredentials;
 
         if (!user.Password.Equals(query.Password)) 
@@ -34,7 +31,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
         var token = _jwtTokenProvider.GenerateToken(user);
 
-        var refreshToken = RefreshToken.Create(user.Id);
+        var refreshToken = RefreshTokenEntity.Create(user.Id);
 
         refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 

@@ -1,8 +1,8 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
-using MediatR;
 using ErrorOr;
+using MediatR;
 
-namespace ApiTemplate.Application.Common.Interfaces.Handlers;
+namespace ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 
 public interface ICommandHandler<in TCommand, TResult> : IRequestHandler<TCommand, ErrorOr<TResult>> 
     where TCommand : ICommand<TResult>

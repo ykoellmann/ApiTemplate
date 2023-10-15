@@ -36,19 +36,19 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasColumnOrder(104)
             .IsRequired();
         
-        builder.HasOne(e => e.CreatedByUser)
+        builder.HasOne(e => e.CreatedByUserEntity)
             .WithMany()
             .HasForeignKey(e => e.CreatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Metadata.FindNavigation(nameof(Entity<TId>.CreatedByUser));
+        builder.Metadata.FindNavigation(nameof(Entity<TId>.CreatedByUserEntity));
         
-        builder.HasOne(e => e.UpdatedByUser)
+        builder.HasOne(e => e.UpdatedByUserEntity)
             .WithMany()
             .HasForeignKey(e => e.UpdatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Metadata.FindNavigation(nameof(Entity<TId>.UpdatedByUser));
+        builder.Metadata.FindNavigation(nameof(Entity<TId>.UpdatedByUserEntity));
         
         ConfigureEntity(builder);
     }

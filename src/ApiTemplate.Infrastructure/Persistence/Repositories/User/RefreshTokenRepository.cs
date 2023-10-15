@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
-public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>, IRefreshTokenRepository
+public class RefreshTokenRepository : Repository<RefreshTokenEntity, RefreshTokenId>, IRefreshTokenRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
     
@@ -14,7 +14,7 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>, 
         _dbContext = dbContext;
     }
 
-    public override async Task<RefreshToken> AddAsync(RefreshToken entity, UserId userId, CancellationToken cancellationToken)
+    public override async Task<RefreshTokenEntity> AddAsync(RefreshTokenEntity entity, UserId userId, CancellationToken cancellationToken)
     {
         await _dbContext.RefreshTokens
             .Where(rt => rt.UserId == userId)
