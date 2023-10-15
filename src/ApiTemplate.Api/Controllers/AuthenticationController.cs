@@ -31,7 +31,7 @@ public class AuthenticationController : ApiController
 
         var authResult = await _mediator.Send(command, cancellationToken);
 
-        if (authResult.IsError && authResult.FirstError == Errors.UserErrors.UserWithGivenEmailAlreadyExists)
+        if (authResult.IsError && authResult.FirstError == Errors.User.UserWithGivenEmailAlreadyExists)
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
 
         return authResult.Match(

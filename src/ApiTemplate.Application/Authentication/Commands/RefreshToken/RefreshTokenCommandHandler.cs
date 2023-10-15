@@ -30,7 +30,7 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
             new UserIncludeRefreshTokenSpecification());
 
         if (user is null)
-            return Errors.UserErrors.UserDoesNotExist;
+            return Errors.User.UserDoesNotExist;
 
         if (user.ActiveRefreshToken?.Expired ?? true)
             return Errors.Authentication.RefreshTokenExpired;

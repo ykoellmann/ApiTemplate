@@ -29,7 +29,7 @@ public class RegisterCommandHandlerTests
 
         //Assert
         result.IsError.Should().BeTrue();
-        result.FirstError.Should().Be(Errors.UserErrors.UserWithGivenEmailAlreadyExists);
+        result.FirstError.Should().Be(Errors.User.UserWithGivenEmailAlreadyExists);
     }
 
     [Fact]
