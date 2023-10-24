@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
 using ApiTemplate.Api.Common.Mapping;
+using ApiTemplate.Api.Controllers;
+using Carter;
 using FluentValidation;
 
 namespace ApiTemplate.Api;
@@ -12,6 +14,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
+        services.AddCarter(configurator: c =>
+        {
+            c.WithModule<AuthenticationModule>();
+        });
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(option =>

@@ -3,7 +3,7 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
-using ApiTemplate.Domain.User;
+using ApiTemplate.Domain.Users;
 using ErrorOr;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
@@ -29,13 +29,13 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
             return Errors.User.UserWithGivenEmailAlreadyExists;
 
         //Create user
-        var user = UserEntity.Create(command.FirstName, command.LastName, command.Email, command.Password);
+        var user = User.Create(command.FirstName, command.LastName, command.Email, command.Password);
         await _userRepository.AddAsync(user, cancellationToken);
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
         
-        var refreshToken = RefreshTokenEntity.Create(user.Id);
+        var refreshToken = Domain.Users.RefreshToken.Create(user.Id);
 
         refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 

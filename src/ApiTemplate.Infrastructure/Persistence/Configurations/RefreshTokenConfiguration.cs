@@ -1,13 +1,13 @@
-﻿using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
+﻿using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
-public class RefreshTokenConfiguration : BaseConfiguration<RefreshTokenEntity, RefreshTokenId>
+public class RefreshTokenConfiguration : BaseConfiguration<RefreshToken, RefreshTokenId>
 {
-    public override void ConfigureEntity(EntityTypeBuilder<RefreshTokenEntity> builder)
+    public override void ConfigureEntity(EntityTypeBuilder<RefreshToken> builder)
     {
         builder.ToTable("RefreshTokens");
 

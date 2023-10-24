@@ -1,5 +1,5 @@
 ﻿using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -36,19 +36,19 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasColumnOrder(104)
             .IsRequired();
         
-        builder.HasOne(e => e.CreatedByUserEntity)
+        builder.HasOne(e => e.CreatedByUser)
             .WithMany()
             .HasForeignKey(e => e.CreatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Metadata.FindNavigation(nameof(Entity<TId>.CreatedByUserEntity));
+        builder.Metadata.FindNavigation(nameof(Entity<TId>.CreatedByUser));
         
-        builder.HasOne(e => e.UpdatedByUserEntity)
+        builder.HasOne(e => e.UpdatedByUser)
             .WithMany()
             .HasForeignKey(e => e.UpdatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Metadata.FindNavigation(nameof(Entity<TId>.UpdatedByUserEntity));
+        builder.Metadata.FindNavigation(nameof(Entity<TId>.UpdatedByUser));
         
         ConfigureEntity(builder);
     }

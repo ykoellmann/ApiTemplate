@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Domain.Models;
 
@@ -25,8 +26,8 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     public virtual DateTime UpdatedAt { get; set; }
     
     
-    public virtual User.UserEntity CreatedByUserEntity { get; set; }
-    public virtual User.UserEntity UpdatedByUserEntity { get; set; }
+    public virtual User CreatedByUser { get; set; }
+    public virtual User UpdatedByUser { get; set; }
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     public async Task ClearDomainEventsAsync()
     {

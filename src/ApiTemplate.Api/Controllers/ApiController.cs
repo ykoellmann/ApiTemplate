@@ -1,5 +1,5 @@
 ﻿using ApiTemplate.Api.Common.Http;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ public class ApiController : ControllerBase
         if (!errors.Any())
             return Problem();
 
-        if (errors.All(error => error.Type == ErrorType.Validation)) return ValidationProblem(errors);
+        if (errors.TrueForAll(error => error.Type == ErrorType.Validation)) return ValidationProblem(errors);
 
         HttpContext.Items[HttpContextItemKeys.Errors] = errors;
 

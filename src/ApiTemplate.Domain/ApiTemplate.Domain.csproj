@@ -13,6 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="User\Events\" />
+      <Folder Include="Users\Events\" />
     </ItemGroup>
 </Project>

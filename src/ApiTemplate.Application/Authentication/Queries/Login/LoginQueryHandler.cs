@@ -3,7 +3,7 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
-using ApiTemplate.Domain.User;
+using ApiTemplate.Domain.Users;
 using ErrorOr;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
@@ -23,7 +23,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        if (await _userRepository.GetByEmailAsync(query.Email, cancellationToken) is not UserEntity user) 
+        if (await _userRepository.GetByEmailAsync(query.Email, cancellationToken) is not User user) 
             return Errors.Authentication.InvalidCredentials;
 
         if (!user.Password.Equals(query.Password)) 
@@ -31,7 +31,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
         var token = _jwtTokenProvider.GenerateToken(user);
 
-        var refreshToken = RefreshTokenEntity.Create(user.Id);
+        var refreshToken = RefreshToken.Create(user.Id);
 
         refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 

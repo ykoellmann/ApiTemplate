@@ -1,9 +1,9 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Application.User.Events;
+using ApiTemplate.Application.Users.Events;
 using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Common.Specification;
-using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
 [CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UserUpdatedEventHandler))]
-public class UserRepository : Repository<UserEntity, UserId>, IUserRepository
+public class UserRepository : Repository<Domain.Users.User, UserId>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
     
@@ -20,14 +20,24 @@ public class UserRepository : Repository<UserEntity, UserId>, IUserRepository
         _dbContext = dbContext;
     }
 
-    public override async Task<UserEntity?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Specification<UserEntity, UserId> specification = null)
+    public override async Task<Domain.Users.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Specification<Domain.Users.User, UserId> specification = null)
     {
         return await _dbContext.Users
             .Specificate(specification)
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
     }
 
-    public async Task<UserEntity> AddAsync(UserEntity entity, CancellationToken cancellationToken)
+    public async Task<Domain.Users.User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: cancellationToken);
+    }
+
+    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Users.AnyAsync(u => u.Email == email, cancellationToken: cancellationToken);
+    }
+
+    public async Task<Domain.Users.User> AddAsync(Domain.Users.User entity, CancellationToken cancellationToken)
     {
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
@@ -38,19 +48,9 @@ public class UserRepository : Repository<UserEntity, UserId>, IUserRepository
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override async Task<UserEntity> AddAsync(UserEntity entity, UserId userId,
+    public override async Task<Domain.Users.User> AddAsync(Domain.Users.User entity, UserId userId,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<UserEntity?> GetByEmailAsync(string email, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: cancellationToken);
-    }
-
-    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Users.AnyAsync(u => u.Email == email, cancellationToken: cancellationToken);
     }
 }

@@ -4,7 +4,8 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
-using ApiTemplate.Domain.User.Specifications;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.Specifications;
 using MediatR;
 using ErrorOr;
 
@@ -39,7 +40,7 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
             return Errors.Authentication.InvalidRefreshToken;
         
         
-        var newRefreshToken = Domain.User.RefreshTokenEntity.Create(user.Id);
+        var newRefreshToken = Domain.Users.RefreshToken.Create(user.Id);
         
         newRefreshToken = await _refreshTokenRepository.AddAsync(newRefreshToken, user.Id, cancellationToken);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);

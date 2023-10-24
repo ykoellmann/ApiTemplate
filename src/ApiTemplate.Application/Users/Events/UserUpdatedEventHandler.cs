@@ -1,12 +1,12 @@
 ﻿using ApiTemplate.Application.Common.EventHandlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Events;
-using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 
-namespace ApiTemplate.Application.User.Events;
+namespace ApiTemplate.Application.Users.Events;
 
-public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, UserEntity, UserId, UpdatedEvent<UserEntity, UserId>>
+public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, User, UserId, UpdatedEvent<User, UserId>>
 {
     private readonly IUserRepository _userRepository;
 
@@ -15,7 +15,7 @@ public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, User
         _userRepository = userRepository;
     }
 
-    public override async Task<List<string>> GetCacheKeysAsync(UpdatedEvent<UserEntity, UserId> notification)
+    public override async Task<List<string>> GetCacheKeysAsync(UpdatedEvent<User, UserId> notification)
     {
         return new List<string>
         {

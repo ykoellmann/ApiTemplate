@@ -1,7 +1,7 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Extensions;
 using ErrorOr;
 using Microsoft.Extensions.Caching.Distributed;

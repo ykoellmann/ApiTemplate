@@ -1,6 +1,6 @@
 ﻿using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +31,6 @@ public class ApiTemplateDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
     }
 
-    public DbSet<UserEntity?> Users { get; set; } = null!;
-    public DbSet<RefreshTokenEntity> RefreshTokens { get; set; } = null!;
+    public DbSet<User?> Users { get; set; } = null!;
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 }

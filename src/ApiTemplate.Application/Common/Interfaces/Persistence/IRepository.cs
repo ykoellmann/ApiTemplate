@@ -1,6 +1,6 @@
 ﻿using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
 
 namespace ApiTemplate.Application.Common.Interfaces.Persistence;

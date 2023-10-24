@@ -1,6 +1,6 @@
 using ApiTemplate.Domain.Models;
 
-namespace ApiTemplate.Domain.User.ValueObjects;
+namespace ApiTemplate.Domain.Users.ValueObjects;
 
 public class UserId : IdObject<UserId>
 {

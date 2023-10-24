@@ -1,11 +1,11 @@
-using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
-public interface IUserRepository : IRepository<UserEntity, UserId>
+public interface IUserRepository : IRepository<User, UserId>
 {
-    Task<UserEntity> AddAsync(UserEntity entity, CancellationToken cancellationToken);
-    Task<UserEntity?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken);
+    Task<User> AddAsync(User entity, CancellationToken cancellationToken);
 }

@@ -20,10 +20,9 @@ services:
       RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57001:57100"
-    - "127.0.0.1:57201:57300"
+    - "127.0.0.1:57004:57100"
+    - "127.0.0.1:57204:57300"
     volumes:
-    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/fallbackpackages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
@@ -31,5 +30,5 @@ services:
       Linux64:/riderDebugger"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\232.9921.83/bin:/riderLogsConf"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.2\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_10_14_20_14_09:/riderLogs:rw"
+      JetBrains.Debugger.Worker.2023_10_15_14_41_53:/riderLogs:rw"
     working_dir: "/app"

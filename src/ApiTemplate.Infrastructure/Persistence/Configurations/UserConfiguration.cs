@@ -1,14 +1,14 @@
 ﻿using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.User;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
-public class UserConfiguration : BaseConfiguration<UserEntity, UserId>
+public class UserConfiguration : BaseConfiguration<User, UserId>
 {
-    public override void Configure(EntityTypeBuilder<UserEntity> builder)
+    public override void Configure(EntityTypeBuilder<User> builder)
     {
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
@@ -27,7 +27,7 @@ public class UserConfiguration : BaseConfiguration<UserEntity, UserId>
         ConfigureEntity(builder);
     }
 
-    public override void ConfigureEntity(EntityTypeBuilder<UserEntity> builder)
+    public override void ConfigureEntity(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("Users");
 
@@ -50,10 +50,10 @@ public class UserConfiguration : BaseConfiguration<UserEntity, UserId>
             .IsRequired();
 
         builder.HasMany(u => u.RefreshTokens)
-            .WithOne(rt => rt.UserEntity)
+            .WithOne(rt => rt.User)
             .HasForeignKey(rt => rt.UserId);
         
-        builder.Metadata.FindNavigation(nameof(UserEntity.RefreshTokens))
+        builder.Metadata.FindNavigation(nameof(User.RefreshTokens))
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

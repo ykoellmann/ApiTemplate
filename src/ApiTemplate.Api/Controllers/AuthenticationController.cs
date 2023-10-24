@@ -8,7 +8,7 @@ using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Queries.Login;
 using ApiTemplate.Contracts.Authentication;
 using ApiTemplate.Domain.Common.Errors;
-using ApiTemplate.Domain.User;
+using ApiTemplate.Domain.Users;
 
 namespace ApiTemplate.Api.Controllers;
 
@@ -37,7 +37,7 @@ public class AuthenticationController : ApiController
         return authResult.Match(
             authResult =>
             {
-                SetRefreshToken(authResult.RefreshTokenEntity).Wait();
+                SetRefreshToken(authResult.RefreshToken).Wait();
                 return Ok(_mapper.Map<AuthenticationResponse>(authResult));
             },
             errors => Problem(errors));
@@ -56,7 +56,7 @@ public class AuthenticationController : ApiController
         return authResult.Match(
             authResult =>
             {
-                SetRefreshToken(authResult.RefreshTokenEntity).Wait();
+                SetRefreshToken(authResult.RefreshToken).Wait();
                 return Ok(_mapper.Map<AuthenticationResponse>(authResult));
             },
             errors => Problem(errors));
@@ -78,20 +78,20 @@ public class AuthenticationController : ApiController
         return authResult.Match(
             authResult =>
             {
-                SetRefreshToken(authResult.RefreshTokenEntity).Wait();
+                SetRefreshToken(authResult.RefreshToken).Wait();
                 return Ok(_mapper.Map<AuthenticationResponse>(authResult));
             },
             errors => Problem(errors));
     }
 
-    private async Task SetRefreshToken(RefreshTokenEntity refreshTokenEntity)
+    private async Task SetRefreshToken(RefreshToken refreshToken)
     {
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Expires = refreshTokenEntity.Expires,
+            Expires = refreshToken.Expires,
         };
         
-        Response.Cookies.Append("refreshToken", refreshTokenEntity.Token, cookieOptions);
+        Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
     }
 }

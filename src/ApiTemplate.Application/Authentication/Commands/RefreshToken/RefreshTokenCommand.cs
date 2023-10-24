@@ -1,6 +1,6 @@
 ﻿using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users.ValueObjects;
 using MediatR;
 using ErrorOr;
 

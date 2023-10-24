@@ -1,7 +1,7 @@
-﻿using ApiTemplate.Domain.User;
+﻿using ApiTemplate.Domain.Users;
 
 namespace ApiTemplate.Application.Authentication.Common;
 
 public record AuthenticationResult(
     string Token,
-    RefreshTokenEntity RefreshTokenEntity);
+    RefreshToken RefreshToken);

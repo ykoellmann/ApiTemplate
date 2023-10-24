@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Services;
-using ApiTemplate.Domain.User;
+using ApiTemplate.Domain.Users;
 using ApiTemplate.Infrastructure.Settings.Jwt;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -21,13 +21,13 @@ public class JwtTokenProvider : IJwtTokenProvider
         _jwtSettings = jwtSettings.Value;
     }
 
-    public string GenerateToken(UserEntity userEntity)
+    public string GenerateToken(User user)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userEntity.Id.Value.ToString()),
-            new Claim(JwtRegisteredClaimNames.GivenName, userEntity.FirstName),
-            new Claim(JwtRegisteredClaimNames.FamilyName, userEntity.LastName),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+            new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

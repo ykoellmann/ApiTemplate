@@ -1,12 +1,12 @@
 ﻿using System.Security.Cryptography;
 using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.User.ValueObjects;
+using ApiTemplate.Domain.Users.ValueObjects;
 
-namespace ApiTemplate.Domain.User;
+namespace ApiTemplate.Domain.Users;
 
-public class RefreshTokenEntity : Entity<RefreshTokenId>
+public class RefreshToken : Entity<RefreshTokenId>
 {
-    private RefreshTokenEntity(RefreshTokenId id, string token, DateTime expires, UserId userId) : base(id)
+    private RefreshToken(RefreshTokenId id, string token, DateTime expires, UserId userId) : base(id)
     {
         Token = token;
         Expires = expires;
@@ -14,7 +14,7 @@ public class RefreshTokenEntity : Entity<RefreshTokenId>
     }
     
     //Used for Json serialization
-    private RefreshTokenEntity() : base()
+    private RefreshToken() : base()
     {
     }
     
@@ -23,11 +23,11 @@ public class RefreshTokenEntity : Entity<RefreshTokenId>
     public bool Disabled { get; set; } = false;
     public bool Expired => Disabled || Expires < DateTime.UtcNow;
     public UserId UserId { get; set; } = null!;
-    public virtual UserEntity UserEntity { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 
-    public static RefreshTokenEntity Create(UserId userId)
+    public static RefreshToken Create(UserId userId)
     {
-        return new RefreshTokenEntity(
+        return new RefreshToken(
             RefreshTokenId.CreateUnique(), 
             Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
             DateTime.UtcNow.AddMinutes(1), 
