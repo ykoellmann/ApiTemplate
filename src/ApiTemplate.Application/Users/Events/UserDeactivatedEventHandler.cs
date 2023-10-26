@@ -11,6 +11,12 @@ public class UserDeactivatedEventHandler : DeletedEventHandler<IUserRepository, 
     public UserDeactivatedEventHandler(IUserRepository repository) : base(repository)
     {
     }
-    
-    
+
+    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(DeletedEvent<User, UserId> notification)
+    {
+        await foreach (var cacheKey in base.GetCacheKeysAsync(notification))
+        {
+            yield return cacheKey;
+        }
+    }
 }
