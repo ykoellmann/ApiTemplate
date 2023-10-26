@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.EventHandlers;
 
-public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventHandler<TUpdated> 
+public abstract class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventHandler<TUpdated> 
     where TUpdated : UpdatedEvent<TEntity, TId>
     where TIRepository : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
@@ -21,15 +21,14 @@ public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventH
     
     public async Task Handle(TUpdated notification, CancellationToken cancellationToken)
     {
-        var _cacheKeys = await GetCacheKeysAsync(notification);
-        
-        _cacheKeys.Add(await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync), notification.Updated.Id.Value.ToString()));
+        var _cacheKeys = GetCacheKeysAsync(notification);
         
         await _repository.ClearCacheAsync(_cacheKeys);
     }
 
-    public virtual async Task<List<string>> GetCacheKeysAsync(TUpdated notification)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TUpdated notification)
     {
-        return new List<string>();
+        yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
+            notification.Updated.Id.Value.ToString());
     }
 }

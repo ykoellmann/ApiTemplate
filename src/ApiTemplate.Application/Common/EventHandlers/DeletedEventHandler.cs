@@ -15,23 +15,21 @@ public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : IEventH
     private readonly TIRepository _repository;
     private List<string>? _cacheKeys;
     
-    public DeletedEventHandler(TIRepository repository, List<string>? cacheKeys = null)
+    public DeletedEventHandler(TIRepository repository)
     {
         _repository = repository;
-        _cacheKeys = cacheKeys;
     }
     
     public Task Handle(TDeleted notification, CancellationToken cancellationToken)
     {
-        _cacheKeys ??= new List<string>();
+        var cacheKeys = GetCacheKeysAsync(notification);
         
-        _cacheKeys.Add(_repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync), notification.Deleted.Id.Value.ToString()).Result);
-        
-        return _repository.ClearCacheAsync(_cacheKeys);
+        return _repository.ClearCacheAsync(cacheKeys);
     }
 
-    public virtual async Task<List<string>> GetCacheKeys(TDeleted notification)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TDeleted notification)
     {
-        return new List<string>();
+        yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
+            notification.Deleted.Id.Value.ToString());
     }
 }

@@ -14,13 +14,14 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 public class UserRepository : Repository<Domain.Users.User, UserId>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
-    
+
     public UserRepository(ApiTemplateDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public override async Task<Domain.Users.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken, Specification<Domain.Users.User, UserId> specification = null)
+    public override async Task<Domain.Users.User?> GetByIdAsync(UserId id, CancellationToken cancellationToken,
+        Specification<Domain.Users.User, UserId> specification = null)
     {
         return await _dbContext.Users
             .Specificate(specification)
@@ -43,7 +44,7 @@ public class UserRepository : Repository<Domain.Users.User, UserId>, IUserReposi
         entity.UpdatedAt = DateTime.UtcNow;
         await _dbContext.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
-        
+
         return entity;
     }
 

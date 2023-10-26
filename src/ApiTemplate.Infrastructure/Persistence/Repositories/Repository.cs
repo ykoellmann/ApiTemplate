@@ -70,7 +70,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         return new Deleted();
     }
 
-    public async Task ClearCacheAsync(List<string> cacheKeys = null)
+    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null)
     {
         throw new NotImplementedException();
     }

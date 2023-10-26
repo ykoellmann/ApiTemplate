@@ -23,8 +23,6 @@ public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>,
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeysEntityValue.Add(cacheKey);
-            
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.GetByEmailAsync(email, cancellationToken);
@@ -37,8 +35,6 @@ public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>,
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeysEntityValue.Add(cacheKey);
-            
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.IsEmailUniqueAsync(email, cancellationToken);
@@ -61,8 +57,6 @@ public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>,
         
         return await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeysEntityValue.Add(cacheKey);
-            
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return addedEntity;

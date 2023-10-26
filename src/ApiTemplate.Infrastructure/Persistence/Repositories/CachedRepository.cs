@@ -15,9 +15,6 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     public readonly TimeSpan CacheExpiration;
     private readonly IRepository<TEntity, TId> _decorated;
     
-    protected static readonly List<string> CacheKeysEntity = new();
-    protected static readonly List<string> CacheKeysEntityValue = new();
-    
     protected readonly IDistributedCache Cache;
 
     protected async Task<string> EntityCacheKeyAsync(string usage) => $"{typeof(TEntity).Name}:{usage}";
@@ -36,8 +33,6 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         var cacheKey = await EntityCacheKeyAsync(nameof(GetListAsync));
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {        
-            CacheKeysEntity.Add(cacheKey);
-
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.GetListAsync(cancellationToken, specification);
@@ -50,8 +45,6 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeysEntityValue.Add(cacheKey);
-
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return await _decorated.GetByIdAsync(id, cancellationToken, specification);
@@ -67,8 +60,6 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeysEntityValue.Add(cacheKey);
-
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return addedEntity;
@@ -84,8 +75,6 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         
         return await Cache.GetOrCreateAsync(cacheKey, async entry =>
         {
-            CacheKeysEntityValue.Add(cacheKey);
-
             entry.SetAbsoluteExpiration(CacheExpiration);
             
             return updatedEntity;
@@ -99,22 +88,14 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         return await _decorated.DeleteAsync(id, cancellationToken);
     }
     
-    public async Task ClearCacheAsync(List<string> cacheKeys = null)
+    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null)
     {
         if (cacheKeys is not null)
         {
-            foreach (var cacheKey in cacheKeys)
+            await foreach (var cacheKey in cacheKeys)
             {
                 await Cache.RemoveAsync(cacheKey);
             }
-            CacheKeysEntityValue.RemoveAll(k => cacheKeys.Contains(k));
         }
-        
-        var cacheKeysEntity = CacheKeysEntity.Where(cacheKey => cacheKey.Contains(typeof(TEntity).Name));
-        foreach (var cacheKey in cacheKeysEntity)
-        {
-            await Cache.RemoveAsync(cacheKey);
-        }
-        CacheKeysEntity.RemoveAll(k => k.Contains(typeof(TEntity).Name));
     }
 }

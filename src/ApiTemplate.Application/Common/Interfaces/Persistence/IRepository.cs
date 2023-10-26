@@ -19,6 +19,6 @@ public interface IRepository<TEntity, TId>
     
     public Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken);
     
-    public Task ClearCacheAsync(List<string> cacheKeys = null);
+    public Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null);
     public Task<string> EntityValueCacheKeyAsync(string usage, string value);
 }
