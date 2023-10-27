@@ -5,12 +5,15 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Domain.Common.Events;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Authentication;
 using ApiTemplate.Infrastructure.Extensions;
 using ApiTemplate.Infrastructure.Persistence;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
+using ApiTemplate.Infrastructure.Persistence.Repositories.User;
 using ApiTemplate.Infrastructure.Services;
 using ApiTemplate.Infrastructure.Settings;
 using ApiTemplate.Infrastructure.Settings.Jwt;
@@ -113,14 +116,14 @@ public static class DependencyInjection
 
     private static IServiceCollection AddCacheEventHandlers(this IServiceCollection collection, Type repositoryInterface, Type repository)
     {
-        var domainEvents = repository
+        var cacheDomainEvents = repository
             .GetCustomAttributes<CacheDomainEventAttribute>()
             .OrderBy(domainEvent => domainEvent.EventHandlerType == typeof(UpdatedEventHandler<,,,>) ||
                                      domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,>))
             .ToList();
 
         var clearedDomainEvents = new List<CacheDomainEventAttribute>();
-        foreach (var domainEvent in domainEvents)
+        foreach (var domainEvent in cacheDomainEvents)
         { 
             if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name &&
                 domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name)
@@ -138,7 +141,7 @@ public static class DependencyInjection
         
         
         var genericEventArguments = repository.GetInterface(typeof(IRepository<,>).Name).GetGenericArguments();
-        
+
         clearedDomainEvents
             .ForEach(domainEvent =>
             {

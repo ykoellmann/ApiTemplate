@@ -2,7 +2,7 @@
 
 namespace ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 
-public interface IEventHandler<in TEvent> : INotificationHandler<TEvent>
+public interface IEventHandler<TEvent> : INotificationHandler<TEvent>
     where TEvent : INotification
 {
     

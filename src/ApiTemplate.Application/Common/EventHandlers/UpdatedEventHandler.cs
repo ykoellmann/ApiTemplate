@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.EventHandlers;
 
-public abstract class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventHandler<TUpdated> 
+public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventHandler<TUpdated> 
     where TUpdated : UpdatedEvent<TEntity, TId>
     where TIRepository : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
