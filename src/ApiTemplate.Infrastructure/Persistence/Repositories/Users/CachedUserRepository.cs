@@ -1,14 +1,13 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Extensions;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
+namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>, IUserRepository
+public class CachedUserRepository : CachedRepository<User, UserId>, IUserRepository
 {
     private readonly IUserRepository _decorated;
     private readonly IDistributedCache _cache;
@@ -19,7 +18,7 @@ public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>,
         _cache = cache;
     }
 
-    public async Task<Domain.Users.User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByEmailAsync), email);
         
@@ -43,9 +42,9 @@ public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>,
         });
     }
 
-    public async Task<Domain.Users.User> AddAsync(Domain.Users.User entity, CancellationToken cancellationToken)
+    public async Task<User> AddAsync(User entity, CancellationToken cancellationToken)
     {
-        await entity.AddDomainEventAsync(new CreatedEvent<Domain.Users.User, UserId>(entity));
+        await entity.AddDomainEventAsync(new CreatedEvent<User, UserId>(entity));
         
         var addedEntity = await _decorated.AddAsync(entity, cancellationToken);
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
@@ -59,7 +58,7 @@ public class CachedUserRepository : CachedRepository<Domain.Users.User, UserId>,
     }
 
     [Obsolete("This method is replaced by its overload")]
-    public override async Task<Domain.Users.User> AddAsync(Domain.Users.User entity, UserId userId,
+    public override async Task<User> AddAsync(User entity, UserId userId,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

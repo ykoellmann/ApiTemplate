@@ -12,7 +12,7 @@ using ApiTemplate.Domain.Users;
 
 namespace ApiTemplate.Api.Controllers;
 
-[Route("api/auth"), Authorize]
+[Route("api/authentication"), Authorize]
 public class AuthenticationController : ApiController
 {
     private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ public class AuthenticationController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost("register"), EnableRateLimiting("sliding"), AllowAnonymous]
+    [HttpPost("[action]"), EnableRateLimiting("sliding"), AllowAnonymous]
     public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<RegisterCommand>(registerRequest);
@@ -43,7 +43,7 @@ public class AuthenticationController : ApiController
             errors => Problem(errors));
     }
 
-    [HttpPost("login"), AllowAnonymous]
+    [HttpPost("[action]"), AllowAnonymous]
     public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<LoginQuery>(loginRequest);

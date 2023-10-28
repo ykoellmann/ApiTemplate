@@ -3,7 +3,7 @@ using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
+namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
 public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>, IRefreshTokenRepository
 {

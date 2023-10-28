@@ -13,7 +13,6 @@ using ApiTemplate.Infrastructure.Extensions;
 using ApiTemplate.Infrastructure.Persistence;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
-using ApiTemplate.Infrastructure.Persistence.Repositories.User;
 using ApiTemplate.Infrastructure.Services;
 using ApiTemplate.Infrastructure.Settings;
 using ApiTemplate.Infrastructure.Settings.Jwt;
