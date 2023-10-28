@@ -1,4 +1,4 @@
-﻿using ApiTemplate.Application.Authentication.Commands.RefreshToken;
+﻿using ApiTemplate.Application.Authentication.Commands.Refresh;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

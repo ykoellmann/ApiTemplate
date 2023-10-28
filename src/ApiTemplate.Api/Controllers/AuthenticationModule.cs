@@ -1,4 +1,4 @@
-﻿using ApiTemplate.Application.Authentication.Commands.RefreshToken;
+﻿using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Queries.Login;
 using ApiTemplate.Contracts.Authentication;

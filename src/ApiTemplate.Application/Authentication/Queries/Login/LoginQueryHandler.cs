@@ -30,7 +30,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
             return Errors.Authentication.InvalidCredentials;
 
         var token = _jwtTokenProvider.GenerateToken(user);
-        var refreshToken = RefreshToken.Create(user.Id);
+        var refreshToken = new RefreshToken(user.Id);
         refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
 
         return new AuthenticationResult(token, refreshToken);

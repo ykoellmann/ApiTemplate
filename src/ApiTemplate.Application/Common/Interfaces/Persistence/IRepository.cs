@@ -21,4 +21,5 @@ public interface IRepository<TEntity, TId>
     
     public Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null);
     public Task<string> EntityValueCacheKeyAsync(string usage, string value);
+    public Task<string> EntityCacheKeyAsync(string usage);
 }

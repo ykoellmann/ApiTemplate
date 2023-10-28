@@ -13,7 +13,7 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
             .HasConversion(id => id.Value,
-                value => IdObject<UserId>.Create(value))
+                value => (UserId)new IdObject<UserId>(value))
             .IsRequired();
         builder.Property(e => e.CreatedAt)
             .ValueGeneratedNever()

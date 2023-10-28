@@ -1,15 +1,13 @@
-﻿using System.Security.Cryptography;
-using ApiTemplate.Application.Authentication.Common;
+﻿using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
-using MediatR;
 using ErrorOr;
 
-namespace ApiTemplate.Application.Authentication.Commands.RefreshToken;
+namespace ApiTemplate.Application.Authentication.Commands.Refresh;
 
 internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, AuthenticationResult>
 {
@@ -40,7 +38,7 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
             return Errors.Authentication.InvalidRefreshToken;
         
         
-        var newRefreshToken = Domain.Users.RefreshToken.Create(user.Id);
+        var newRefreshToken = new RefreshToken(user.Id);
         
         newRefreshToken = await _refreshTokenRepository.AddAsync(newRefreshToken, user.Id, cancellationToken);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);

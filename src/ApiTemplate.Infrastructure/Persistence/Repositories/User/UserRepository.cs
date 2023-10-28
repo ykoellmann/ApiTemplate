@@ -12,7 +12,7 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories.User;
 
 [CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UserUpdatedEventHandler))]
 [CacheDomainEvent(typeof(DeletedEvent<,>), typeof(UserDeactivatedEventHandler))]
-
+[CacheDomainEvent(typeof(CreatedEvent<,>), typeof(UserCreatedEventHandler))]
 public class UserRepository : Repository<Domain.Users.User, UserId>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
@@ -29,7 +29,7 @@ public class UserRepository : Repository<Domain.Users.User, UserId>, IUserReposi
 
     public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
     {
-        return await _dbContext.Users.AnyAsync(u => u.Email == email, cancellationToken: cancellationToken);
+        return await _dbContext.Users.AllAsync(u => u.Email != email, cancellationToken: cancellationToken);
     }
 
     public async Task<Domain.Users.User> AddAsync(Domain.Users.User entity, CancellationToken cancellationToken)

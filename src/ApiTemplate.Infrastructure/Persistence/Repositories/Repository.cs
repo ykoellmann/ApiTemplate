@@ -13,6 +13,7 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
 [CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,>))]
 [CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,>))]
+[CacheDomainEvent(typeof(CreatedEvent<,>), typeof(CreatedEventHandler<,,,>))]
 public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
@@ -76,6 +77,11 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     }
 
     public async Task<string> EntityValueCacheKeyAsync(string usage, string value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<string> EntityCacheKeyAsync(string usage)
     {
         throw new NotImplementedException();
     }

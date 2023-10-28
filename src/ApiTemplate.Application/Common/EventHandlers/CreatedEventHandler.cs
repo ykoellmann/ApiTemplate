@@ -6,30 +6,30 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.EventHandlers;
 
-public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventHandler<TUpdated> 
-    where TUpdated : UpdatedEvent<TEntity, TId>
+public class CreatedEventHandler<TIRepository, TEntity, TId, TCreated> : IEventHandler<TCreated> 
+    where TCreated : CreatedEvent<TEntity, TId>
     where TIRepository : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
 {
     private readonly TIRepository _repository;
 
-    public UpdatedEventHandler(TIRepository repository)
+    public CreatedEventHandler(TIRepository repository)
     {
         _repository = repository;
     }
-    
-    public async Task Handle(TUpdated notification, CancellationToken cancellationToken)
+
+    public async Task Handle(TCreated notification, CancellationToken cancellationToken)
     {
         var _cacheKeys = GetCacheKeysAsync(notification);
         
         await _repository.ClearCacheAsync(_cacheKeys);
     }
 
-    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TUpdated notification)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TCreated notification)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
-            notification.Updated.Id.Value.ToString());
+            notification.Created.Id.Value.ToString());
         yield return await _repository.EntityCacheKeyAsync(nameof(_repository.GetListAsync));
     }
 }

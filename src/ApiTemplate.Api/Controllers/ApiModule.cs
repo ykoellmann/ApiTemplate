@@ -50,6 +50,6 @@ public abstract class ApiModule : CarterModule
     }
     
     protected UserId? UserId(HttpContext httpContext) => httpContext.User?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value is string guidString
-        ? Domain.Users.ValueObjects.UserId.Create(Guid.Parse(guidString))
+        ? new UserId(Guid.Parse(guidString))
         : null;
 }

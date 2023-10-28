@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ApiTemplate.Application.Authentication.Commands.RefreshToken;
+namespace ApiTemplate.Application.Authentication.Commands.Refresh;
 
 internal class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
 {

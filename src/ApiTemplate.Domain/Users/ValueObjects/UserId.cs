@@ -4,12 +4,11 @@ namespace ApiTemplate.Domain.Users.ValueObjects;
 
 public class UserId : IdObject<UserId>
 {
-    private UserId(Guid value) : base(value)
+    public UserId() : base()
     {
     }
     
-    //Used for Json serialization
-    private UserId() : base()
+    public UserId(Guid value) : base(value)
     {
     }
 }

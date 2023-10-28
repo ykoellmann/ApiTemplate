@@ -6,16 +6,11 @@ namespace ApiTemplate.Domain.Users;
 
 public class RefreshToken : Entity<RefreshTokenId>
 {
-    private RefreshToken(RefreshTokenId id, string token, DateTime expires, UserId userId) : base(id)
+    public RefreshToken(UserId userId) : base(new RefreshTokenId())
     {
-        Token = token;
-        Expires = expires;
+        Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        Expires = DateTime.UtcNow.AddMinutes(1);
         UserId = userId;
-    }
-    
-    //Used for Json serialization
-    private RefreshToken() : base()
-    {
     }
     
     public string Token { get; set; } = null!;
@@ -24,13 +19,4 @@ public class RefreshToken : Entity<RefreshTokenId>
     public bool Expired => Disabled || Expires < DateTime.UtcNow;
     public UserId UserId { get; set; } = null!;
     public virtual User User { get; set; } = null!;
-
-    public static RefreshToken Create(UserId userId)
-    {
-        return new RefreshToken(
-            RefreshTokenId.CreateUnique(), 
-            Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), 
-            DateTime.UtcNow.AddMinutes(1), 
-            userId);
-    }
 }

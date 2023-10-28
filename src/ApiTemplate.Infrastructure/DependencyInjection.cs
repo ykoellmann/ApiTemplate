@@ -119,14 +119,16 @@ public static class DependencyInjection
         var cacheDomainEvents = repository
             .GetCustomAttributes<CacheDomainEventAttribute>()
             .OrderBy(domainEvent => domainEvent.EventHandlerType == typeof(UpdatedEventHandler<,,,>) ||
-                                     domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,>))
+                                     domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,>) ||
+                                     domainEvent.EventHandlerType == typeof(CreatedEventHandler<,,,>))
             .ToList();
 
         var clearedDomainEvents = new List<CacheDomainEventAttribute>();
         foreach (var domainEvent in cacheDomainEvents)
         { 
             if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name &&
-                domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name)
+                domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name &&
+                domainEvent.EventHandlerType.BaseType.Name != typeof(CreatedEventHandler<,,,>).Name)
             {
                 if (clearedDomainEvents.All(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
                 {

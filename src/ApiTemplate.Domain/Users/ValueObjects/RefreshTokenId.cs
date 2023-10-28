@@ -4,7 +4,11 @@ namespace ApiTemplate.Domain.Users.ValueObjects;
 
 public class RefreshTokenId : IdObject<RefreshTokenId>
 {
-    protected RefreshTokenId(Guid value) : base(value)
+    public RefreshTokenId() : base()
+    {
+    }
+    
+    public RefreshTokenId(Guid value) : base(value)
     {
     }
 }

@@ -13,7 +13,7 @@ namespace ApiTemplate.Api.Controllers;
 public class ApiController : ControllerBase
 {
     protected UserId? UserId => User?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value is string guidString
-        ? UserId.Create(Guid.Parse(guidString))
+        ? new UserId(Guid.Parse(guidString))
         : null;
 
     protected IActionResult Problem(List<Error> errors)

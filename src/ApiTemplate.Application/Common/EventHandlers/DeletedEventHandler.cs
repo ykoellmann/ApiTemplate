@@ -31,5 +31,6 @@ public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : IEventH
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
             notification.Deleted.Id.Value.ToString());
+        yield return await _repository.EntityCacheKeyAsync(nameof(_repository.GetListAsync));
     }
 }

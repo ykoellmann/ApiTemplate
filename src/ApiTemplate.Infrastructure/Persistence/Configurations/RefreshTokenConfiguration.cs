@@ -13,6 +13,6 @@ public class RefreshTokenConfiguration : BaseConfiguration<RefreshToken, Refresh
 
         builder.Property(rt => rt.UserId)
             .HasConversion(userId => userId.Value,
-                guid => UserId.Create(guid));
+                guid => new UserId(guid));
     }
 }

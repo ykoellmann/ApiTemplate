@@ -5,39 +5,18 @@ namespace ApiTemplate.Domain.Models;
 public class IdObject<TIdObject> : ValueObject
     where TIdObject : IdObject<TIdObject>
 {
-    protected IdObject(Guid value)
+    public IdObject(Guid value)
     {
         Value = value;
     }
     
-    //Used for Json serialization
-    protected IdObject()
+    
+    public IdObject()
     {
+        Value = Guid.NewGuid();
     }
 
     public Guid Value { get; set; }
-
-    public static TIdObject CreateUnique()
-    {
-        return Construct(Guid.NewGuid());
-    }
-
-    public static TIdObject Create(Guid value)
-    {
-        return Construct(value);
-    }
-    
-    private static TIdObject Construct(Guid value)
-    {
-        var type = typeof(TIdObject);
-        
-        var constructor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {typeof(Guid)}, null);
-        if (constructor is null)
-            throw new InvalidOperationException();
-        
-        return constructor.Invoke(new object[] {value}) as TIdObject ??
-               throw new InvalidOperationException();
-    }
 
     public override IEnumerable<object> GetEqualityComponents()
     {
@@ -51,6 +30,6 @@ public class IdObject<TIdObject> : ValueObject
 
     public static implicit operator IdObject<TIdObject>(Guid value)
     {
-        return Create(value);
+        return new IdObject<TIdObject>(value);
     }
 }

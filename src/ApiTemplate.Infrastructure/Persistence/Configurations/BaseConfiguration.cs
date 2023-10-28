@@ -14,12 +14,12 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
             .HasConversion(id => id.Value,
-                value => IdObject<TId>.Create(value))
+                value => (TId)new IdObject<TId>(value))
             .IsRequired();
         
         builder.Property(e => e.CreatedBy)
             .HasConversion(userId => userId.Value,
-                guid => UserId.Create(guid))
+                guid => new UserId(guid))
             .HasColumnOrder(101)
             .IsRequired();
         builder.Property(e => e.CreatedAt)
@@ -28,7 +28,7 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .IsRequired();
         builder.Property(e => e.UpdatedBy)
             .HasConversion(userId => userId.Value,
-                guid => UserId.Create(guid))
+                guid => new UserId(guid))
             .HasColumnOrder(103)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
