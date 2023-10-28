@@ -1,7 +1,6 @@
 using ApiTemplate.Api;
 using ApiTemplate.Application;
 using ApiTemplate.Infrastructure;
-using Carter;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +30,5 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    app.MapCarter();
     app.Run();
 }
