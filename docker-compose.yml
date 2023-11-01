@@ -36,8 +36,8 @@ services:
       - 8004:80
     networks:
       - apitemplate-backend
-  apitemplate.api:
-    container_name: apitemplate.api
+  apitemplate.api.green:
+    container_name: api.green
     image: apitemplate.api
     build:
       context: .
@@ -52,11 +52,82 @@ services:
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - 8001:80
+      - 8100:80
     depends_on:
       - apitemplate.db
       - apitemplate.redis
       - apitemplate.seq
+    networks:
+      - apitemplate-backend
+  apitemplate.api.blue:
+    container_name: api.blue
+    image: apitemplate.api
+    build:
+      context: .
+      dockerfile: src/apitemplate.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:80
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=postgres;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
+      - JwtSettings__ExpiryMinutes=1
+      - JwtSettings__Issuer=ApiTemplate
+      - JwtSettings__Audience=ApiTemplate
+    ports:
+      - 8200:80
+    depends_on:
+      - apitemplate.db
+      - apitemplate.redis
+      - apitemplate.seq
+    networks:
+      - apitemplate-backend
+  apitemplate.api.white:
+    container_name: api.white
+    image: apitemplate.api
+    build:
+      context: .
+      dockerfile: src/apitemplate.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:80
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=postgres;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=redis:6379
+      - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
+      - JwtSettings__ExpiryMinutes=1
+      - JwtSettings__Issuer=ApiTemplate
+      - JwtSettings__Audience=ApiTemplate
+    ports:
+      - 8300:80
+      - 8301:443
+    depends_on:
+      - apitemplate.db
+      - apitemplate.redis
+      - apitemplate.seq
+    networks:
+      - apitemplate-backend
+  apitemplate.loadbalancer:
+    container_name: loadbalancer
+    image: apitemplate.loadbalancer
+    build:
+      context: .
+      dockerfile: src/apitemplate.LoadBalancer/Dockerfile
+    restart: always
+    ports:
+      - 8001:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:80
+      - ReverseProxy__Clusters__api__Destinations__green__Address=http://api.green:80
+      - ReverseProxy__Clusters__api__Destinations__blue__Address=http://api.blue:80
+      - ReverseProxy__Clusters__api__Destinations__white__Address=http://api.white:80
+      - ReverseProxy__Clusters__api__LoadBalancingPolicy=RoundRobin
+      - ReverseProxy__Routes__api__ClusterId=api
+      - ReverseProxy__Routes__api__Match__Path={**catch-all}
+    depends_on:
+      - apitemplate.api.green
+      - apitemplate.api.blue
+      - apitemplate.api.white
     networks:
       - apitemplate-backend
 
