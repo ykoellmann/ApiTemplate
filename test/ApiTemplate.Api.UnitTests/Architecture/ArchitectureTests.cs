@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using ApiTemplate.Api.Controllers;
+using ApiTemplate.Api.Common.Controllers;
 using ApiTemplate.UnitTests.Rules;
 using NetArchTest.Rules;
 

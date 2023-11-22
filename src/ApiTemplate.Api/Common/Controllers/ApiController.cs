@@ -1,11 +1,11 @@
-﻿using ApiTemplate.Api.Common.Http;
+﻿using ApiTemplate.Api.Common.Errors;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ApiTemplate.Api.Controllers;
+namespace ApiTemplate.Api.Common.Controllers;
 
 [ApiController]
 [Authorize]

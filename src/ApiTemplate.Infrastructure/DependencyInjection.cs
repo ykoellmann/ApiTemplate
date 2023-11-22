@@ -129,7 +129,7 @@ public static class DependencyInjection
                 domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name &&
                 domainEvent.EventHandlerType.BaseType.Name != typeof(CreatedEventHandler<,,,>).Name)
             {
-                if (clearedDomainEvents.All(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
+                if (clearedDomainEvents.TrueForAll(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
                 {
                     clearedDomainEvents.Add(domainEvent);
                 }

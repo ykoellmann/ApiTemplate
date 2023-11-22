@@ -1,8 +1,10 @@
-﻿using ApiTemplate.Api.Common.Errors;
+﻿using System.Reflection;
+using ApiTemplate.Api.Common.Errors;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
-using ApiTemplate.Api.Common.Mapping;
+using Mapster;
+using MapsterMapper;
 
 namespace ApiTemplate.Api;
 
@@ -74,6 +76,16 @@ public static class DependencyInjection
             });
         });
 
+        return services;
+    }
+
+    public static IServiceCollection AddMapping(this IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
         return services;
     }
 }

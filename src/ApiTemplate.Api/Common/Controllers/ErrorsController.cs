@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ApiTemplate.Api.Controllers;
+namespace ApiTemplate.Api.Common.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ErrorsController : ControllerBase

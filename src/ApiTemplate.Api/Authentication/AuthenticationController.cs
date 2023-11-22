@@ -1,16 +1,17 @@
-﻿using ApiTemplate.Application.Authentication.Commands.Refresh;
-using MapsterMapper;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
+﻿using ApiTemplate.Api.Common.Controllers;
+using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Queries.Login;
 using ApiTemplate.Contracts.Authentication;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Users;
+using MapsterMapper;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
-namespace ApiTemplate.Api.Controllers;
+namespace ApiTemplate.Api.Authentication;
 
 [Route("api/authentication"), Authorize]
 public class AuthenticationController : ApiController

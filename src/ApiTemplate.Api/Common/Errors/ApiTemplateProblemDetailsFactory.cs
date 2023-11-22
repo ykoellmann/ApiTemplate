@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using ApiTemplate.Api.Common.Http;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;

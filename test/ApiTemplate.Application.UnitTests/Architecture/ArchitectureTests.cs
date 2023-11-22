@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ApiTemplate.Application.Common.EventHandlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
@@ -147,6 +148,12 @@ public class ArchitectureTests
             .DoNotImplementInterface(typeof(IValidator<>))
             .And()
             .DoNotImplementInterface(typeof(INotificationHandler<>))
+            .And()
+            .DoNotInherit(typeof(CreatedEventHandler<,,,>))
+            .And()
+            .DoNotInherit(typeof(UpdatedEventHandler<,,,>))
+            .And()
+            .DoNotInherit(typeof(DeletedEventHandler<,,,>))
             .Should()
             .MeetCustomRule(new AsyncMethodsHaveSuffixAsyncRule())
             .GetResult();

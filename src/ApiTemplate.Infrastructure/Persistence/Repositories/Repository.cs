@@ -19,20 +19,22 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     where TId : IdObject<TId>
 {
     private readonly ApiTemplateDbContext _dbContext;
-    
+
     public Repository(ApiTemplateDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken,
+        Specification<TEntity, TId> specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
             .ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null)
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken,
+        Specification<TEntity, TId> specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
@@ -47,7 +49,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         entity.UpdatedAt = DateTime.UtcNow;
         await _dbContext.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
-        
+
         return entity;
     }
 
@@ -62,27 +64,22 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Set<TEntity>().FindAsync(new object?[] { id }, cancellationToken: cancellationToken);
+        var entity = await _dbContext.Set<TEntity>()
+            .FindAsync(new object?[] { id }, cancellationToken: cancellationToken);
         await entity.AddDomainEventAsync(new DeletedEvent<TEntity, TId>(entity));
-        
+
         _dbContext.Set<TEntity>().Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new Deleted();
     }
 
-    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null)
-    {
+    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null) => 
         throw new NotImplementedException();
-    }
 
-    public async Task<string> EntityValueCacheKeyAsync(string usage, string value)
-    {
+    public async Task<string> EntityValueCacheKeyAsync(string usage, string value) =>
         throw new NotImplementedException();
-    }
 
-    public Task<string> EntityCacheKeyAsync(string usage)
-    {
+    public async Task<string> EntityCacheKeyAsync(string usage) => 
         throw new NotImplementedException();
-    }
 }

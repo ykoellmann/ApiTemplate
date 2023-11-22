@@ -1,10 +1,10 @@
-﻿using Mapster;
-using ApiTemplate.Application.Authentication.Commands.Register;
+﻿using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Authentication.Queries.Login;
 using ApiTemplate.Contracts.Authentication;
+using Mapster;
 
-namespace ApiTemplate.Api.Common.Mapping;
+namespace ApiTemplate.Api.Authentication;
 
 internal class AuthenticationMapping : IRegister
 {

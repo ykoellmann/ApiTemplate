@@ -1,4 +1,4 @@
-﻿namespace ApiTemplate.Api.Common.Http;
+﻿namespace ApiTemplate.Api.Common.Errors;
 
 public static class HttpContextItemKeys
 {
