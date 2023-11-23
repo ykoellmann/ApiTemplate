@@ -1,8 +1,9 @@
-﻿using ApiTemplate.Api.Common.Controllers;
+﻿using ApiTemplate.Api.Authentication.Request;
+using ApiTemplate.Api.Authentication.Response;
+using ApiTemplate.Api.Common.Controllers;
 using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Queries.Login;
-using ApiTemplate.Contracts.Authentication;
 using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Users;
 using MapsterMapper;

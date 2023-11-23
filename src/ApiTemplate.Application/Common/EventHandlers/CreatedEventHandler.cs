@@ -26,10 +26,10 @@ public class CreatedEventHandler<TIRepository, TEntity, TId, TCreated> : IEventH
         await _repository.ClearCacheAsync(_cacheKeys);
     }
 
-    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TCreated notification)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TCreated createdEvent)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
-            notification.Created.Id.Value.ToString());
+            createdEvent.Created.Id.Value.ToString());
         yield return await _repository.EntityCacheKeyAsync(nameof(_repository.GetListAsync));
     }
 }

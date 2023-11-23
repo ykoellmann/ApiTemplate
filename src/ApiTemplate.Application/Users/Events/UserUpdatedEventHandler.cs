@@ -15,14 +15,14 @@ public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, User
         _repository = repository;
     }
 
-    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(UpdatedEvent<User, UserId> notification)
+    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(UpdatedEvent<User, UserId> deletedEvent)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByEmailAsync),
-            notification.Updated.Email);
+            deletedEvent.Updated.Email);
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.IsEmailUniqueAsync),
-            notification.Updated.Email);
+            deletedEvent.Updated.Email);
         
-        await foreach (var cacheKey in base.GetCacheKeysAsync(notification))
+        await foreach (var cacheKey in base.GetCacheKeysAsync(deletedEvent))
         {
             yield return cacheKey;
         }
