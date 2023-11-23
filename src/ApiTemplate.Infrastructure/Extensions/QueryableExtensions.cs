@@ -15,12 +15,4 @@ public static class QueryableExtensions
     {
         return specification is null ? query : specification.Specificate(query);
     }
-
-    public static IQueryable<TEntity> Specificate<TEntity, TId>(this IQueryable<TEntity> query,
-        Func<IQueryable<TEntity>, IQueryable<TEntity>> specification)
-        where TEntity : Entity<TId>
-        where TId : IdObject<TId>
-    {
-        return specification is null ? query : specification.Invoke(query);
-    }
 }

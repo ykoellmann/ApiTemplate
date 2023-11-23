@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Domain.Common;
 using ApiTemplate.Infrastructure.Persistence.Configurations;
 using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.UnitTests.Rules;
