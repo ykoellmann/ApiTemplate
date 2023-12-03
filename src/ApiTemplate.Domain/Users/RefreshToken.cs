@@ -15,7 +15,7 @@ public class RefreshToken : Entity<RefreshTokenId>
     
     public string Token { get; set; } = null!;
     public DateTime Expires { get; set; }
-    public bool Disabled { get; set; } = false;
+    public bool Disabled { get; set; }
     public bool Expired => Disabled || Expires < DateTime.UtcNow;
     public UserId UserId { get; set; } = null!;
     public virtual User User { get; set; } = null!;

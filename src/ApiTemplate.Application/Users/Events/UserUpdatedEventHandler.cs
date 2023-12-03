@@ -6,7 +6,8 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Application.Users.Events;
 
-public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, User, UserId, UpdatedEvent<User, UserId>>
+public class UserUpdatedEventHandler 
+    : UpdatedEventHandler<IUserRepository, User, UserId, UpdatedEvent<User, UserId>>
 {
     private readonly IUserRepository _repository;
 
