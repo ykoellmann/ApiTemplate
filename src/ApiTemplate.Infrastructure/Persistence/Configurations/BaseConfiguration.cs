@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
 public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity> 
-    where TId : IdObject<TId>
+    where TId : IdObject<TId>, new()
     where TEntity : Entity<TId> 
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
@@ -14,7 +14,7 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
             .HasConversion(id => id.Value,
-                value => (TId)new IdObject<TId>(value))
+                value => new TId {Value = value})
             .IsRequired();
         
         builder.Property(e => e.CreatedBy)

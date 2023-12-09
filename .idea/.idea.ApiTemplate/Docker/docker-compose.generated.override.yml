@@ -32,7 +32,7 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.261\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_09_21_26_04:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_10_00_53_48:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.api.green:
     build:
@@ -66,7 +66,7 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.261\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_09_21_26_04:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_10_00_53_48:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.api.white:
     build:
@@ -100,7 +100,7 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.261\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_09_21_26_04:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_10_00_53_48:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.loadbalancer:
     build:
@@ -134,5 +134,5 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.261\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_09_21_26_04:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_10_00_53_48:/var/opt/rider-debugger:rw"
     working_dir: "/app"
