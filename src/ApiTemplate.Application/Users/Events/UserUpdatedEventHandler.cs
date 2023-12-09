@@ -6,7 +6,8 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Application.Users.Events;
 
-public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, User, UserId, UpdatedEvent<User, UserId>>
+public class UserUpdatedEventHandler 
+    : UpdatedEventHandler<IUserRepository, User, UserId, UpdatedEvent<User, UserId>>
 {
     private readonly IUserRepository _repository;
 
@@ -15,14 +16,14 @@ public class UserUpdatedEventHandler : UpdatedEventHandler<IUserRepository, User
         _repository = repository;
     }
 
-    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(UpdatedEvent<User, UserId> notification)
+    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(UpdatedEvent<User, UserId> updatedEvent)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByEmailAsync),
-            notification.Updated.Email);
+            updatedEvent.Updated.Email);
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.IsEmailUniqueAsync),
-            notification.Updated.Email);
+            updatedEvent.Updated.Email);
         
-        await foreach (var cacheKey in base.GetCacheKeysAsync(notification))
+        await foreach (var cacheKey in base.GetCacheKeysAsync(updatedEvent))
         {
             yield return cacheKey;
         }

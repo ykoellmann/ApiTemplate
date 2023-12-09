@@ -1,7 +1,8 @@
-﻿using ApiTemplate.Application.Authentication.Commands.Register;
+﻿using ApiTemplate.Api.Authentication.Request;
+using ApiTemplate.Api.Authentication.Response;
+using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Authentication.Queries.Login;
-using ApiTemplate.Contracts.Authentication;
 using Mapster;
 
 namespace ApiTemplate.Api.Authentication;

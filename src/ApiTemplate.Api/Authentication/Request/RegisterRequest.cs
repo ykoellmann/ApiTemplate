@@ -1,4 +1,4 @@
-﻿namespace ApiTemplate.Contracts.Authentication;
+﻿namespace ApiTemplate.Api.Authentication.Request;
 
 public record RegisterRequest(
     string FirstName,

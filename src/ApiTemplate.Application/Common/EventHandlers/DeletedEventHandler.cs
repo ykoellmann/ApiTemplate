@@ -27,10 +27,10 @@ public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : IEventH
         return _repository.ClearCacheAsync(cacheKeys);
     }
 
-    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TDeleted notification)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TDeleted deletedEvent)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
-            notification.Deleted.Id.Value.ToString());
+            deletedEvent.Deleted.Id.Value.ToString());
         yield return await _repository.EntityCacheKeyAsync(nameof(_repository.GetListAsync));
     }
 }

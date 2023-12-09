@@ -74,12 +74,15 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         return new Deleted();
     }
 
-    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null) => 
+    [Obsolete("This method is only relevant for the cached repository")]
+    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null) =>
         throw new NotImplementedException();
 
+    [Obsolete("This method is only relevant for the cached repository")]
     public async Task<string> EntityValueCacheKeyAsync(string usage, string value) =>
         throw new NotImplementedException();
 
-    public async Task<string> EntityCacheKeyAsync(string usage) => 
+    [Obsolete("This method is only relevant for the cached repository")]
+    public async Task<string> EntityCacheKeyAsync(string usage) =>
         throw new NotImplementedException();
 }

@@ -6,23 +6,24 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Application.Users.Events;
 
-public class UserCreatedEventHandler : CreatedEventHandler<IUserRepository, User, UserId, CreatedEvent<User, UserId>>
+public class UserCreatedEventHandler 
+    : CreatedEventHandler<IUserRepository, User, UserId, CreatedEvent<User, UserId>>
 {
     private readonly IUserRepository _repository;
-    
+
     public UserCreatedEventHandler(IUserRepository repository) : base(repository)
     {
         _repository = repository;
     }
-    
-    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(CreatedEvent<User, UserId> notification)
+
+    protected override async IAsyncEnumerable<string> GetCacheKeysAsync(CreatedEvent<User, UserId> createdEvent)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByEmailAsync),
-            notification.Created.Email);
+            createdEvent.Created.Email);
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.IsEmailUniqueAsync),
-            notification.Created.Email);
-        
-        await foreach (var cacheKey in base.GetCacheKeysAsync(notification))
+            createdEvent.Created.Email);
+
+        await foreach (var cacheKey in base.GetCacheKeysAsync(createdEvent))
         {
             yield return cacheKey;
         }

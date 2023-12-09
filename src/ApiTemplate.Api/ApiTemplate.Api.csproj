@@ -22,7 +22,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ApiTemplate.Application\ApiTemplate.Application.csproj" />
-      <ProjectReference Include="..\ApiTemplate.Contracts\ApiTemplate.Contracts.csproj" />
       <ProjectReference Include="..\ApiTemplate.Infrastructure\ApiTemplate.Infrastructure.csproj" />
     </ItemGroup>
 
