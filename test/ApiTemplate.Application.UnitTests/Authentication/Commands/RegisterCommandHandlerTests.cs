@@ -1,7 +1,11 @@
-﻿using ApiTemplate.Application.Authentication.Commands.Register;
+﻿using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Errors;
+using ApiTemplate.Domain.Common.Specification;
+using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.Specifications;
+using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Application.UnitTests.Authentication.Commands;
 
@@ -12,44 +16,80 @@ public class RegisterCommandHandlerTests
     private readonly Mock<IRefreshTokenRepository> _refreshTokenRepository = new();
 
     [Fact]
-    public async Task Handle_Should_ReturnError_WhenEmailExists()
+    public async Task Handle_Returns_RefreshTokenExpired_Error_When_ActiveRefreshToken_Is_Expired()
     {
-        //Arrange
-        var command = new RegisterCommand("Test", "Test", "Test@Test.de", "test1234");
+        // Arrange
+        var userId = new UserId(Guid.NewGuid());
+        var user = new Mock<User>("Firstname", "Lastname", "Email", "Password");
 
-        var handler = new RegisterCommandHandler(_userRepository.Object, _jwtTokenProvider.Object,
-            _refreshTokenRepository.Object);
+        user.SetupGet(u => u.ActiveRefreshToken).Returns((RefreshToken)null);
 
-        _userRepository.Setup(repository => 
-            repository.IsEmailUniqueAsync(
-                It.IsAny<string>(), new CancellationToken()))
-            .ReturnsAsync(false);
-        //Act
-        var result = await handler.Handle(command, default);
+        _userRepository
+            .Setup(repository =>
+                repository.GetByIdAsync(It.IsAny<UserId>(), It.IsAny<CancellationToken>(),
+                    It.IsAny<Specification<User, UserId>>()))
+            .ReturnsAsync(user.Object);
 
-        //Assert
+        var commandHandler = new RefreshTokenCommandHandler(_refreshTokenRepository.Object, _userRepository.Object,
+            _jwtTokenProvider.Object);
+        var command = new RefreshTokenCommand("token", userId);
+
+        // Act
+        var result = await commandHandler.Handle(command, new CancellationToken());
+
+        // Assert
         result.IsError.Should().BeTrue();
-        result.FirstError.Should().Be(Errors.User.UserWithGivenEmailAlreadyExists);
+        result.FirstError.Should().Be(Errors.Authentication.RefreshTokenExpired);
     }
-
+    
     [Fact]
-    public async Task Handle_Should_ReturnResult()
+    public async Task Handle_Returns_UserNotFound_Error_When_User_Is_Not_Found()
     {
-        //Arrange
-        var command = new RegisterCommand("Test", "Test", "Test@Test.de", "test1234");
+        // Arrange
+        var mockUserId = new UserId(Guid.NewGuid());
 
-        var handler = new RegisterCommandHandler(_userRepository.Object, _jwtTokenProvider.Object,
-            _refreshTokenRepository.Object);
+        _userRepository
+            .Setup(repository =>
+                repository.GetByIdAsync(It.IsAny<UserId>(), It.IsAny<CancellationToken>(),
+                    It.IsAny<Specification<User, UserId>>()))
+            .ReturnsAsync((User)null);
 
-        _userRepository.Setup(repository => 
-                repository.IsEmailUniqueAsync(
-                    It.IsAny<string>(),
-                    new CancellationToken()))
-            .ReturnsAsync(true);
-        //Act
-        var result = await handler.Handle(command, default);
+        var commandHandler = new RefreshTokenCommandHandler(_refreshTokenRepository.Object, _userRepository.Object,
+            _jwtTokenProvider.Object);
+        var command = new RefreshTokenCommand("token", mockUserId);
 
-        //Assert   
+        // Act
+        var result = await commandHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsError.Should().BeTrue();
+        result.FirstError.Should().Be(Errors.User.UserNotFound);
+    }
+    
+    [Fact]
+    public async Task Handle_Returns_Success_When_ActiveRefreshToken_Is_Not_Expired()
+    {
+        // Arrange
+        var userId = new UserId(Guid.NewGuid());
+        var user = new Mock<User>("Firstname", "Lastname", "Email", "Password");
+        var refreshToken = new RefreshToken(userId);
+
+        user.SetupGet(u => u.ActiveRefreshToken).Returns(refreshToken);
+
+        _userRepository
+            .Setup(repository =>
+                repository.GetByIdAsync(It.IsAny<UserId>(), It.IsAny<CancellationToken>(),
+                    It.IsAny<Specification<User, UserId>>()))
+            .ReturnsAsync(user.Object);
+
+        var commandHandler = new RefreshTokenCommandHandler(_refreshTokenRepository.Object, _userRepository.Object,
+            _jwtTokenProvider.Object);
+        var command = new RefreshTokenCommand(refreshToken.Token, userId);
+
+        // Act
+        var result = await commandHandler.Handle(command, CancellationToken.None);
+
+        // Assert
         result.IsError.Should().BeFalse();
     }
 }

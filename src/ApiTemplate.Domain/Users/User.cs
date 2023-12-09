@@ -24,7 +24,7 @@ public class User : AggregateRoot<UserId>
     public bool Active { get; set; } = true;
     
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
-    public RefreshToken? ActiveRefreshToken => _refreshTokens.Find(rt => !rt.Expired);
+    public virtual RefreshToken? ActiveRefreshToken => _refreshTokens.Find(rt => !rt.Expired);
     
     [NotMapped, Obsolete("Because of generic AggregateRoot")]
     public override UserId CreatedBy { get; set; } = null!;
