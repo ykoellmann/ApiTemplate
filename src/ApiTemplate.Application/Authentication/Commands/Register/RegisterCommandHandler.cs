@@ -2,11 +2,11 @@ using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
+using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
 
@@ -37,11 +37,8 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
+        var newRefreshToken = await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
 
-        var refreshToken = new RefreshToken(user.Id);
-
-        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
-
-        return new AuthenticationResult(token, refreshToken);
+        return new AuthenticationResult(token, newRefreshToken);
     }
 }

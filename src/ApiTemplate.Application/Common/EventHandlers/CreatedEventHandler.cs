@@ -19,17 +19,27 @@ public class CreatedEventHandler<TIRepository, TEntity, TId, TCreated> : IEventH
         _repository = repository;
     }
 
-    public async Task Handle(TCreated notification, CancellationToken cancellationToken)
+    public Task Handle(TCreated notification, CancellationToken cancellationToken)
     {
-        var _cacheKeys = GetCacheKeysAsync(notification);
-        
-        await _repository.ClearCacheAsync(_cacheKeys);
+        var _cacheKeys = GetBaseCacheKeysAsync(notification);
+
+        return _repository.ClearCacheAsync(_cacheKeys);
     }
 
-    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TCreated createdEvent)
+    private async IAsyncEnumerable<string> GetBaseCacheKeysAsync(TCreated createdEvent)
     {
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.GetByIdAsync),
             createdEvent.Created.Id.Value.ToString());
         yield return await _repository.EntityCacheKeyAsync(nameof(_repository.GetListAsync));
+        
+        await foreach (var cacheKey in GetCacheKeysAsync(createdEvent))
+        {
+            yield return cacheKey;
+        }
+    }
+
+    protected virtual IAsyncEnumerable<string> GetCacheKeysAsync(TCreated createdEvent)
+    {
+        throw new NotImplementedException("Override this method to add additional cache keys.");
     }
 }

@@ -23,7 +23,8 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasColumnOrder(101)
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedNever()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedBy)
@@ -32,7 +33,8 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasColumnOrder(103)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedNever()
+            .ValueGeneratedOnUpdate()
+            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
         
@@ -41,14 +43,12 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasForeignKey(e => e.CreatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Metadata.FindNavigation(nameof(Entity<TId>.CreatedByUser));
         
         builder.HasOne(e => e.UpdatedByUser)
             .WithMany()
             .HasForeignKey(e => e.UpdatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Metadata.FindNavigation(nameof(Entity<TId>.UpdatedByUser));
         
         ConfigureEntity(builder);
     }

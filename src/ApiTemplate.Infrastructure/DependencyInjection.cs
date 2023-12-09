@@ -2,6 +2,7 @@
 using System.Text;
 using ApiTemplate.Application.Common.EventHandlers;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Domain.Common.Events;
@@ -30,7 +31,7 @@ namespace ApiTemplate.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+    public static void AddInfrastructure(this IServiceCollection services,
         ConfigurationManager configuration)
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
@@ -49,11 +50,9 @@ public static class DependencyInjection
         {
             options.Configuration = configuration.GetConnectionString("Redis");
         });
-
-        return services;
     }
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+    private static void AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptionsWithFluentValidation<JwtSettings>(JwtSettings.SectionName);
 
@@ -75,11 +74,9 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });
-
-        return services;
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection collection)
+    private static void AddRepositories(this IServiceCollection collection)
     {
         var assembly = typeof(DependencyInjection).Assembly;
 
@@ -109,11 +106,10 @@ public static class DependencyInjection
             }
 
         });
-
-        return collection;
     }
 
-    private static IServiceCollection AddCacheEventHandlers(this IServiceCollection collection, Type repositoryInterface, Type repository)
+    private static void AddCacheEventHandlers(this IServiceCollection collection, Type repositoryInterface,
+        Type repository)
     {
         var cacheDomainEvents = repository
             .GetCustomAttributes<CacheDomainEventAttribute>()
@@ -161,11 +157,9 @@ public static class DependencyInjection
 
         foreach (var domainEvent in clearedDomainEvents)
         {
-            var interfaceType = typeof(INotificationHandler<>).MakeGenericType(domainEvent.EventType);
+            var interfaceType = typeof(IEventHandler<>).MakeGenericType(domainEvent.EventType);
             collection.AddTransient(interfaceType, domainEvent.EventHandlerType);
         }
-
-        return collection;
     }
 
     private static IServiceCollection AddHttpClient(this IServiceCollection collection)

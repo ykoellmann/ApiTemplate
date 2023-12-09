@@ -2,9 +2,9 @@ using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Users;
 using ErrorOr;
+using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
 
@@ -30,9 +30,8 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
             return Errors.Authentication.InvalidCredentials;
 
         var token = _jwtTokenProvider.GenerateToken(user);
-        var refreshToken = new RefreshToken(user.Id);
-        refreshToken = await _refreshTokenRepository.AddAsync(refreshToken, user.Id, cancellationToken);
+        var newRefreshToken = await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
 
-        return new AuthenticationResult(token, refreshToken);
+        return new AuthenticationResult(token, newRefreshToken);
     }
 }

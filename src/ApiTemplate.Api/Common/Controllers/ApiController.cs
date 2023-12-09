@@ -12,9 +12,21 @@ namespace ApiTemplate.Api.Common.Controllers;
 [Route("api/[controller]")]
 public class ApiController : ControllerBase
 {
-    protected UserId? UserId => User?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value is string guidString
-        ? new UserId(Guid.Parse(guidString))
-        : null;
+    private const string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+
+    protected UserId? UserId
+    {
+        get
+        {
+            var claimValue = User?.Claims.FirstOrDefault(c => c.Type == UserIdClaimType)?.Value;
+            if (claimValue is string && Guid.TryParse(claimValue, out var guid))
+            {
+                return new UserId(guid);
+            }
+
+            return null;
+        }
+    }
 
     protected IActionResult Problem(List<Error> errors)
     {

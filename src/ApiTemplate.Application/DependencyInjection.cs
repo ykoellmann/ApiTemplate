@@ -14,24 +14,29 @@ public static class DependencyInjection
     {
         services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly); });
         
-        services.AddScoped(typeof(IPipelineBehavior<,>),
-            typeof(ValidationBehaviour<,>));
-        services.AddScoped(typeof(IPipelineBehavior<,>), 
-        typeof(LoggingBehaviour<,>));
-
-        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        services.AddPipelineBehaviours();
+        
         services.AddMapping();
 
         return services;
     }
     
-    private static IServiceCollection AddMapping(this IServiceCollection services)
+    private static void AddMapping(this IServiceCollection services)
     {
         var config = TypeAdapterConfig.GlobalSettings;
         config.Scan(Assembly.GetExecutingAssembly());
 
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
-        return services;
+    }
+    
+    private static void AddPipelineBehaviours(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        services.AddScoped(typeof(IPipelineBehavior<,>),
+            typeof(ValidationBehaviour<,>));
+
+        services.AddScoped(typeof(IPipelineBehavior<,>), 
+            typeof(LoggingBehaviour<,>));
     }
 }

@@ -22,10 +22,5 @@ public class UserDeactivatedEventHandler
             deletedEvent.Deleted.Email);
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.IsEmailUniqueAsync),
             deletedEvent.Deleted.Email);
-        
-        await foreach (var cacheKey in base.GetCacheKeysAsync(deletedEvent))
-        {
-            yield return cacheKey;
-        }
     }
 }

@@ -7,8 +7,8 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
 public class CachedRefreshTokenRepository : CachedRepository<RefreshToken, RefreshTokenId>, IRefreshTokenRepository
 {
-    public CachedRefreshTokenRepository(IRepository<RefreshToken, RefreshTokenId> decorated, IDistributedCache cache,
-        int cacheExpirationMinutes = 10) : base(decorated, cache, cacheExpirationMinutes)
+    public CachedRefreshTokenRepository(IRepository<RefreshToken, RefreshTokenId> decorated, IDistributedCache cache) :
+        base(decorated, cache)
     {
     }
 }

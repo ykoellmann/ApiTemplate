@@ -13,14 +13,16 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
             .HasConversion(id => id.Value,
-                value => (UserId)new IdObject<UserId>(value))
+                value => new UserId(value))
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedNever()
+            .ValueGeneratedOnAdd()
+            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedNever()
+            .ValueGeneratedOnUpdate()
+            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
 
@@ -52,8 +54,5 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
         builder.HasMany(u => u.RefreshTokens)
             .WithOne(rt => rt.User)
             .HasForeignKey(rt => rt.UserId);
-        
-        builder.Metadata.FindNavigation(nameof(User.RefreshTokens))
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

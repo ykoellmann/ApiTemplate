@@ -22,10 +22,5 @@ public class UserCreatedEventHandler
             createdEvent.Created.Email);
         yield return await _repository.EntityValueCacheKeyAsync(nameof(_repository.IsEmailUniqueAsync),
             createdEvent.Created.Email);
-
-        await foreach (var cacheKey in base.GetCacheKeysAsync(createdEvent))
-        {
-            yield return cacheKey;
-        }
     }
 }

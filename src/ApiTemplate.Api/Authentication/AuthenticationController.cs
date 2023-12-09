@@ -3,14 +3,16 @@ using ApiTemplate.Api.Authentication.Response;
 using ApiTemplate.Api.Common.Controllers;
 using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
+using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Authentication.Queries.Login;
-using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Users;
+using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Api.Authentication;
 
@@ -26,7 +28,7 @@ public class AuthenticationController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost("[action]"), EnableRateLimiting("sliding"), AllowAnonymous]
+    [HttpPost("register"), EnableRateLimiting("sliding"), AllowAnonymous]
     public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken cancellationToken)
     {
         var command = _mapper.Map<RegisterCommand>(registerRequest);
@@ -37,15 +39,11 @@ public class AuthenticationController : ApiController
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
 
         return authResult.Match(
-            authResult =>
-            {
-                SetRefreshToken(authResult.RefreshToken).Wait();
-                return Ok(_mapper.Map<AuthenticationResponse>(authResult));
-            },
+            authResult => SetRefreshToken(authResult),
             errors => Problem(errors));
     }
 
-    [HttpPost("[action]"), AllowAnonymous]
+    [HttpPost("login"), AllowAnonymous]
     public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
         var query = _mapper.Map<LoginQuery>(loginRequest);
@@ -56,11 +54,7 @@ public class AuthenticationController : ApiController
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
 
         return authResult.Match(
-            authResult =>
-            {
-                SetRefreshToken(authResult.RefreshToken).Wait();
-                return Ok(_mapper.Map<AuthenticationResponse>(authResult));
-            },
+            authResult => SetRefreshToken(authResult),
             errors => Problem(errors));
     }
     
@@ -78,16 +72,14 @@ public class AuthenticationController : ApiController
             return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
 
         return authResult.Match(
-            authResult =>
-            {
-                SetRefreshToken(authResult.RefreshToken).Wait();
-                return Ok(_mapper.Map<AuthenticationResponse>(authResult));
-            },
+            authResult => SetRefreshToken(authResult),
             errors => Problem(errors));
     }
 
-    private async Task SetRefreshToken(RefreshToken refreshToken)
+    private IActionResult SetRefreshToken(AuthenticationResult authResult)
     {
+        var refreshToken = authResult.RefreshToken;
+        
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
@@ -95,5 +87,7 @@ public class AuthenticationController : ApiController
         };
         
         Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+
+        return Ok(_mapper.Map<AuthenticationResponse>(authResult));
     }
 }

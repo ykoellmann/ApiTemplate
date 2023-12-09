@@ -1,6 +1,6 @@
 using ErrorOr;
 
-namespace ApiTemplate.Domain.Common.Errors;
+namespace ApiTemplate.Domain.Users.Errors;
 
 public static partial class Errors
 {

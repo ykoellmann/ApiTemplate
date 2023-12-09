@@ -21,40 +21,27 @@ public class CachedUserRepository : CachedRepository<User, UserId>, IUserReposit
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByEmailAsync), email);
-        
-        return await _cache.GetOrCreateAsync(cacheKey, async entry =>
-        {
-            entry.SetAbsoluteExpiration(CacheExpiration);
-            
-            return await _decorated.GetByEmailAsync(email, cancellationToken);
-        });
+
+        return await _cache.GetOrCreateAsync(cacheKey, CacheExpiration,
+            _ => _decorated.GetByEmailAsync(email, cancellationToken));
     }
 
     public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
     {
         var cacheKey = await EntityValueCacheKeyAsync(nameof(IsEmailUniqueAsync), email);
-        
-        return await _cache.GetOrCreateAsync(cacheKey, async entry =>
-        {
-            entry.SetAbsoluteExpiration(CacheExpiration);
-            
-            return await _decorated.IsEmailUniqueAsync(email, cancellationToken);
-        });
+
+        return await _cache.GetOrCreateAsync(cacheKey, CacheExpiration,
+            _ => _decorated.IsEmailUniqueAsync(email, cancellationToken));
     }
 
     public async Task<User> AddAsync(User entity, CancellationToken cancellationToken)
     {
         await entity.AddDomainEventAsync(new CreatedEvent<User, UserId>(entity));
-        
+
         var addedEntity = await _decorated.AddAsync(entity, cancellationToken);
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
-        
-        return await Cache.GetOrCreateAsync(cacheKey, async entry =>
-        {
-            entry.SetAbsoluteExpiration(CacheExpiration);
-            
-            return addedEntity;
-        });
+
+        return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration, async _ => addedEntity);
     }
 
     [Obsolete("This method is replaced by its overload")]

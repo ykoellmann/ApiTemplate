@@ -1,11 +1,11 @@
 ﻿using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Errors;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
 using ApiTemplate.Domain.Users.ValueObjects;
+using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.UnitTests.Authentication.Commands;
 
