@@ -33,11 +33,11 @@
         {
             "source": "./",
             "include": [
-                "README.md",
                 "docker-compose.yml",
                 ".gitignore",
                 ".dockerignore",
-                "ApiTemplate.sln"
+                "ApiTemplate.sln",
+                ".env"
             ],
             "target": "./"
         }
