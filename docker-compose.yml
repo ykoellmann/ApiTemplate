@@ -4,15 +4,15 @@
 
 services:
   apitemplate.redis:
-    container_name: redis
+    container_name: apitemplate.redis
     image: redis:latest
     restart: always
     ports:
-      - 8003:6379
+      - "${ADDRESS}:8003:6379"
     networks:
       - apitemplate-backend
   apitemplate.db:
-    container_name: postgres
+    container_name: apitemplate.db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -22,22 +22,22 @@ services:
     volumes:
       - appdata:/var/lib/postgresql/data
     ports:
-      - 8002:5432
+      - "${ADDRESS}:8002:5432"
     networks:
       - apitemplate-backend
   apitemplate.seq:
-    container_name: seq
+    container_name: apitemplate.seq
     image: datalust/seq:latest
     restart: always
     environment:
       - ACCEPT_EULA=Y
     ports:
-      - 5341:5341
-      - 8004:80
+      - "${ADDRESS}:5341:5341"
+      - "${ADDRESS}:8004:80"
     networks:
       - apitemplate-backend
   apitemplate.api.green:
-    container_name: api.green
+    container_name: apitemplate.api.green
     image: apitemplate.api
     build:
       context: .
@@ -52,7 +52,7 @@ services:
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - 8100:80
+      - "${ADDRESS}:8100:80"
     depends_on:
       - apitemplate.db
       - apitemplate.redis
@@ -60,7 +60,7 @@ services:
     networks:
       - apitemplate-backend
   apitemplate.api.blue:
-    container_name: api.blue
+    container_name: apitemplate.api.blue
     image: apitemplate.api
     build:
       context: .
@@ -75,7 +75,7 @@ services:
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - 8200:80
+      - "${ADDRESS}:8200:80"
     depends_on:
       - apitemplate.db
       - apitemplate.redis
@@ -83,7 +83,7 @@ services:
     networks:
       - apitemplate-backend
   apitemplate.api.white:
-    container_name: api.white
+    container_name: apitemplate.api.white
     image: apitemplate.api
     build:
       context: .
@@ -98,8 +98,8 @@ services:
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - 8300:80
-      - 8301:443
+      - "${ADDRESS}:8300:80"
+      - "${ADDRESS}:8301:443"
     depends_on:
       - apitemplate.db
       - apitemplate.redis
@@ -107,14 +107,14 @@ services:
     networks:
       - apitemplate-backend
   apitemplate.loadbalancer:
-    container_name: loadbalancer
+    container_name: apitemplate.loadbalancer
     image: apitemplate.loadbalancer
     build:
       context: .
       dockerfile: src/apitemplate.LoadBalancer/Dockerfile
     restart: always
     ports:
-      - 8001:80
+      - "${ADDRESS}:8001:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
