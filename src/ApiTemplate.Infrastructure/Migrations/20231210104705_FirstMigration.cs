@@ -20,13 +20,14 @@ namespace ApiTemplate.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2023, 12, 10, 10, 47, 5, 612, DateTimeKind.Utc).AddTicks(5559)),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2023, 12, 10, 10, 47, 5, 612, DateTimeKind.Utc).AddTicks(5861)),
                     Email = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     Password = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     FirstName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     LastName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Active = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,9 +41,9 @@ namespace ApiTemplate.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2023, 12, 10, 10, 47, 5, 608, DateTimeKind.Utc).AddTicks(7012)),
                     UpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2023, 12, 10, 10, 47, 5, 608, DateTimeKind.Utc).AddTicks(9010)),
                     Token = table.Column<string>(type: "text", nullable: false),
                     Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Disabled = table.Column<bool>(type: "boolean", nullable: false),
