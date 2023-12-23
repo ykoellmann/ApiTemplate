@@ -6,11 +6,12 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.EventHandlers;
 
-public class UpdatedEventHandler<TIRepository, TEntity, TId, TUpdated> : IEventHandler<TUpdated> 
+public class UpdatedEventHandler<TIRepository, TEntity, TId, TIDto, TUpdated> : INotificationHandler<TUpdated> 
     where TUpdated : UpdatedEvent<TEntity, TId>
-    where TIRepository : IRepository<TEntity, TId>
+    where TIRepository : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
+    where TIDto : IDto<TId>
 {
     private readonly TIRepository _repository;
 

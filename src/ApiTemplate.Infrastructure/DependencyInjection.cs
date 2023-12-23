@@ -35,7 +35,7 @@ public static class DependencyInjection
         ConfigurationManager configuration)
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-        
+
         services.AddAuth(configuration);
 
         services.AddSingleton<IDateTimeService, DateTimeService>();
@@ -57,7 +57,7 @@ public static class DependencyInjection
         services.AddOptionsWithFluentValidation<JwtSettings>(JwtSettings.SectionName);
 
         services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
-        
+
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -82,7 +82,7 @@ public static class DependencyInjection
 
         var repositories = assembly
             .GetTypes()
-            .Where(x => x.GetInterface(typeof(IRepository<,>).Name) is not null && x != typeof(Repository<,>))
+            .Where(x => x.GetInterface(typeof(IRepository<,,>).Name) is not null && x != typeof(Repository<,,>))
             .OrderBy(repo => repo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Any(field => field.FieldType == typeof(IDistributedCache)))
             .ToList();
@@ -90,7 +90,7 @@ public static class DependencyInjection
         repositories.ForEach(repository =>
         {
             var repositoryInterface =
-                repository.GetInterfaces().FirstOrDefault(x => x.Name != typeof(IRepository<,>).Name);
+                repository.GetInterfaces().FirstOrDefault(x => x.Name != typeof(IRepository<,,>).Name);
 
             if (repositoryInterface is null) return;
 
@@ -104,7 +104,6 @@ public static class DependencyInjection
                 collection.AddTransient(repositoryInterface, repository);
                 collection.AddCacheEventHandlers(repositoryInterface, repository);
             }
-
         });
     }
 
@@ -113,19 +112,20 @@ public static class DependencyInjection
     {
         var cacheDomainEvents = repository
             .GetCustomAttributes<CacheDomainEventAttribute>()
-            .OrderBy(domainEvent => domainEvent.EventHandlerType == typeof(UpdatedEventHandler<,,,>) ||
-                                     domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,>) ||
-                                     domainEvent.EventHandlerType == typeof(CreatedEventHandler<,,,>))
+            .OrderBy(domainEvent => domainEvent.EventHandlerType == typeof(UpdatedEventHandler<,,,,>) ||
+                                    domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,,>) ||
+                                    domainEvent.EventHandlerType == typeof(CreatedEventHandler<,,,,>))
             .ToList();
 
         var clearedDomainEvents = new List<CacheDomainEventAttribute>();
         foreach (var domainEvent in cacheDomainEvents)
-        { 
-            if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,>).Name &&
-                domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,>).Name &&
-                domainEvent.EventHandlerType.BaseType.Name != typeof(CreatedEventHandler<,,,>).Name)
+        {
+            if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,,>).Name &&
+                domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,,>).Name &&
+                domainEvent.EventHandlerType.BaseType.Name != typeof(CreatedEventHandler<,,,,>).Name)
             {
-                if (clearedDomainEvents.TrueForAll(clearedDomainEvent => clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
+                if (clearedDomainEvents.TrueForAll(clearedDomainEvent =>
+                        clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
                 {
                     clearedDomainEvents.Add(domainEvent);
                 }
@@ -135,29 +135,32 @@ public static class DependencyInjection
                 clearedDomainEvents.Add(domainEvent);
             }
         }
-        
-        
-        var genericEventArguments = repository.GetInterface(typeof(IRepository<,>).Name).GetGenericArguments();
+
+
+        var genericEventArguments = repository.GetInterface(typeof(IRepository<,,>).Name).GetGenericArguments();
 
         clearedDomainEvents
             .ForEach(domainEvent =>
             {
                 if (domainEvent.EventType.IsGenericType)
                 {
-                    domainEvent.EventType = domainEvent.EventType.MakeGenericType(genericEventArguments);
+                    var arguments = genericEventArguments[Range.EndAt(2)];
+                    domainEvent.EventType = domainEvent.EventType.MakeGenericType(arguments);
                 }
-                
+
                 if (domainEvent.EventHandlerType.IsGenericType)
                 {
                     domainEvent.EventHandlerType = domainEvent.EventHandlerType.MakeGenericType(repositoryInterface,
                         genericEventArguments[0],
-                        genericEventArguments[1], domainEvent.EventType);
+                        genericEventArguments[1],
+                        genericEventArguments[2],
+                        domainEvent.EventType);
                 }
             });
 
         foreach (var domainEvent in clearedDomainEvents)
         {
-            var interfaceType = typeof(IEventHandler<>).MakeGenericType(domainEvent.EventType);
+            var interfaceType = typeof(INotificationHandler<>).MakeGenericType(domainEvent.EventType);
             collection.AddTransient(interfaceType, domainEvent.EventHandlerType);
         }
     }

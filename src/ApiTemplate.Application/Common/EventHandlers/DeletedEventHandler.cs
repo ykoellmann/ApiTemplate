@@ -6,11 +6,12 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.EventHandlers;
 
-public class DeletedEventHandler<TIRepository, TEntity, TId, TDeleted> : IEventHandler<TDeleted> 
+public class DeletedEventHandler<TIRepository, TEntity, TId, TIDto, TDeleted> : INotificationHandler<TDeleted> 
     where TDeleted : DeletedEvent<TEntity, TId>
-    where TIRepository : IRepository<TEntity, TId>
+    where TIRepository : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
+    where TIDto : IDto<TId>
 {
     private readonly TIRepository _repository;
     private List<string>? _cacheKeys;

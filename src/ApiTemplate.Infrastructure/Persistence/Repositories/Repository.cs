@@ -11,12 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
-[CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,>))]
-[CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,>))]
-[CacheDomainEvent(typeof(CreatedEvent<,>), typeof(CreatedEventHandler<,,,>))]
-public class Repository<TEntity, TId> : IRepository<TEntity, TId>
+[CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,,>))]
+[CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,,>))]
+[CacheDomainEvent(typeof(CreatedEvent<,>), typeof(CreatedEventHandler<,,,,>))]
+public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
+    where TIDto : IDto<TId>
 {
     private readonly ApiTemplateDbContext _dbContext;
 
@@ -38,6 +39,14 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
+    }
+    
+    public virtual async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
+        where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+    {
+        return await _dbContext.Set<TEntity>()
+            .Select(new TDto().Projection())
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
     }
 

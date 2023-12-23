@@ -8,7 +8,8 @@ services:
     image: redis:latest
     restart: always
     ports:
-      - "${ADDRESS}:8003:6379"
+#      - "${ADDRESS}:8003:6379"
+      - 8003:6379
     networks:
       - apitemplate-backend
   apitemplate.db:
@@ -22,7 +23,8 @@ services:
     volumes:
       - appdata:/var/lib/postgresql/data
     ports:
-      - "${ADDRESS}:8002:5432"
+#      - "${ADDRESS}:8002:5432"
+      - 8002:5432
     networks:
       - apitemplate-backend
   apitemplate.seq:
@@ -32,8 +34,10 @@ services:
     environment:
       - ACCEPT_EULA=Y
     ports:
-      - "${ADDRESS}:5341:5341"
-      - "${ADDRESS}:8004:80"
+#      - "${ADDRESS}:5341:5341"
+#      - "${ADDRESS}:8004:80"
+      - 5341:5341
+      - 8004:80
     networks:
       - apitemplate-backend
   apitemplate.api.green:
@@ -45,14 +49,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
-      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=postgres;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=apitemplate.db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=apitemplate.redis:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - "${ADDRESS}:8100:80"
+#      - "${ADDRESS}:8100:80"
+      - 8100:80
     depends_on:
       - apitemplate.db
       - apitemplate.redis
@@ -68,14 +73,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
-      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=postgres;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=apitemplate.db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=apitemplate.redis:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - "${ADDRESS}:8200:80"
+#      - "${ADDRESS}:8200:80"
+      - 8200:80
     depends_on:
       - apitemplate.db
       - apitemplate.redis
@@ -91,15 +97,17 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
-      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=postgres;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=apitemplate.db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=apitemplate.redis:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-      - "${ADDRESS}:8300:80"
-      - "${ADDRESS}:8301:443"
+#      - "${ADDRESS}:8300:80"
+#      - "${ADDRESS}:8301:443"
+      - 8300:80
+      - 8301:443
     depends_on:
       - apitemplate.db
       - apitemplate.redis
@@ -114,7 +122,8 @@ services:
       dockerfile: src/apitemplate.LoadBalancer/Dockerfile
     restart: always
     ports:
-      - "${ADDRESS}:8001:80"
+#      - "${ADDRESS}:8001:80"
+      - 8001:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80

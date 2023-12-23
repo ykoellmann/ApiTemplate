@@ -7,7 +7,7 @@ using ApiTemplate.Domain.Users.ValueObjects;
 namespace ApiTemplate.Application.Users.Events;
 
 public class UserCreatedEventHandler 
-    : CreatedEventHandler<IUserRepository, User, UserId, CreatedEvent<User, UserId>>
+    : CreatedEventHandler<IUserRepository, User, UserId, IUserDto, CreatedEvent<User, UserId>>
 {
     private readonly IUserRepository _repository;
 

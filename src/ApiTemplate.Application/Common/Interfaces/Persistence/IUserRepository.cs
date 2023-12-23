@@ -3,7 +3,7 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
-public interface IUserRepository : IRepository<User, UserId>
+public interface IUserRepository : IRepository<User, UserId, IUserDto>
 {
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken);

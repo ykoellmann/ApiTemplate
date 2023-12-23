@@ -5,13 +5,17 @@ using ErrorOr;
 
 namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
-public interface IRepository<TEntity, TId>
+public interface IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
+    where TIDto : IDto<TId>
 {
     public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
     
     public Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
+
+    Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
+        where TDto : Dto<TDto, TEntity, TId>, TIDto, new();
 
     public Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken);
     

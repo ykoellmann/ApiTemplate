@@ -24,7 +24,7 @@ public class User : AggregateRoot<UserId>
     public bool Active { get; set; } = true;
     
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
-    public virtual RefreshToken? ActiveRefreshToken => _refreshTokens.Find(rt => !rt.Expired);
+    public virtual RefreshToken? ActiveRefreshToken => _refreshTokens.SingleOrDefault(rt => !rt.Expired);
     public bool HasActiveRefreshToken => ActiveRefreshToken is not null;
     
     [NotMapped, Obsolete("Because of generic AggregateRoot")]

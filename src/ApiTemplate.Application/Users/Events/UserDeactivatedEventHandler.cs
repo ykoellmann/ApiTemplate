@@ -7,7 +7,7 @@ using ApiTemplate.Domain.Users.ValueObjects;
 namespace ApiTemplate.Application.Users.Events;
 
 public class UserDeactivatedEventHandler 
-    : DeletedEventHandler<IUserRepository, User, UserId, DeletedEvent<User, UserId>>
+    : DeletedEventHandler<IUserRepository, User, UserId, IUserDto, DeletedEvent<User, UserId>>
 {
     private readonly IUserRepository _repository;
     

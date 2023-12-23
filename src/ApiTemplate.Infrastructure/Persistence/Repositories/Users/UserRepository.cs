@@ -8,10 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-[CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UserUpdatedEventHandler))]
 [CacheDomainEvent(typeof(DeletedEvent<,>), typeof(UserDeactivatedEventHandler))]
 [CacheDomainEvent(typeof(CreatedEvent<,>), typeof(UserCreatedEventHandler))]
-public class UserRepository : Repository<User, UserId>, IUserRepository
+public class UserRepository : Repository<User, UserId, IUserDto>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
 

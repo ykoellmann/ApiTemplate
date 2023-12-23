@@ -9,12 +9,13 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
-public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
+public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
+    where TIDto : IDto<TId>
 {
     public readonly TimeSpan CacheExpiration;
-    private readonly IRepository<TEntity, TId> _decorated;
+    private readonly IRepository<TEntity, TId, TIDto> _decorated;
 
     protected readonly IDistributedCache Cache;
 
@@ -24,7 +25,7 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     public async Task<string> EntityValueCacheKeyAsync(string usage, string value) =>
         $"{typeof(TEntity).Name}:{usage}:{value}";
 
-    public CachedRepository(IRepository<TEntity, TId> decorated, IDistributedCache cache,
+    public CachedRepository(IRepository<TEntity, TId, TIDto> decorated, IDistributedCache cache,
         int cacheExpirationMinutes = 10)
     {
         _decorated = decorated;
@@ -47,6 +48,16 @@ public class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
             _ => _decorated.GetByIdAsync(id, cancellationToken, specification));
+    }
+
+    public async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
+        where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+    {
+        var cacheKey =
+            await EntityValueCacheKeyAsync(nameof(GetDtoByIdAsync) + ":" + typeof(TDto).Name, id.Value.ToString());
+
+        return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
+            _ => _decorated.GetDtoByIdAsync<TDto>(id, cancellationToken));
     }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)

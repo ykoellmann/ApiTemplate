@@ -5,9 +5,9 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-public class CachedRefreshTokenRepository : CachedRepository<RefreshToken, RefreshTokenId>, IRefreshTokenRepository
+public class CachedRefreshTokenRepository : CachedRepository<RefreshToken, RefreshTokenId, IRefreshTokenDto>, IRefreshTokenRepository
 {
-    public CachedRefreshTokenRepository(IRepository<RefreshToken, RefreshTokenId> decorated, IDistributedCache cache) :
+    public CachedRefreshTokenRepository(IRefreshTokenRepository decorated, IDistributedCache cache) :
         base(decorated, cache)
     {
     }
