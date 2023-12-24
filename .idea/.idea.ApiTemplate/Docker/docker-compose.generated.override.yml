@@ -21,18 +21,18 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57016:57100"
-    - "127.0.0.1:57216:57300"
+    - "127.0.0.1:57020:57100"
+    - "127.0.0.1:57220:57300"
     volumes:
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.1\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.2\\\
       Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.303\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_24_00_59_14:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_24_16_45_59:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.api.green:
     build:
@@ -55,18 +55,18 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57017:57100"
-    - "127.0.0.1:57217:57300"
+    - "127.0.0.1:57021:57100"
+    - "127.0.0.1:57221:57300"
     volumes:
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.1\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.2\\\
       Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.303\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_24_00_59_14:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_24_16_45_59:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.api.white:
     build:
@@ -89,18 +89,18 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57018:57100"
-    - "127.0.0.1:57218:57300"
+    - "127.0.0.1:57022:57100"
+    - "127.0.0.1:57222:57300"
     volumes:
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.1\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.2\\\
       Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.303\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_24_00_59_14:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_24_16_45_59:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.loadbalancer:
     build:
@@ -123,16 +123,16 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.loadbalancer:dev"
     ports:
-    - "127.0.0.1:57019:57100"
-    - "127.0.0.1:57219:57300"
+    - "127.0.0.1:57023:57100"
+    - "127.0.0.1:57223:57300"
     volumes:
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.LoadBalancer:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.1\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.2\\\
       Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.11799.303\\\
+    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2023_12_24_00_59_14:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2023_12_24_16_45_59:/var/opt/rider-debugger:rw"
     working_dir: "/app"

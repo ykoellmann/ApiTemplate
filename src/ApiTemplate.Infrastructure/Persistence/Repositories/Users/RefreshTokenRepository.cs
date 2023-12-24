@@ -24,15 +24,12 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId, I
             .Where(rt => rt.UserId == userId && !rt.Disabled)
             .ToListAsync(cancellationToken);
 
-        refreshTokens.ForEach(async rt => 
-            await entity.AddDomainEventAsync(new DeletedEvent<RefreshToken, RefreshTokenId>(rt)));
+        refreshTokens.ForEach(async rt =>
+        {
+            rt.Disabled = true;
+            await entity.AddDomainEventAsync(new DeletedEvent<RefreshToken, RefreshTokenId>(rt));
+        });
         
-        await _dbContext.RefreshTokens
-            .Where(rt => rt.UserId == userId && !rt.Disabled)
-            .ExecuteUpdateAsync(s =>
-                    s.SetProperty(rt => rt.Disabled, true),
-                cancellationToken);
-
         return await base.AddAsync(entity, userId, cancellationToken);
     }
 }

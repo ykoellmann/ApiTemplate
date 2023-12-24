@@ -41,7 +41,7 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
             .Specificate(specification)
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
     }
-    
+
     public virtual async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
         where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
     {
@@ -59,7 +59,8 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
         await _dbContext.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return entity;
+        return await _dbContext.Set<TEntity>()
+            .SingleAsync(e => e.Id == entity.Id, cancellationToken: cancellationToken);
     }
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
@@ -68,7 +69,8 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return entity;
+        return await _dbContext.Set<TEntity>()
+            .SingleAsync(e => e.Id == entity.Id, cancellationToken: cancellationToken);
     }
 
     public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)

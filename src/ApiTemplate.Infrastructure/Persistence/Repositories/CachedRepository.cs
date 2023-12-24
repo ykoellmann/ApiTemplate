@@ -37,6 +37,10 @@ public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, T
         Specification<TEntity, TId> specification = null)
     {
         var cacheKey = await EntityCacheKeyAsync(nameof(GetListAsync));
+        
+        if (specification is not null)
+            return await _decorated.GetListAsync(cancellationToken, specification);
+        
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
             _ => _decorated.GetListAsync(cancellationToken, specification));
     }
@@ -45,6 +49,9 @@ public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, T
         Specification<TEntity, TId> specification = null)
     {
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), id.Value.ToString());
+        
+        if (specification is not null)
+            return await _decorated.GetByIdAsync(id, cancellationToken, specification);
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
             _ => _decorated.GetByIdAsync(id, cancellationToken, specification));

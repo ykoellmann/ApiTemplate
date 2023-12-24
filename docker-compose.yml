@@ -133,6 +133,12 @@ services:
       - ReverseProxy__Clusters__api__LoadBalancingPolicy=RoundRobin
       - ReverseProxy__Routes__api__ClusterId=api
       - ReverseProxy__Routes__api__Match__Path={**catch-all}
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=apitemplate.db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=apitemplate.redis:6379
+      - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
+      - JwtSettings__ExpiryMinutes=10
+      - JwtSettings__Issuer=ApiTemplate
+      - JwtSettings__Audience=ApiTemplate
     depends_on:
       - apitemplate.api.green
       - apitemplate.api.blue
