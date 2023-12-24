@@ -1,6 +1,5 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Users.Events;
-using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Attributes;

@@ -1,10 +1,9 @@
-﻿using ApiTemplate.Application.Common.EventHandlers;
+﻿using ApiTemplate.Application.Common.Events.Deleted;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 
-namespace ApiTemplate.Application.Users.Events;
+namespace ApiTemplate.Application.Users.Events.Deactivated;
 
 public class UserDeactivatedEventHandler 
     : DeletedEventHandler<IUserRepository, User, UserId, IUserDto, DeletedEvent<User, UserId>>

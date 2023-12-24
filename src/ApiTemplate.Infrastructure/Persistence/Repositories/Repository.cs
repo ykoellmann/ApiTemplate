@@ -1,6 +1,7 @@
-﻿using ApiTemplate.Application.Common.EventHandlers;
+﻿using ApiTemplate.Application.Common.Events.Created;
+using ApiTemplate.Application.Common.Events.Deleted;
+using ApiTemplate.Application.Common.Events.Updated;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.Users.ValueObjects;

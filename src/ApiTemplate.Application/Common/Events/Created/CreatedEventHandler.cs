@@ -1,10 +1,8 @@
-﻿using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
-using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Events;
+﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Models;
 using MediatR;
 
-namespace ApiTemplate.Application.Common.EventHandlers;
+namespace ApiTemplate.Application.Common.Events.Created;
 
 public class CreatedEventHandler<TIRepository, TEntity, TId, TIDto, TCreated> : INotificationHandler<TCreated> 
     where TCreated : CreatedEvent<TEntity, TId>

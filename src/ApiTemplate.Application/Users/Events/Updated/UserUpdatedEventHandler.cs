@@ -1,10 +1,9 @@
-﻿using ApiTemplate.Application.Common.EventHandlers;
+﻿using ApiTemplate.Application.Common.Events.Updated;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 
-namespace ApiTemplate.Application.Users.Events;
+namespace ApiTemplate.Application.Users.Events.Updated;
 
 public class UserUpdatedEventHandler 
     : UpdatedEventHandler<IUserRepository, User, UserId, IUserDto, UpdatedEvent<User, UserId>>

@@ -1,11 +1,5 @@
 using ApiTemplate.Api;
 using ApiTemplate.Application;
-using ApiTemplate.Application.Common.EventHandlers;
-using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
-using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Domain.Common.Events;
-using ApiTemplate.Domain.Users;
-using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure;
 using Serilog;
 

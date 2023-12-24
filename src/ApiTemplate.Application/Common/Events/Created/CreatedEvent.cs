@@ -1,6 +1,6 @@
 ﻿using ApiTemplate.Domain.Models;
 
-namespace ApiTemplate.Domain.Common.Events;
+namespace ApiTemplate.Application.Common.Events.Created;
 
 public record CreatedEvent<TEntity, TId>(TEntity Created) : IDomainEvent
     where TEntity : Entity<TId> 

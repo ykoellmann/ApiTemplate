@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
-using ApiTemplate.Application.Common.EventHandlers;
+using ApiTemplate.Application.Common.Events.Created;
+using ApiTemplate.Application.Common.Events.Deleted;
+using ApiTemplate.Application.Common.Events.Updated;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
-using ApiTemplate.Infrastructure.Persistence.Repositories;
 using ApiTemplate.UnitTests.Rules;
 using FluentValidation;
 using MediatR;
-using Mono.Cecil;
 using NetArchTest.Rules;
 
 namespace ApiTemplate.Application.UnitTests.Architecture;

@@ -1,7 +1,6 @@
 ﻿using ApiTemplate.Domain.Models;
-using MediatR;
 
-namespace ApiTemplate.Domain.Common.Events;
+namespace ApiTemplate.Application.Common.Events.Updated;
 
 public record UpdatedEvent<TEntity, TId>(TEntity Updated) : IDomainEvent 
     where TEntity : Entity<TId> 
