@@ -39,8 +39,8 @@ public class UpdatedEventHandler<TIRepository, TEntity, TId, TIDto, TUpdated> : 
         }
     }
 
-    protected virtual IAsyncEnumerable<string> GetCacheKeysAsync(TUpdated updatedEvent)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TUpdated updatedEvent)
     {
-        throw new NotImplementedException("Override this method to add additional cache keys.");
+        yield break;
     }
 }

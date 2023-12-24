@@ -40,8 +40,8 @@ public class DeletedEventHandler<TIRepository, TEntity, TId, TIDto, TDeleted> : 
         }
     }
 
-    protected virtual IAsyncEnumerable<string> GetCacheKeysAsync(TDeleted deletedEvent)
+    protected virtual async IAsyncEnumerable<string> GetCacheKeysAsync(TDeleted deletedEvent)
     {
-        throw new NotImplementedException("Override this method to add additional cache keys.");
+        yield break;
     }
 }

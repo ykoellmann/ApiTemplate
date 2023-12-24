@@ -37,7 +37,6 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
         if (user.ActiveRefreshToken.Token != request.TokenToRefresh)
             return Errors.Authentication.InvalidRefreshToken;
         
-        
         var newRefreshToken = await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);
         
