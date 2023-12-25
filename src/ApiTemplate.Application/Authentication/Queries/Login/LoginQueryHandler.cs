@@ -3,9 +3,7 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Users;
-using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
-using MediatR;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
@@ -15,14 +13,12 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
-    private readonly IPublisher _mediator;
 
-    public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IPublisher mediator)
+    public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
     {
         _jwtTokenProvider = jwtTokenProvider;
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
-        _mediator = mediator;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)

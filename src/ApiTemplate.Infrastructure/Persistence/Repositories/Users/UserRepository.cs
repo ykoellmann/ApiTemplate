@@ -2,13 +2,14 @@
 using ApiTemplate.Application.Users.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
-using ApiTemplate.Infrastructure.Attributes;
+using ApiTemplate.Infrastructure.Cache.CustomCacheAttributes;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-// [CacheDomainEvent(typeof(DeletedEvent<,>), typeof(UserDeactivatedEventHandler))]
-// [CacheDomainEvent(typeof(CreatedEvent<,>), typeof(UserCreatedEventHandler))]
+[CustomCreatedEvent]
+[CustomUpdatedEvent]
+[CustomDeletedEvent]
 public class UserRepository : Repository<User, UserId, IUserDto>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;

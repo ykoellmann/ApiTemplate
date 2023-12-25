@@ -5,16 +5,12 @@ using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.Users.ValueObjects;
-using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Extensions;
 using ErrorOr;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
-[CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,,>))]
-[CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,,>))]
-[CacheDomainEvent(typeof(CreatedEvent<,>), typeof(CreatedEventHandler<,,,,>))]
 public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>

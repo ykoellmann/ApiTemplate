@@ -6,8 +6,9 @@ using ApiTemplate.Application.Common.Events.Updated;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Services;
-using ApiTemplate.Infrastructure.Attributes;
 using ApiTemplate.Infrastructure.Authentication;
+using ApiTemplate.Infrastructure.Cache;
+using ApiTemplate.Infrastructure.Cache.CustomCacheAttributes;
 using ApiTemplate.Infrastructure.Extensions;
 using ApiTemplate.Infrastructure.Persistence;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
@@ -103,59 +104,37 @@ public static class DependencyInjection
         });
     }
 
-    //ToDo: refactor dont use attributes
+
     private static void AddCacheEventHandlers(this IServiceCollection collection, Type repositoryInterface,
         Type repository)
     {
-        var cacheDomainEvents = repository
-            .GetCustomAttributes<CacheDomainEventAttribute>()
-            .OrderBy(domainEvent => domainEvent.EventHandlerType == typeof(UpdatedEventHandler<,,,,>) ||
-                                    domainEvent.EventHandlerType == typeof(DeletedEventHandler<,,,,>) ||
-                                    domainEvent.EventHandlerType == typeof(CreatedEventHandler<,,,,>))
-            .ToList();
+        var cacheDomainEvents = new List<CacheDomainEvent>();
 
-        var clearedDomainEvents = new List<CacheDomainEventAttribute>();
-        foreach (var domainEvent in cacheDomainEvents)
-        {
-            if (domainEvent.EventHandlerType.BaseType.Name != typeof(UpdatedEventHandler<,,,,>).Name &&
-                domainEvent.EventHandlerType.BaseType.Name != typeof(DeletedEventHandler<,,,,>).Name &&
-                domainEvent.EventHandlerType.BaseType.Name != typeof(CreatedEventHandler<,,,,>).Name)
-            {
-                if (clearedDomainEvents.TrueForAll(clearedDomainEvent =>
-                        clearedDomainEvent.EventHandlerType.BaseType.Name != domainEvent.EventHandlerType.Name))
-                {
-                    clearedDomainEvents.Add(domainEvent);
-                }
-            }
-            else
-            {
-                clearedDomainEvents.Add(domainEvent);
-            }
-        }
-
-
+        if (repository.GetCustomAttribute<CustomCreatedEventAttribute>() is null)
+            cacheDomainEvents.Add(new CacheDomainEvent(typeof(CreatedEvent<,>), typeof(CreatedEventHandler<,,,,>)));
+        
+        if (repository.GetCustomAttribute<CustomUpdatedEventAttribute>() is null)
+            cacheDomainEvents.Add(new CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,,>)));
+        
+        if (repository.GetCustomAttribute<CustomDeletedEventAttribute>() is null)
+            cacheDomainEvents.Add(new CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,,>)));
+        
         var genericEventArguments = repository.GetInterface(typeof(IRepository<,,>).Name).GetGenericArguments();
-
-        clearedDomainEvents
+        
+        cacheDomainEvents
             .ForEach(domainEvent =>
             {
-                if (domainEvent.EventType.IsGenericType)
-                {
-                    var arguments = genericEventArguments[Range.EndAt(2)];
-                    domainEvent.EventType = domainEvent.EventType.MakeGenericType(arguments);
-                }
+                var arguments = genericEventArguments[Range.EndAt(2)];
+                domainEvent.EventType = domainEvent.EventType.MakeGenericType(arguments);
 
-                if (domainEvent.EventHandlerType.IsGenericType)
-                {
-                    domainEvent.EventHandlerType = domainEvent.EventHandlerType.MakeGenericType(repositoryInterface,
-                        genericEventArguments[0],
-                        genericEventArguments[1],
-                        genericEventArguments[2],
-                        domainEvent.EventType);
-                }
+                domainEvent.EventHandlerType = domainEvent.EventHandlerType.MakeGenericType(repositoryInterface,
+                    genericEventArguments[0],
+                    genericEventArguments[1],
+                    genericEventArguments[2],
+                    domainEvent.EventType);
             });
-
-        foreach (var domainEvent in clearedDomainEvents)
+        
+        foreach (var domainEvent in cacheDomainEvents)
         {
             var interfaceType = typeof(INotificationHandler<>).MakeGenericType(domainEvent.EventType);
             collection.AddTransient(interfaceType, domainEvent.EventHandlerType);
