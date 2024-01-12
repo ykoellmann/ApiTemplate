@@ -24,6 +24,10 @@
         </AssemblyAttribute>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Users\Events\" />
+    </ItemGroup>
+
 
 
 
