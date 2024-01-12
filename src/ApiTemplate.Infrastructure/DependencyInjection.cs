@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
-using ApiTemplate.Application.Common.Events.Created;
-using ApiTemplate.Application.Common.Events.Deleted;
-using ApiTemplate.Application.Common.Events.Updated;
+using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Services;
@@ -108,24 +106,25 @@ public static class DependencyInjection
     private static void AddCacheEventHandlers(this IServiceCollection collection, Type repositoryInterface,
         Type repository)
     {
-        var cacheDomainEvents = new List<CacheDomainEvent>();
+        var cacheDomainEvents = repository.GetCustomAttributes<CustomClearCacheEventAttribute>()
+            .Select(
+                customClearCacheEventAttribute =>
+                    new CacheDomainEvent(customClearCacheEventAttribute.EventType,
+                        typeof(ClearCacheEventHandler<,,,,>)))
+            .ToList();
 
-        if (repository.GetCustomAttribute<CustomCreatedEventAttribute>() is null)
-            cacheDomainEvents.Add(new CacheDomainEvent(typeof(CreatedEvent<,>), typeof(CreatedEventHandler<,,,,>)));
-        
-        if (repository.GetCustomAttribute<CustomUpdatedEventAttribute>() is null)
-            cacheDomainEvents.Add(new CacheDomainEvent(typeof(UpdatedEvent<,>), typeof(UpdatedEventHandler<,,,,>)));
-        
-        if (repository.GetCustomAttribute<CustomDeletedEventAttribute>() is null)
-            cacheDomainEvents.Add(new CacheDomainEvent(typeof(DeletedEvent<,>), typeof(DeletedEventHandler<,,,,>)));
-        
+        cacheDomainEvents.Add(new CacheDomainEvent(typeof(ClearCacheEvent<,>), typeof(ClearCacheEventHandler<,,,,>)));
+
         var genericEventArguments = repository.GetInterface(typeof(IRepository<,,>).Name).GetGenericArguments();
-        
+
         cacheDomainEvents
             .ForEach(domainEvent =>
             {
-                var arguments = genericEventArguments[Range.EndAt(2)];
-                domainEvent.EventType = domainEvent.EventType.MakeGenericType(arguments);
+                if (domainEvent.EventType.IsGenericType)
+                {
+                    var arguments = genericEventArguments[Range.EndAt(2)];
+                    domainEvent.EventType = domainEvent.EventType.MakeGenericType(arguments);
+                }
 
                 domainEvent.EventHandlerType = domainEvent.EventHandlerType.MakeGenericType(repositoryInterface,
                     genericEventArguments[0],
@@ -133,7 +132,7 @@ public static class DependencyInjection
                     genericEventArguments[2],
                     domainEvent.EventType);
             });
-        
+
         foreach (var domainEvent in cacheDomainEvents)
         {
             var interfaceType = typeof(INotificationHandler<>).MakeGenericType(domainEvent.EventType);

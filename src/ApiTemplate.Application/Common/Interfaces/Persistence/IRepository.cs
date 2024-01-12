@@ -1,4 +1,5 @@
-﻿using ApiTemplate.Domain.Common.Specification;
+﻿using ApiTemplate.Application.Common.Events;
+using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
@@ -22,8 +23,9 @@ public interface IRepository<TEntity, TId, TIDto>
     public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
     
     public Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken);
-    
-    public Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null);
+
+    public Task ClearCacheAsync<TChanged>(TChanged changedEvent)
+        where TChanged : ClearCacheEvent<TEntity, TId>;
     public Task<string> EntityValueCacheKeyAsync(string usage, string value);
     public Task<string> EntityCacheKeyAsync(string usage);
 }

@@ -6,14 +6,6 @@ namespace ApiTemplate.Domain.Users;
 
 public class User : AggregateRoot<UserId>
 {
-    public User(string firstName, string lastName, string email, string password) : base(new UserId())
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Password = password;
-    }
-    
     private readonly List<RefreshToken> _refreshTokens = new();
     
     public string Email { get; set; } = null!;
@@ -39,5 +31,11 @@ public class User : AggregateRoot<UserId>
     [NotMapped, Obsolete("Because of generic AggregateRoot")]
     public override User UpdatedByUser { get; set; } = null!;
     
-    
+    public User(string firstName, string lastName, string email, string password) : base(new UserId())
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Password = password;
+    }
 }

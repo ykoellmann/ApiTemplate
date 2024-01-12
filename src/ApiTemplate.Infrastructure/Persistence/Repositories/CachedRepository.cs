@@ -1,6 +1,4 @@
-﻿using ApiTemplate.Application.Common.Events.Created;
-using ApiTemplate.Application.Common.Events.Deleted;
-using ApiTemplate.Application.Common.Events.Updated;
+﻿using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
@@ -11,7 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
-public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
+public abstract class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
     where TId : IdObject<TId>
     where TIDto : IDto<TId>
@@ -71,7 +69,7 @@ public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, T
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)
     {
-        entity.AddDomainEventAsync(new CreatedEvent<TEntity, TId>(entity));
+        entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         var addedEntity = await _decorated.AddAsync(entity, userId, cancellationToken);
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
@@ -81,7 +79,7 @@ public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, T
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        entity.AddDomainEventAsync(new UpdatedEvent<TEntity, TId>(entity));
+        entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         var updatedEntity = await _decorated.UpdateAsync(entity, cancellationToken);
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), updatedEntity.Id.Value.ToString());
@@ -93,14 +91,31 @@ public class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, T
     {
         var entity = await _decorated.GetByIdAsync(id, cancellationToken);
 
-        entity.AddDomainEventAsync(new DeletedEvent<TEntity, TId>(entity));
+        entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         return await _decorated.DeleteAsync(id, cancellationToken);
     }
 
-    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null)
+    private async IAsyncEnumerable<string> GetBaseCacheKeysAsync<TChanged>(TChanged changedEvent)
+        where TChanged : ClearCacheEvent<TEntity, TId>
     {
-        await foreach (var cacheKey in cacheKeys)
+        yield return await EntityValueCacheKeyAsync(nameof(GetByIdAsync),
+            changedEvent.Changed.Id.Value.ToString());
+        yield return await EntityCacheKeyAsync(nameof(GetListAsync));
+        
+        await foreach (var cacheKey in GetCacheKeysAsync(changedEvent))
+        {
+            yield return cacheKey;
+        }
+    }
+
+    protected abstract IAsyncEnumerable<string> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
+        where TChanged : ClearCacheEvent<TEntity, TId>;
+
+    public async Task ClearCacheAsync<TChanged>(TChanged changedEvent)
+        where TChanged : ClearCacheEvent<TEntity, TId>
+    {
+        await foreach (var cacheKey in GetBaseCacheKeysAsync(changedEvent))
         {
             await Cache.RemoveAsync(cacheKey);
         }

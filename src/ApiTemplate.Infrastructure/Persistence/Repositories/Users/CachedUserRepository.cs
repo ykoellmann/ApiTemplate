@@ -1,5 +1,6 @@
-﻿using ApiTemplate.Application.Common.Events.Created;
+﻿using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Application.Users.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Extensions;
@@ -16,6 +17,14 @@ public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IU
     {
         _decorated = decorated;
         _cache = cache;
+    }
+
+    protected override async IAsyncEnumerable<string> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
+    {
+        yield return await EntityValueCacheKeyAsync(nameof(GetByEmailAsync),
+            changedEvent.Changed.Email);
+        yield return await EntityValueCacheKeyAsync(nameof(IsEmailUniqueAsync),
+            changedEvent.Changed.Email);
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
@@ -36,7 +45,7 @@ public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IU
 
     public async Task<User> AddAsync(User entity, CancellationToken cancellationToken)
     {
-        await entity.AddDomainEventAsync(new CreatedEvent<User, UserId>(entity));
+        await entity.AddDomainEventAsync(new UserCreatedEvent(entity));
 
         var addedEntity = await _decorated.AddAsync(entity, cancellationToken);
         var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
@@ -48,6 +57,6 @@ public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IU
     public override async Task<User> AddAsync(User entity, UserId userId,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("This method is replaced by its overload");
     }
 }

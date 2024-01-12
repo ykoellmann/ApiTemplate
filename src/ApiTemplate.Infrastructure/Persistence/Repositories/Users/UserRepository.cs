@@ -7,9 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-[CustomCreatedEvent]
-[CustomUpdatedEvent]
-[CustomDeletedEvent]
+[CustomClearCacheEvent(typeof(UserCreatedEvent))]
 public class UserRepository : Repository<User, UserId, IUserDto>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;

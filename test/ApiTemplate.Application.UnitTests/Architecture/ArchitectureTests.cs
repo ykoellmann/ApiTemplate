@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-using ApiTemplate.Application.Common.Events.Created;
-using ApiTemplate.Application.Common.Events.Deleted;
-using ApiTemplate.Application.Common.Events.Updated;
+using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
 using ApiTemplate.UnitTests.Rules;
@@ -149,11 +147,7 @@ public class ArchitectureTests
             .And()
             .DoNotImplementInterface(typeof(INotificationHandler<>))
             .And()
-            .DoNotInherit(typeof(CreatedEventHandler<,,,,>))
-            .And()
-            .DoNotInherit(typeof(UpdatedEventHandler<,,,,>))
-            .And()
-            .DoNotInherit(typeof(DeletedEventHandler<,,,,>))
+            .DoNotInherit(typeof(ClearCacheEventHandler<,,,,>))
             .Should()
             .MeetCustomRule(new AsyncMethodsHaveSuffixAsyncRule())
             .GetResult();

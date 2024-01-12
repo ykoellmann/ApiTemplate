@@ -6,17 +6,17 @@ namespace ApiTemplate.Domain.Users;
 
 public class RefreshToken : Entity<RefreshTokenId>
 {
-    public RefreshToken(UserId userId) : base(new RefreshTokenId())
-    {
-        Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-        Expires = DateTime.UtcNow.AddMinutes(10);
-        UserId = userId;
-    }
-    
     public string Token { get; set; } = null!;
     public DateTime Expires { get; set; }
     public bool Disabled { get; set; }
     public bool Expired => Disabled || Expires < DateTime.UtcNow;
     public UserId UserId { get; set; } = null!;
     public User User { get; set; } = null!;
+    
+    public RefreshToken(UserId userId) : base(new RefreshTokenId())
+    {
+        Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        Expires = DateTime.UtcNow.AddMinutes(10);
+        UserId = userId;
+    }
 }

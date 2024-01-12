@@ -1,6 +1,4 @@
-﻿using ApiTemplate.Application.Common.Events.Created;
-using ApiTemplate.Application.Common.Events.Deleted;
-using ApiTemplate.Application.Common.Events.Updated;
+﻿using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Models;
@@ -62,7 +60,7 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        entity.AddDomainEventAsync(new UpdatedEvent<TEntity, TId>(entity));
+        entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -74,7 +72,7 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     {
         var entity = await _dbContext.Set<TEntity>()
             .FindAsync(new object?[] { id }, cancellationToken: cancellationToken);
-        await entity.AddDomainEventAsync(new DeletedEvent<TEntity, TId>(entity));
+        await entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         _dbContext.Set<TEntity>().Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -83,7 +81,8 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     }
 
     [Obsolete("This method is only relevant for the cached repository")]
-    public async Task ClearCacheAsync(IAsyncEnumerable<string> cacheKeys = null) =>
+    public Task ClearCacheAsync<TChanged>(TChanged changedEvent) 
+        where TChanged : ClearCacheEvent<TEntity, TId> =>
         throw new NotImplementedException();
 
     [Obsolete("This method is only relevant for the cached repository")]

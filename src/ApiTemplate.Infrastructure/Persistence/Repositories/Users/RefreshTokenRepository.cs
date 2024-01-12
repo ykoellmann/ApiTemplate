@@ -1,4 +1,4 @@
-﻿using ApiTemplate.Application.Common.Events.Deleted;
+﻿using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
@@ -27,7 +27,7 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId, I
         refreshTokens.ForEach(async rt =>
         {
             rt.Disabled = true;
-            await entity.AddDomainEventAsync(new DeletedEvent<RefreshToken, RefreshTokenId>(rt));
+            await entity.AddDomainEventAsync(new ClearCacheEvent<RefreshToken, RefreshTokenId>(rt));
         });
         
         return await base.AddAsync(entity, userId, cancellationToken);
