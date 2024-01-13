@@ -80,16 +80,8 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
         return new Deleted();
     }
 
-    [Obsolete("This method is only relevant for the cached repository")]
-    public Task ClearCacheAsync<TChanged>(TChanged changedEvent) 
-        where TChanged : ClearCacheEvent<TEntity, TId> =>
-        throw new NotImplementedException();
 
-    [Obsolete("This method is only relevant for the cached repository")]
-    public async Task<string> EntityValueCacheKeyAsync(string usage, string value) =>
-        throw new NotImplementedException();
-
-    [Obsolete("This method is only relevant for the cached repository")]
-    public async Task<string> EntityCacheKeyAsync(string usage) =>
-        throw new NotImplementedException();
+    [Obsolete("This method is only available in the cached repository")]
+    public Task ClearCacheAsync<TChanged>(TChanged changedEvent) where TChanged : ClearCacheEvent<TEntity, TId>
+        => throw new NotImplementedException("This method is only available in the cached repository");
 }

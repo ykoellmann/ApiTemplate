@@ -26,6 +26,4 @@ public interface IRepository<TEntity, TId, TIDto>
 
     public Task ClearCacheAsync<TChanged>(TChanged changedEvent)
         where TChanged : ClearCacheEvent<TEntity, TId>;
-    public Task<string> EntityValueCacheKeyAsync(string usage, string value);
-    public Task<string> EntityCacheKeyAsync(string usage);
 }

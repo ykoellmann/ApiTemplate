@@ -1,6 +1,5 @@
 ﻿using ApiTemplate.Application.Common.Events;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Application.Users.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Extensions;
@@ -19,17 +18,17 @@ public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IU
         _cache = cache;
     }
 
-    protected override async IAsyncEnumerable<string> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
+    protected override async IAsyncEnumerable<CacheKey<User>> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
     {
-        yield return await EntityValueCacheKeyAsync(nameof(GetByEmailAsync),
+        yield return new CacheKey<User>(nameof(GetByEmailAsync),
             changedEvent.Changed.Email);
-        yield return await EntityValueCacheKeyAsync(nameof(IsEmailUniqueAsync),
+        yield return new CacheKey<User>(nameof(IsEmailUniqueAsync),
             changedEvent.Changed.Email);
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByEmailAsync), email);
+        var cacheKey = new CacheKey<User>(nameof(GetByEmailAsync), email);
 
         return await _cache.GetOrCreateAsync(cacheKey, CacheExpiration,
             _ => _decorated.GetByEmailAsync(email, cancellationToken));
@@ -37,7 +36,7 @@ public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IU
 
     public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken)
     {
-        var cacheKey = await EntityValueCacheKeyAsync(nameof(IsEmailUniqueAsync), email);
+        var cacheKey = new CacheKey<User>(nameof(IsEmailUniqueAsync), email);
 
         return await _cache.GetOrCreateAsync(cacheKey, CacheExpiration,
             _ => _decorated.IsEmailUniqueAsync(email, cancellationToken));
@@ -45,10 +44,10 @@ public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IU
 
     public async Task<User> AddAsync(User entity, CancellationToken cancellationToken)
     {
-        await entity.AddDomainEventAsync(new UserCreatedEvent(entity));
+        await entity.AddDomainEventAsync(new ClearCacheEvent<User, UserId>(entity));
 
         var addedEntity = await _decorated.AddAsync(entity, cancellationToken);
-        var cacheKey = await EntityValueCacheKeyAsync(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
+        var cacheKey = new CacheKey<User>(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration, async _ => addedEntity);
     }

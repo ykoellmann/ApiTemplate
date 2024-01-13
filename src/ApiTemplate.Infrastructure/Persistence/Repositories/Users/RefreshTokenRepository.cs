@@ -16,7 +16,6 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId, I
         _dbContext = dbContext;
     }
 
-    //toDo: Cache invalidation
     public override async Task<RefreshToken> AddAsync(RefreshToken entity, UserId userId,
         CancellationToken cancellationToken)
     {

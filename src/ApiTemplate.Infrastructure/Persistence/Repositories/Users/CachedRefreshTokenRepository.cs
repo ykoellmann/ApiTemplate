@@ -12,7 +12,7 @@ public class CachedRefreshTokenRepository : CachedRepository<RefreshToken, Refre
     {
     }
 
-    protected override async IAsyncEnumerable<string> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
+    protected override async IAsyncEnumerable<CacheKey<RefreshToken>> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
     {
         yield break;
     }

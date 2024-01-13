@@ -1,5 +1,4 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
-using ApiTemplate.Application.Users.Events;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Cache.CustomCacheAttributes;
@@ -7,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-[CustomClearCacheEvent(typeof(UserCreatedEvent))]
 public class UserRepository : Repository<User, UserId, IUserDto>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
