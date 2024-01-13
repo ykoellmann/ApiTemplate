@@ -12,6 +12,8 @@ public interface IRepository<TEntity, TId, TIDto>
     where TIDto : IDto<TId>
 {
     public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
+    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken cancellationToken)
+        where TDto : Dto<TDto, TEntity, TId>, TIDto, new();
     
     public Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
 

@@ -70,6 +70,14 @@ public abstract class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntit
             _ => _decorated.GetListAsync(cancellationToken, specification));
     }
 
+    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken cancellationToken) where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+    {
+        var cacheKey = new CacheKey<TEntity>(nameof(GetDtoListAsync), typeof(TDto).Name);
+        
+        return Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
+            _ => _decorated.GetDtoListAsync<TDto>(cancellationToken));
+    }
+
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken,
         Specification<TEntity, TId> specification = null)
     {

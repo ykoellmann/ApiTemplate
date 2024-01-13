@@ -28,6 +28,14 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
             .Specificate(specification)
             .ToListAsync(cancellationToken);
     }
+    
+    public virtual async Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken cancellationToken)
+        where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+    {
+        return await _dbContext.Set<TEntity>()
+            .Select(new TDto().Projection())
+            .ToListAsync(cancellationToken);
+    }
 
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken,
         Specification<TEntity, TId> specification = null)
