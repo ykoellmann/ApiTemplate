@@ -40,13 +40,14 @@ public class ApiController : ControllerBase
         return Problem(errors.First());
     }
 
-    private IActionResult Problem(Error error)
+    protected IActionResult Problem(Error error)
     {
         var status = error.Type switch
         {
-            ErrorType.Conflict => StatusCodes.Status409Conflict,
             ErrorType.Validation => StatusCodes.Status400BadRequest,
+            ErrorType.Conflict => StatusCodes.Status409Conflict,
             ErrorType.NotFound => StatusCodes.Status404NotFound,
+            ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
         return Problem(statusCode: status, detail: error.Description);

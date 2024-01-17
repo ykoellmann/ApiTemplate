@@ -7,6 +7,7 @@
       <UserSecretsId>8e0ea02c-7471-491b-9dc9-5cce9b817cfa</UserSecretsId>
       <IsPackable>true</IsPackable>
       <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+      <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
     <ItemGroup>

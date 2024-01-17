@@ -7,10 +7,10 @@ public static partial class Errors
     public static class Authentication
     {
         public static Error InvalidCredentials =>
-            Error.Conflict("Authentication.InvalidCredentials", "Invalid credentials");
+            Error.Unauthorized("Authentication.InvalidCredentials", "Invalid credentials");
         public static Error InvalidRefreshToken =>
-            Error.Conflict("Authentication.InvalidRefreshToken", "Invalid refresh token");
+            Error.Unauthorized("Authentication.InvalidRefreshToken", "Invalid refresh token");
         public static Error RefreshTokenExpired =>
-            Error.Conflict("Authentication.RefreshTokenExpired", "Refresh token expired");
+            Error.Unauthorized("Authentication.RefreshTokenExpired", "Refresh token expired");
     }
 }

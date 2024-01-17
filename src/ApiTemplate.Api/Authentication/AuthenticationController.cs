@@ -50,8 +50,9 @@ public class AuthenticationController : ApiController
 
         var authResult = await _mediator.Send(query, cancellationToken);
         
+        //ToDo check if this is done automatically by match
         if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
-            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
+            return Problem(Errors.Authentication.InvalidCredentials);
 
         return authResult.Match(
             authResult => SetRefreshToken(authResult),
@@ -64,13 +65,14 @@ public class AuthenticationController : ApiController
         var tokenToRefresh = Request.Cookies["refreshToken"];
         
         if (string.IsNullOrEmpty(tokenToRefresh))
-            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: Errors.Authentication.InvalidRefreshToken.Description);
+            return Problem(Errors.Authentication.InvalidRefreshToken);
 
         var authResult = await _mediator.Send(new RefreshTokenCommand(tokenToRefresh, UserId));
 
         if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidRefreshToken)
-            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
+            return Problem(Errors.Authentication.InvalidRefreshToken);
 
+        //ToDo check if this is done automatically by match
         return authResult.Match(
             authResult => SetRefreshToken(authResult),
             errors => Problem(errors));
