@@ -11,7 +11,7 @@ public static class QueryableExtensions
 {
     public static IQueryable<TEntity> Specificate<TEntity, TId>(this IQueryable<TEntity> query, Specification<TEntity, TId> specification)
         where TEntity : Entity<TId>
-        where TId : IdObject<TId>
+        where TId : Id<TId>
     {
         return specification is null ? query : specification.Specificate(query);
     }

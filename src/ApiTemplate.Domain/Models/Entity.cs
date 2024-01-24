@@ -5,7 +5,7 @@ using ApiTemplate.Domain.Users.ValueObjects;
 namespace ApiTemplate.Domain.Models;
 
 public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
-    where TId : IdObject<TId>
+    where TId : Id<TId>
 {
     private readonly List<IDomainEvent> _domainEvents = new();
     

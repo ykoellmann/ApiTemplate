@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
 public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity> 
-    where TId : IdObject<TId>, new()
+    where TId : Id<TId>, new()
     where TEntity : Entity<TId> 
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)

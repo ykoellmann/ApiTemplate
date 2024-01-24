@@ -2,9 +2,9 @@
 
 namespace ApiTemplate.Domain.Users.ValueObjects;
 
-public class RefreshTokenId : IdObject<RefreshTokenId>
+public class RefreshTokenId : Id<RefreshTokenId>
 {
-    public RefreshTokenId() : base()
+    public RefreshTokenId()
     {
     }
     

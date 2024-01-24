@@ -11,7 +11,7 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
 public abstract class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
-    where TId : IdObject<TId>
+    where TId : Id<TId>
     where TIDto : IDto<TId>
 {
     public readonly TimeSpan CacheExpiration;

@@ -8,7 +8,7 @@ public class ClearCacheEventHandler<TIRepository, TEntity, TId, TIDto, TChanged>
     where TChanged : ClearCacheEvent<TEntity, TId>
     where TIRepository : IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
-    where TId : IdObject<TId>
+    where TId : Id<TId>
     where TIDto : IDto<TId>
 {
     private readonly TIRepository _repository;

@@ -8,7 +8,7 @@ namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
 public interface IRepository<TEntity, TId, TIDto>
     where TEntity : Entity<TId>
-    where TId : IdObject<TId>
+    where TId : Id<TId>
     where TIDto : IDto<TId>
 {
     public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
