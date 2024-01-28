@@ -3,6 +3,7 @@ using System;
 using ApiTemplate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiTemplate.Infrastructure.Migrations
 {
     [DbContext(typeof(ApiTemplateDbContext))]
-    partial class ApiTemplateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240128130545_AddAuth5")]
+    partial class AddAuth5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +35,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 273, DateTimeKind.Utc).AddTicks(8366))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 777, DateTimeKind.Utc).AddTicks(981))
                         .HasColumnOrder(102);
 
                     b.Property<string>("Feature")
@@ -47,7 +50,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 273, DateTimeKind.Utc).AddTicks(8757))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 777, DateTimeKind.Utc).AddTicks(1359))
                         .HasColumnOrder(104);
 
                     b.HasKey("Id");
@@ -60,7 +63,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d1dbccbf-56d5-4698-b2ff-c5df8b88358f"),
+                            Id = new Guid("eee04d2f-7eed-48b6-ad10-32c36aa51e06"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Feature = "WeatherForecast",
                             Name = "WeatherForecast:Get",
@@ -68,18 +71,10 @@ namespace ApiTemplate.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9dbe241f-884a-485d-8dc6-4d183b5e701a"),
+                            Id = new Guid("0a7e085c-f639-47db-afa0-fbd273e0fd1b"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Feature = "WeatherForecast",
                             Name = "WeatherForecast:Set",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("ee51430f-4c62-4013-8c67-8c4faf4710ba"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Feature = "WeatherForecast",
-                            Name = "WeatherForecast:Delete",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -93,7 +88,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 274, DateTimeKind.Utc).AddTicks(9223))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 778, DateTimeKind.Utc).AddTicks(4754))
                         .HasColumnOrder(102);
 
                     b.Property<string>("Name")
@@ -104,7 +99,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 274, DateTimeKind.Utc).AddTicks(9545))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 778, DateTimeKind.Utc).AddTicks(5202))
                         .HasColumnOrder(104);
 
                     b.HasKey("Id");
@@ -117,7 +112,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("22b96710-484c-4df9-86da-d62f30a689d2"),
+                            Id = new Guid("5add906c-b0f7-4da4-a257-388cb1095a56"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "SelfOrAdmin",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -133,7 +128,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 275, DateTimeKind.Utc).AddTicks(7658))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 779, DateTimeKind.Utc).AddTicks(4626))
                         .HasColumnOrder(102);
 
                     b.Property<Guid>("CreatedBy")
@@ -153,7 +148,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 275, DateTimeKind.Utc).AddTicks(9826))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 779, DateTimeKind.Utc).AddTicks(6755))
                         .HasColumnOrder(104);
 
                     b.Property<Guid>("UpdatedBy")
@@ -183,7 +178,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 283, DateTimeKind.Utc).AddTicks(8663))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 786, DateTimeKind.Utc).AddTicks(2293))
                         .HasColumnOrder(102);
 
                     b.Property<string>("Name")
@@ -194,7 +189,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 283, DateTimeKind.Utc).AddTicks(9183))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 786, DateTimeKind.Utc).AddTicks(2622))
                         .HasColumnOrder(104);
 
                     b.HasKey("Id");
@@ -204,7 +199,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d6717309-622e-4577-98ae-1fc68fd157c3"),
+                            Id = new Guid("113f2a57-4b41-42b1-9e0f-95db56ef4fc9"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Admin",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -226,7 +221,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 284, DateTimeKind.Utc).AddTicks(2860))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 786, DateTimeKind.Utc).AddTicks(6177))
                         .HasColumnOrder(102);
 
                     b.Property<string>("Email")
@@ -252,7 +247,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 284, DateTimeKind.Utc).AddTicks(3511))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 786, DateTimeKind.Utc).AddTicks(6643))
                         .HasColumnOrder(104);
 
                     b.HasKey("Id");
@@ -269,7 +264,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 285, DateTimeKind.Utc).AddTicks(6360))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 787, DateTimeKind.Utc).AddTicks(6422))
                         .HasColumnOrder(102);
 
                     b.Property<Guid>("PermissionId")
@@ -278,7 +273,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 285, DateTimeKind.Utc).AddTicks(7090))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 787, DateTimeKind.Utc).AddTicks(6854))
                         .HasColumnOrder(104);
 
                     b.Property<Guid>("UserId")
@@ -302,7 +297,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 287, DateTimeKind.Utc).AddTicks(5136))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 789, DateTimeKind.Utc).AddTicks(4803))
                         .HasColumnOrder(102);
 
                     b.Property<Guid>("PolicyId")
@@ -311,7 +306,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 287, DateTimeKind.Utc).AddTicks(5637))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 789, DateTimeKind.Utc).AddTicks(5181))
                         .HasColumnOrder(104);
 
                     b.Property<Guid>("UserId")
@@ -335,7 +330,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 289, DateTimeKind.Utc).AddTicks(3153))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 792, DateTimeKind.Utc).AddTicks(3511))
                         .HasColumnOrder(102);
 
                     b.Property<Guid>("RoleId")
@@ -344,7 +339,7 @@ namespace ApiTemplate.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 7, 5, 289, DateTimeKind.Utc).AddTicks(3683))
+                        .HasDefaultValue(new DateTime(2024, 1, 28, 13, 5, 45, 792, DateTimeKind.Utc).AddTicks(4232))
                         .HasColumnOrder(104);
 
                     b.Property<Guid>("UserId")

@@ -31,7 +31,7 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
 
     public override void ConfigureEntity(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("Users");
+        builder.ToTable("User");
 
         builder.Property(u => u.Email)
             .IsRequired()

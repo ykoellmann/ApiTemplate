@@ -5,6 +5,7 @@ using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
 using ApiTemplate.Domain.Users.ValueObjects;
+using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.UnitTests.Authentication.Commands;
@@ -14,6 +15,7 @@ public class RegisterCommandHandlerTests
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<IJwtTokenProvider> _jwtTokenProvider = new();
     private readonly Mock<IRefreshTokenRepository> _refreshTokenRepository = new();
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessor = new();
 
     [Fact]
     public async Task Handle_Returns_RefreshTokenExpired_Error_When_ActiveRefreshToken_Is_Expired()
@@ -31,7 +33,7 @@ public class RegisterCommandHandlerTests
             .ReturnsAsync(user.Object);
 
         var commandHandler = new RefreshTokenCommandHandler(_refreshTokenRepository.Object, _userRepository.Object,
-            _jwtTokenProvider.Object);
+            _jwtTokenProvider.Object, _httpContextAccessor.Object);
         var command = new RefreshTokenCommand("token", userId);
 
         // Act
@@ -55,7 +57,7 @@ public class RegisterCommandHandlerTests
             .ReturnsAsync((User)null);
 
         var commandHandler = new RefreshTokenCommandHandler(_refreshTokenRepository.Object, _userRepository.Object,
-            _jwtTokenProvider.Object);
+            _jwtTokenProvider.Object, _httpContextAccessor.Object);
         var command = new RefreshTokenCommand("token", mockUserId);
 
         // Act
@@ -83,7 +85,7 @@ public class RegisterCommandHandlerTests
             .ReturnsAsync(user.Object);
 
         var commandHandler = new RefreshTokenCommandHandler(_refreshTokenRepository.Object, _userRepository.Object,
-            _jwtTokenProvider.Object);
+            _jwtTokenProvider.Object, _httpContextAccessor.Object);
         var command = new RefreshTokenCommand(refreshToken.Token, userId);
 
         // Act

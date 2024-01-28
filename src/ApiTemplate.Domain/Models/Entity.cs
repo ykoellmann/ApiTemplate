@@ -38,12 +38,6 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     {
         Id = id;
     }
-
-    //Used for Json serialization
-    protected Entity()
-    {
-        
-    }
     
     public async Task AddDomainEventAsync(IDomainEvent eventItem)
     {

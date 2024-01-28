@@ -4,12 +4,16 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Domain.Users;
 
-public class Permission : Entity<PermissionId>
-{    
-    private readonly List<UserPermission> _userPermissions = new();
-    public string Feature { get; set; } = null!;
-    public string Name { get; private set; } = default!;
+public class Policy : Entity<PolicyId>
+{
+    public Policy(string name) : base(new PolicyId())
+    {
+        Name = name;
+    }
     
+    private readonly List<UserPolicy> _userPolicies = new();
+
+    public string Name { get; private set; } = null!;
     
     [NotMapped, Obsolete("Because of generic AggregateRoot")]
     public override UserId CreatedBy { get; set; } = null!;
@@ -23,11 +27,6 @@ public class Permission : Entity<PermissionId>
 
     [NotMapped, Obsolete("Because of generic AggregateRoot")]
     public override User UpdatedByUser { get; set; } = null!;
-    public IReadOnlyList<UserPermission> UserPermissions => _userPermissions.AsReadOnly();
-
-    public Permission(string feature, string name) : base(new PermissionId())
-    {
-        Feature = feature;
-        Name = name;
-    }
+    
+    public IReadOnlyCollection<UserPolicy> UserPolicies => _userPolicies.AsReadOnly();
 }

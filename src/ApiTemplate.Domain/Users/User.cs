@@ -7,6 +7,9 @@ namespace ApiTemplate.Domain.Users;
 public class User : AggregateRoot<UserId>
 {
     private readonly List<RefreshToken> _refreshTokens = new();
+    private readonly List<UserRole> _userRoles = new();
+    private readonly List<UserPermission> _userPermissions = new();
+    private readonly List<UserPolicy> _userPolicies = new();
     
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
@@ -16,6 +19,9 @@ public class User : AggregateRoot<UserId>
     public bool Active { get; set; } = true;
     
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
+    public IReadOnlyList<UserRole> UserRoles => _userRoles.AsReadOnly();
+    public IReadOnlyList<UserPermission> UserPermissions => _userPermissions.AsReadOnly();
+    public IReadOnlyList<UserPolicy> UserPolicies => _userPolicies.AsReadOnly();
     public virtual RefreshToken? ActiveRefreshToken => _refreshTokens.SingleOrDefault(rt => !rt.Expired);
     public bool HasActiveRefreshToken => ActiveRefreshToken is not null;
     

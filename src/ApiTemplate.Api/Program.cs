@@ -1,12 +1,14 @@
 using ApiTemplate.Api;
+using ApiTemplate.Api.Common.Endpoint;
 using ApiTemplate.Application;
 using ApiTemplate.Infrastructure;
 using Serilog;
+using Endpoint = Microsoft.AspNetCore.Http.Endpoint;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
-
+    builder.Services.AddHttpContextAccessor();
     builder.Services
         .AddPresentation()
         .AddApplication()
@@ -15,6 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    var endpoints = typeof(EndpointBase).Assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(EndpointBase)) && !x.IsAbstract);
+    foreach (var endpoint in endpoints)
+    {
+        var instance = Activator.CreateInstance(endpoint, app.Services.GetService<IHttpContextAccessor>());
+        endpoint.GetMethod("AddRoute")?.Invoke(instance, [app]);
+    }
+    
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {

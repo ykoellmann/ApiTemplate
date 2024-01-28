@@ -5,6 +5,7 @@ using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
 using ErrorOr;
+using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Commands.Refresh;
@@ -14,15 +15,19 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenProvider _jwtTokenProvider;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository, IJwtTokenProvider jwtTokenProvider)
+    public RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository,
+        IJwtTokenProvider jwtTokenProvider, IHttpContextAccessor httpContextAccessor)
     {
         _refreshTokenRepository = refreshTokenRepository;
         _userRepository = userRepository;
         _jwtTokenProvider = jwtTokenProvider;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokenCommand request,
+        CancellationToken cancellationToken)
     {
         //Get user with userId and check if given refresh token is users last refresh token. Only one can be valid for one user at a time.
         var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken,
@@ -33,13 +38,21 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
 
         if (!user.HasActiveRefreshToken)
             return Errors.Authentication.RefreshTokenExpired;
-        
+
         if (user.ActiveRefreshToken.Token != request.TokenToRefresh)
             return Errors.Authentication.InvalidRefreshToken;
-        
-        var newRefreshToken = await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
+
+        var newRefreshToken =
+            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);
-        
+
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", newRefreshToken.Token,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newRefreshToken.Expires,
+            });
+
         return new AuthenticationResult(jwtToken, newRefreshToken);
     }
 }
