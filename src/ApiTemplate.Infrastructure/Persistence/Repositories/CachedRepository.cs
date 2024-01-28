@@ -58,75 +58,75 @@ public abstract class CachedRepository<TEntity, TId, TIDto> : IRepository<TEntit
 
     #region Implementation of IRepository
     
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken,
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken ct,
         Specification<TEntity, TId> specification = null)
     {
         var cacheKey = new CacheKey<TEntity>(nameof(GetListAsync));
         
         if (specification is not null)
-            return await _decorated.GetListAsync(cancellationToken, specification);
+            return await _decorated.GetListAsync(ct, specification);
         
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
-            _ => _decorated.GetListAsync(cancellationToken, specification));
+            _ => _decorated.GetListAsync(ct, specification));
     }
 
-    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken cancellationToken) where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct) where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
     {
         var cacheKey = new CacheKey<TEntity>(nameof(GetDtoListAsync), typeof(TDto).Name);
         
         return Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
-            _ => _decorated.GetDtoListAsync<TDto>(cancellationToken));
+            _ => _decorated.GetDtoListAsync<TDto>(ct));
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken,
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct,
         Specification<TEntity, TId> specification = null)
     {
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), id.Value.ToString());
         
         if (specification is not null)
-            return await _decorated.GetByIdAsync(id, cancellationToken, specification);
+            return await _decorated.GetByIdAsync(id, ct, specification);
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
-            _ => _decorated.GetByIdAsync(id, cancellationToken, specification));
+            _ => _decorated.GetByIdAsync(id, ct, specification));
     }
 
-    public async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
+    public async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
         where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
     {
         var cacheKey =
             new CacheKey<TEntity>(nameof(GetDtoByIdAsync), typeof(TDto).Name, id.Value.ToString());
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
-            _ => _decorated.GetDtoByIdAsync<TDto>(id, cancellationToken));
+            _ => _decorated.GetDtoByIdAsync<TDto>(id, ct));
     }
 
-    public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)
+    public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct)
     {
         entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
-        var addedEntity = await _decorated.AddAsync(entity, userId, cancellationToken);
+        var addedEntity = await _decorated.AddAsync(entity, userId, ct);
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration, async _ => addedEntity);
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
     {
         entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
-        var updatedEntity = await _decorated.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = await _decorated.UpdateAsync(entity, ct);
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), updatedEntity.Id.Value.ToString());
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration, async _ => updatedEntity);
     }
 
-    public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken ct)
     {
-        var entity = await _decorated.GetByIdAsync(id, cancellationToken);
+        var entity = await _decorated.GetByIdAsync(id, ct);
 
         entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
-        return await _decorated.DeleteAsync(id, cancellationToken);
+        return await _decorated.DeleteAsync(id, ct);
     }
 
     #endregion

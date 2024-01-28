@@ -15,7 +15,7 @@ public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         _logger.Information("Request started {@RequestName}, {@DateTimeNow} {@Request}", 
             typeof(TRequest).Name, 

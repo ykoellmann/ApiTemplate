@@ -21,69 +21,69 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
         _dbContext = dbContext;
     }
 
-    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken,
+    public virtual async Task<List<TEntity>> GetListAsync(CancellationToken ct,
         Specification<TEntity, TId> specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
     }
     
-    public virtual async Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken cancellationToken)
+    public virtual async Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct)
         where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
     {
         return await _dbContext.Set<TEntity>()
             .Select(new TDto().Projection())
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken,
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct,
         Specification<TEntity, TId> specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
-            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
     }
 
-    public virtual async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
+    public virtual async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
         where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
     {
         return await _dbContext.Set<TEntity>()
             .Select(new TDto().Projection())
-            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
     }
 
-    public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken)
+    public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct)
     {
         entity.CreatedBy = userId;
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedBy = userId;
         entity.UpdatedAt = DateTime.UtcNow;
-        await _dbContext.AddAsync(entity, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.AddAsync(entity, ct);
+        await _dbContext.SaveChangesAsync(ct);
 
         return await _dbContext.Set<TEntity>()
-            .SingleAsync(e => e.Id == entity.Id, cancellationToken: cancellationToken);
+            .SingleAsync(e => e.Id == entity.Id, cancellationToken: ct);
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
     {
         entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(ct);
 
         return await _dbContext.Set<TEntity>()
-            .SingleAsync(e => e.Id == entity.Id, cancellationToken: cancellationToken);
+            .SingleAsync(e => e.Id == entity.Id, cancellationToken: ct);
     }
 
-    public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken ct)
     {
         var entity = await _dbContext.Set<TEntity>()
-            .FindAsync(new object?[] { id }, cancellationToken: cancellationToken);
+            .FindAsync(new object?[] { id }, cancellationToken: ct);
         await entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         _dbContext.Set<TEntity>().Remove(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(ct);
 
         return new Deleted();
     }

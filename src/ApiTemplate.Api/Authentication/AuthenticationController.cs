@@ -29,11 +29,11 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("register"), EnableRateLimiting("sliding"), AllowAnonymous]
-    public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken ct)
     {
         var command = _mapper.Map<RegisterCommand>(registerRequest);
 
-        var authResult = await _mediator.Send(command, cancellationToken);
+        var authResult = await _mediator.Send(command, ct);
 
         return authResult.Match(
             SetRefreshToken,
@@ -41,11 +41,11 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("login"), AllowAnonymous]
-    public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken ct)
     {
         var query = _mapper.Map<LoginQuery>(loginRequest);
 
-        var authResult = await _mediator.Send(query, cancellationToken);
+        var authResult = await _mediator.Send(query, ct);
 
         return authResult.Match(
             SetRefreshToken,

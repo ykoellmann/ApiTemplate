@@ -17,11 +17,11 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId, I
     }
 
     public override async Task<RefreshToken> AddAsync(RefreshToken entity, UserId userId,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var refreshTokens = await _dbContext.RefreshTokens
             .Where(rt => rt.UserId == userId && !rt.Disabled)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
 
         refreshTokens.ForEach(async rt =>
         {
@@ -29,6 +29,6 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId, I
             await entity.AddDomainEventAsync(new ClearCacheEvent<RefreshToken, RefreshTokenId>(rt));
         });
         
-        return await base.AddAsync(entity, userId, cancellationToken);
+        return await base.AddAsync(entity, userId, ct);
     }
 }

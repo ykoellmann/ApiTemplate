@@ -20,10 +20,10 @@ public class PublishDomainEventsInterceptor : SaveChangesInterceptor
         return base.SavingChanges(eventData, result);
     }
     
-    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = new())
+    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken ct = new())
     {
         await PublishDomainEventsAsync(eventData.Context);
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);
+        return await base.SavingChangesAsync(eventData, result, ct);
     }
 
     private async Task PublishDomainEventsAsync(DbContext? dbContext)

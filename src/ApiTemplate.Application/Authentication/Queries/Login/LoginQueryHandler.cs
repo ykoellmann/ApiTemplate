@@ -23,9 +23,9 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
         _refreshTokenRepository = refreshTokenRepository;
     }
 
-    public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken ct)
     {
-        if (await _userRepository.GetByEmailAsync(query.Email, cancellationToken) is not User user)
+        if (await _userRepository.GetByEmailAsync(query.Email, ct) is not User user)
             return Errors.Authentication.InvalidCredentials;
 
         if (!user.Password.Equals(query.Password))
@@ -33,7 +33,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
         var token = _jwtTokenProvider.GenerateToken(user);
         var newRefreshToken =
-            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
+            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, ct);
 
         return new AuthenticationResult(token, newRefreshToken);
     }

@@ -25,20 +25,20 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         //Check if user exists
-        if (!await _userRepository.IsEmailUniqueAsync(command.Email, cancellationToken))
+        if (!await _userRepository.IsEmailUniqueAsync(command.Email, ct))
             return Errors.User.UserWithGivenEmailAlreadyExists;
 
         //Create user
         var user = new User(command.FirstName, command.LastName, command.Email, command.Password);
-        await _userRepository.AddAsync(user, cancellationToken);
+        await _userRepository.AddAsync(user, ct);
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
         var newRefreshToken =
-            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
+            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, ct);
 
         return new AuthenticationResult(token, newRefreshToken);
     }

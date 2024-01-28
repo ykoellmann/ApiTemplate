@@ -5,7 +5,7 @@ namespace ApiTemplate.Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository : IRepository<User, UserId, IUserDto>
 {
-    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken);
-    Task<User> AddAsync(User entity, CancellationToken cancellationToken);
+    Task<User?> GetByEmailAsync(string email, CancellationToken ct);
+    Task<bool> IsEmailUniqueAsync(string email, CancellationToken ct);
+    Task<User> AddAsync(User entity, CancellationToken ct);
 }

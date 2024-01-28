@@ -25,10 +25,10 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokenCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         //Get user with userId and check if given refresh token is users last refresh token. Only one can be valid for one user at a time.
-        var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken,
+        var user = await _userRepository.GetByIdAsync(request.UserId, ct,
             Specifications.User.IncludeRefreshToken);
 
         if (user is null)
@@ -41,7 +41,7 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
             return Errors.Authentication.InvalidRefreshToken;
 
         var newRefreshToken =
-            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
+            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, ct);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);
 
         return new AuthenticationResult(jwtToken, newRefreshToken);

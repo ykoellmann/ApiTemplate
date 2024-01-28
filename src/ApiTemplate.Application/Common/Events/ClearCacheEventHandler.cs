@@ -18,7 +18,7 @@ public class ClearCacheEventHandler<TIRepository, TEntity, TId, TIDto, TChanged>
         _repository = repository;
     }
 
-    public async Task Handle(TChanged changedEvent, CancellationToken cancellationToken)
+    public async Task Handle(TChanged changedEvent, CancellationToken ct)
     {
         await _repository.ClearCacheAsync(changedEvent);
     }

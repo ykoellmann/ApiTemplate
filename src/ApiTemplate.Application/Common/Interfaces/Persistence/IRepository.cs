@@ -11,20 +11,20 @@ public interface IRepository<TEntity, TId, TIDto>
     where TId : Id<TId>
     where TIDto : IDto<TId>
 {
-    public Task<List<TEntity>> GetListAsync(CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
-    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken cancellationToken)
+    public Task<List<TEntity>> GetListAsync(CancellationToken ct, Specification<TEntity, TId> specification = null);
+    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct)
         where TDto : Dto<TDto, TEntity, TId>, TIDto, new();
     
-    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken, Specification<TEntity, TId> specification = null);
+    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct, Specification<TEntity, TId> specification = null);
 
-    Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken cancellationToken)
+    Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
         where TDto : Dto<TDto, TEntity, TId>, TIDto, new();
 
-    public Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken cancellationToken);
+    public Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct);
     
-    public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
+    public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct);
     
-    public Task<Deleted> DeleteAsync(TId id, CancellationToken cancellationToken);
+    public Task<Deleted> DeleteAsync(TId id, CancellationToken ct);
 
     public Task ClearCacheAsync<TChanged>(TChanged changedEvent)
         where TChanged : ClearCacheEvent<TEntity, TId>;
