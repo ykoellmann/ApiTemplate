@@ -30,6 +30,15 @@ public class JwtTokenProvider : IJwtTokenProvider
             new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+        
+        user.UserPermissions.ToList().ForEach(permission =>
+        {
+            claims.Append(new Claim("permission", permission.Permission.Name));
+        });
+        user.UserRoles.ToList().ForEach(role =>
+        {
+            claims.Append(new Claim(ClaimTypes.Role, role.Role.Name));
+        });
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),

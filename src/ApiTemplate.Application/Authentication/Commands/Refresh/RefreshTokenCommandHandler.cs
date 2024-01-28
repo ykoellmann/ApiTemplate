@@ -15,15 +15,13 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenProvider _jwtTokenProvider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository,
-        IJwtTokenProvider jwtTokenProvider, IHttpContextAccessor httpContextAccessor)
+        IJwtTokenProvider jwtTokenProvider)
     {
         _refreshTokenRepository = refreshTokenRepository;
         _userRepository = userRepository;
         _jwtTokenProvider = jwtTokenProvider;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RefreshTokenCommand request,
@@ -45,13 +43,6 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
         var newRefreshToken =
             await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
         var jwtToken = _jwtTokenProvider.GenerateToken(user);
-
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", newRefreshToken.Token,
-            new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = newRefreshToken.Expires,
-            });
 
         return new AuthenticationResult(jwtToken, newRefreshToken);
     }

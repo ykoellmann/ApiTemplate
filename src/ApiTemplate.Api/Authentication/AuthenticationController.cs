@@ -35,12 +35,9 @@ public class AuthenticationController : ApiController
 
         var authResult = await _mediator.Send(command, cancellationToken);
 
-        if (authResult.IsError && authResult.FirstError == Errors.User.UserWithGivenEmailAlreadyExists)
-            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
-
         return authResult.Match(
-            authResult => SetRefreshToken(authResult),
-            errors => Problem(errors));
+            SetRefreshToken,
+            Problem);
     }
 
     [HttpPost("login"), AllowAnonymous]
@@ -49,45 +46,37 @@ public class AuthenticationController : ApiController
         var query = _mapper.Map<LoginQuery>(loginRequest);
 
         var authResult = await _mediator.Send(query, cancellationToken);
-        
-        //ToDo check if this is done automatically by match
-        if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
-            return Problem(Errors.Authentication.InvalidCredentials);
 
         return authResult.Match(
-            authResult => SetRefreshToken(authResult),
-            errors => Problem(errors));
+            SetRefreshToken,
+            Problem);
     }
-    
+
     [HttpPost("token/refresh")]
     public async Task<IActionResult> RefreshToken()
     {
         var tokenToRefresh = Request.Cookies["refreshToken"];
-        
+
         if (string.IsNullOrEmpty(tokenToRefresh))
             return Problem(Errors.Authentication.InvalidRefreshToken);
 
         var authResult = await _mediator.Send(new RefreshTokenCommand(tokenToRefresh, UserId));
 
-        if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidRefreshToken)
-            return Problem(Errors.Authentication.InvalidRefreshToken);
-
-        //ToDo check if this is done automatically by match
         return authResult.Match(
-            authResult => SetRefreshToken(authResult),
-            errors => Problem(errors));
+            SetRefreshToken,
+            Problem);
     }
 
     private IActionResult SetRefreshToken(AuthenticationResult authResult)
     {
         var refreshToken = authResult.RefreshToken;
-        
+
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
             Expires = refreshToken.Expires,
         };
-        
+
         Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
 
         return Ok(_mapper.Map<AuthenticationResponse>(authResult));

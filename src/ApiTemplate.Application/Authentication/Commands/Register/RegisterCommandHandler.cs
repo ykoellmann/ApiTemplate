@@ -5,6 +5,7 @@ using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
+using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
@@ -36,7 +37,8 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);
-        var newRefreshToken = await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
+        var newRefreshToken =
+            await _refreshTokenRepository.AddAsync(new RefreshToken(user.Id), user.Id, cancellationToken);
 
         return new AuthenticationResult(token, newRefreshToken);
     }

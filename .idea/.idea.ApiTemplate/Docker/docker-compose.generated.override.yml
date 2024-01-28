@@ -21,9 +21,10 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57004:57100"
-    - "127.0.0.1:57204:57300"
+    - "127.0.0.1:57020:57100"
+    - "127.0.0.1:57220:57300"
     volumes:
+    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
@@ -32,7 +33,7 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_1_13_20_40_08:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2024_1_28_14_41_24:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.api.green:
     build:
@@ -55,9 +56,10 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57005:57100"
-    - "127.0.0.1:57205:57300"
+    - "127.0.0.1:57021:57100"
+    - "127.0.0.1:57221:57300"
     volumes:
+    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
@@ -66,7 +68,7 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_1_13_20_40_08:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2024_1_28_14_41_24:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.api.white:
     build:
@@ -89,9 +91,10 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57006:57100"
-    - "127.0.0.1:57206:57300"
+    - "127.0.0.1:57022:57100"
+    - "127.0.0.1:57222:57300"
     volumes:
+    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
@@ -100,7 +103,7 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_1_13_20_40_08:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2024_1_28_14_41_24:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   apitemplate.loadbalancer:
     build:
@@ -123,8 +126,8 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.loadbalancer:dev"
     ports:
-    - "127.0.0.1:57007:57100"
-    - "127.0.0.1:57207:57300"
+    - "127.0.0.1:57023:57100"
+    - "127.0.0.1:57223:57300"
     volumes:
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.LoadBalancer:/app:rw"
@@ -134,5 +137,5 @@ services:
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\233.13135.100\\\
       bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_1_13_20_40_08:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2024_1_28_14_41_24:/var/opt/rider-debugger:rw"
     working_dir: "/app"

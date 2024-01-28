@@ -12,7 +12,7 @@ namespace ApiTemplate.Api.Common.Controllers;
 [Route("api/[controller]")]
 public class ApiController : ControllerBase
 {
-    private const string UserIdClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    private const string UserIdClaimType = "id";
 
     protected UserId? UserId
     {
