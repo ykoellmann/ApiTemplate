@@ -15,14 +15,9 @@ public class UserRoleConfiguration : BaseConfiguration<UserRole, UserRoleId>
                 value => new UserRoleId(value))
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedOnAdd()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedOnAdd()
-            .ValueGeneratedOnUpdate()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
 

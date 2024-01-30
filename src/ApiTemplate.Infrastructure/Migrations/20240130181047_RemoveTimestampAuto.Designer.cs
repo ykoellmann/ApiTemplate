@@ -3,6 +3,7 @@ using System;
 using ApiTemplate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiTemplate.Infrastructure.Migrations
 {
     [DbContext(typeof(ApiTemplateDbContext))]
-    partial class ApiTemplateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240130181047_RemoveTimestampAuto")]
+    partial class RemoveTimestampAuto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

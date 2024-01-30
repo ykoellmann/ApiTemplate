@@ -15,14 +15,9 @@ public class PolicyConfiguration : BaseConfiguration<Policy, PolicyId>
                 value => new PolicyId(value))
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedOnAdd()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedOnAdd()
-            .ValueGeneratedOnUpdate()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
 
@@ -41,8 +36,8 @@ public class PolicyConfiguration : BaseConfiguration<Policy, PolicyId>
             .IsRequired()
             .HasMaxLength(128);
         
-        builder.HasData(typeof(Application.Common.Security.Policies.Policy)
-            .GetFields()
-            .Select(x => new Policy(x.Name)));
+        // builder.HasData(typeof(Application.Common.Security.Policies.Policy)
+        //     .GetFields()
+        //     .Select(x => new Policy(x.Name)));
     }
 }

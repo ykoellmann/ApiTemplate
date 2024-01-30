@@ -42,7 +42,7 @@
 
 
     <ItemGroup>
-      <Folder Include="WeatherForecast\Create\" />
+      <Folder Include="WeatherForecast\" />
     </ItemGroup>
 
 </Project>

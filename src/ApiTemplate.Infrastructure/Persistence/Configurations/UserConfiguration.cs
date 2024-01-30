@@ -16,13 +16,9 @@ public class UserConfiguration : BaseConfiguration<User, UserId>
                 value => new UserId(value))
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedOnAdd()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedOnUpdate()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
 

@@ -15,13 +15,9 @@ public class RoleConfiguration : BaseConfiguration<Role, RoleId>
                 value => new RoleId(value))
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedOnAdd()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedOnUpdate()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
 
@@ -36,8 +32,8 @@ public class RoleConfiguration : BaseConfiguration<Role, RoleId>
             .IsRequired()
             .HasMaxLength(128);
         
-        builder.HasData(typeof(Application.Common.Security.Roles.Role)
-            .GetFields()
-            .Select(x => new Role(x.Name)));
+        // builder.HasData(typeof(Application.Common.Security.Roles.Role)
+        //     .GetFields()
+        //     .Select(x => new Role(x.Name)));
     }
 }

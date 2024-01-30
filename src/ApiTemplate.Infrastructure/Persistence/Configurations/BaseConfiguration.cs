@@ -23,8 +23,6 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasColumnOrder(101)
             .IsRequired();
         builder.Property(e => e.CreatedAt)
-            .ValueGeneratedOnAdd()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(102)
             .IsRequired();
         builder.Property(e => e.UpdatedBy)
@@ -33,8 +31,6 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
             .HasColumnOrder(103)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
-            .ValueGeneratedOnUpdate()
-            .HasDefaultValue(DateTime.UtcNow)
             .HasColumnOrder(104)
             .IsRequired();
         
