@@ -28,7 +28,7 @@ public class WeatherForecastController : ApiController
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddForecast([FromForm] AddForecastRequest request)
+    public async Task<IActionResult> AddForecast([FromBody] AddForecastRequest request)
     {
         var command = _mapper.Map<AddForecastCommand>(request);
         

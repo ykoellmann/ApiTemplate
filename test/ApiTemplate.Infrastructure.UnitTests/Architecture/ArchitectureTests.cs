@@ -18,7 +18,7 @@ public class ArchitectureTests
     {
         var result = Types.InAssembly(_infrastructureAssembly)
             .That()
-            .ImplementInterface(typeof(IRepository<,,>))
+            .ImplementInterface(typeof(IRepository<,>))
             .And()
             .DoNotHaveNameMatching("`")
             .Should()
@@ -33,9 +33,9 @@ public class ArchitectureTests
     {
         var result = Types.InAssembly(_infrastructureAssembly)
             .That()
-            .ImplementInterface(typeof(IRepository<,,>))
+            .ImplementInterface(typeof(IRepository<,>))
             .And()
-            .Inherit(typeof(CachedRepository<,,>))
+            .Inherit(typeof(CachedRepository<,>))
             .Should()
             .HaveNameStartingWith("Cached")
             .GetResult();

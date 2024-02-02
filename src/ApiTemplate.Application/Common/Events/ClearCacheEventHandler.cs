@@ -4,12 +4,11 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.Events;
 
-public class ClearCacheEventHandler<TIRepository, TEntity, TId, TIDto, TChanged> : INotificationHandler<TChanged> 
+public class ClearCacheEventHandler<TIRepository, TEntity, TId, TChanged> : INotificationHandler<TChanged> 
     where TChanged : ClearCacheEvent<TEntity, TId>
-    where TIRepository : IRepository<TEntity, TId, TIDto>
+    where TIRepository : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : Id<TId>
-    where TIDto : IDto<TId>
 {
     private readonly TIRepository _repository;
 

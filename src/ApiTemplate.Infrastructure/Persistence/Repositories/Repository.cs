@@ -9,10 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
-public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
+public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : Id<TId>
-    where TIDto : IDto<TId>
 {
     private readonly ApiTemplateDbContext _dbContext;
 
@@ -30,7 +29,7 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     }
     
     public virtual async Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct)
-        where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+        where TDto : IDto<TDto, TEntity, TId>, new()
     {
         return await _dbContext.Set<TEntity>()
             .Select(new TDto().Projection())
@@ -46,7 +45,7 @@ public class Repository<TEntity, TId, TIDto> : IRepository<TEntity, TId, TIDto>
     }
 
     public virtual async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
-        where TDto : Dto<TDto, TEntity, TId>, TIDto, new()
+        where TDto : IDto<TDto, TEntity, TId>, new()
     {
         return await _dbContext.Set<TEntity>()
             .Select(new TDto().Projection())

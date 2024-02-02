@@ -147,7 +147,7 @@ public class ArchitectureTests
             .And()
             .DoNotImplementInterface(typeof(INotificationHandler<>))
             .And()
-            .DoNotInherit(typeof(ClearCacheEventHandler<,,,,>))
+            .DoNotInherit(typeof(ClearCacheEventHandler<,,,>))
             .Should()
             .MeetCustomRule(new AsyncMethodsHaveSuffixAsyncRule())
             .GetResult();

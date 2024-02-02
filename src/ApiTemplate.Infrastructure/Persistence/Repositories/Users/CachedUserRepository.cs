@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-public class CachedUserRepository : CachedRepository<User, UserId, IUserDto>, IUserRepository
+public class CachedUserRepository : CachedRepository<User, UserId>, IUserRepository
 {
     private readonly IUserRepository _decorated;
     private readonly IDistributedCache _cache;

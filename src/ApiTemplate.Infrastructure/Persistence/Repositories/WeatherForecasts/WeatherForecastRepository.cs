@@ -4,7 +4,7 @@ using ApiTemplate.Domain.WeatherForecasts.ValueObjects;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.WeatherForecasts;
 
-public class WeatherForecastRepository : Repository<WeatherForecast, WeatherForecastId, IWeatherForecastDto>, IWeatherForecastRepository
+public class WeatherForecastRepository : Repository<WeatherForecast, WeatherForecastId>, IWeatherForecastRepository
 {
     public WeatherForecastRepository(ApiTemplateDbContext dbContext) : base(dbContext)
     {

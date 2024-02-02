@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId, IRefreshTokenDto>,
+public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>,
     IRefreshTokenRepository
 {
     private readonly ApiTemplateDbContext _dbContext;

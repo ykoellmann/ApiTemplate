@@ -5,10 +5,10 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.WeatherForecasts;
 
-public class CachedWeatherForecastRepository : CachedRepository<WeatherForecast, WeatherForecastId, IWeatherForecastDto>, IWeatherForecastRepository
+public class CachedWeatherForecastRepository : CachedRepository<WeatherForecast, WeatherForecastId>, IWeatherForecastRepository
 {
     public CachedWeatherForecastRepository(
-        IRepository<WeatherForecast, WeatherForecastId, IWeatherForecastDto> decorated, IDistributedCache cache,
+        IRepository<WeatherForecast, WeatherForecastId> decorated, IDistributedCache cache,
         int cacheExpirationMinutes = 10) : base(decorated, cache, cacheExpirationMinutes)
     {
     }

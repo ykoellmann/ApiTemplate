@@ -78,7 +78,7 @@ public static class DependencyInjection
 
         var repositories = assembly
             .GetTypes()
-            .Where(x => x.GetInterface(typeof(IRepository<,,>).Name) is not null && x != typeof(Repository<,,>))
+            .Where(x => x.GetInterface(typeof(IRepository<,>).Name) is not null && x != typeof(Repository<,>))
             .OrderBy(repo => repo.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Any(field => field.FieldType == typeof(IDistributedCache)))
             .ToList();
@@ -86,7 +86,7 @@ public static class DependencyInjection
         repositories.ForEach(repository =>
         {
             var repositoryInterface =
-                repository.GetInterfaces().FirstOrDefault(x => x.Name != typeof(IRepository<,,>).Name);
+                repository.GetInterfaces().FirstOrDefault(x => x.Name != typeof(IRepository<,>).Name);
 
             if (repositoryInterface is null) return;
 
@@ -111,12 +111,12 @@ public static class DependencyInjection
             .Select(
                 customClearCacheEventAttribute =>
                     new CacheDomainEvent(customClearCacheEventAttribute.EventType,
-                        typeof(ClearCacheEventHandler<,,,,>)))
+                        typeof(ClearCacheEventHandler<,,,>)))
             .ToList();
 
-        cacheDomainEvents.Add(new CacheDomainEvent(typeof(ClearCacheEvent<,>), typeof(ClearCacheEventHandler<,,,,>)));
+        cacheDomainEvents.Add(new CacheDomainEvent(typeof(ClearCacheEvent<,>), typeof(ClearCacheEventHandler<,,,>)));
 
-        var genericEventArguments = repository.GetInterface(typeof(IRepository<,,>).Name).GetGenericArguments();
+        var genericEventArguments = repository.GetInterface(typeof(IRepository<,>).Name).GetGenericArguments();
 
         cacheDomainEvents
             .ForEach(domainEvent =>
@@ -130,7 +130,6 @@ public static class DependencyInjection
                 domainEvent.EventHandlerType = domainEvent.EventHandlerType.MakeGenericType(repositoryInterface,
                     genericEventArguments[0],
                     genericEventArguments[1],
-                    genericEventArguments[2],
                     domainEvent.EventType);
             });
 

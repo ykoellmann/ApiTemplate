@@ -8,7 +8,7 @@ namespace ApiTemplate.UnitTests.Rules;
 
 public class IRepositoryHasRepositoryAndCacheRule : ICustomRule
 {
-    private readonly Assembly _infrastructureAssembly = typeof(Repository<,,>).Assembly;
+    private readonly Assembly _infrastructureAssembly = typeof(Repository<,>).Assembly;
         
     public bool MeetsRule(TypeDefinition type)
     {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
-public class UserRepository : Repository<User, UserId, IUserDto>, IUserRepository
+public class UserRepository : Repository<User, UserId>, IUserRepository
 {
     private readonly ApiTemplateDbContext _dbContext;
 

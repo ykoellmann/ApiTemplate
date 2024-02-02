@@ -2,8 +2,11 @@
 
 namespace ApiTemplate.Domain.Models;
 
-public interface IDto<TId>
+public interface IDto<TDto, TEntity, TId>
+    where TDto : IDto<TDto, TEntity, TId>
+    where TEntity : Entity<TId>
     where TId : Id<TId>
 {
     TId Id { get; set; }
+    public Expression<Func<TEntity, TDto>> Projection();
 }
