@@ -8,5 +8,5 @@ public interface IDto<TDto, TEntity, TId>
     where TId : Id<TId>
 {
     TId Id { get; set; }
-    public Expression<Func<TEntity, TDto>> Projection();
+    public static abstract Expression<Func<TEntity, TDto>> Map();
 }

@@ -32,7 +32,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         where TDto : IDto<TDto, TEntity, TId>, new()
     {
         return await _dbContext.Set<TEntity>()
-            .Select(new TDto().Projection())
+            .Select(TDto.Map())
             .ToListAsync(ct);
     }
 
@@ -48,7 +48,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         where TDto : IDto<TDto, TEntity, TId>, new()
     {
         return await _dbContext.Set<TEntity>()
-            .Select(new TDto().Projection())
+            .Select(TDto.Map())
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
     }
 
