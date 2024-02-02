@@ -1,8 +1,10 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Application.Common.Security.Request;
 using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
 using ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
 using ErrorOr;
+using MediatR;
 
 namespace ApiTemplate.Infrastructure.Authentication;
 
@@ -19,7 +21,7 @@ public class AuthorizationService : IAuthorizationService
     }
 
     public ErrorOr<Success> AuthorizeCurrentUser<T>(
-        IAuthorizeableRequest<T> request,
+        IRequest<T> request,
         List<string> requiredRoles,
         List<string> requiredPermissions,
         List<string> requiredPolicies)

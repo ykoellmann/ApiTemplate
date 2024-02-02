@@ -40,9 +40,4 @@
       </Content>
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Folder Include="WeatherForecast\" />
-    </ItemGroup>
-
 </Project>

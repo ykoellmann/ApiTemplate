@@ -5,6 +5,6 @@ public static partial class Permission
     public static class WeatherForecast
     {
         public const string Get = $"{nameof(WeatherForecast)}:{nameof(Get)}";
-        public const string Set = $"{nameof(WeatherForecast)}:{nameof(Set)}";
+        public const string Add = $"{nameof(WeatherForecast)}:{nameof(Add)}";
     }
 }

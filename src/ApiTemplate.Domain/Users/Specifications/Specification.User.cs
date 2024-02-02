@@ -6,6 +6,6 @@ public static partial class Specifications
 {
     public static class User
     {
-        public static UserIncludeRefreshTokenSpecification IncludeRefreshToken => new();
+        public static UserIncludeAuthorizationSpecification IncludeAuthorization => new();
     }
 }

@@ -1,4 +1,7 @@
 ﻿using System.Security.Claims;
+using ApiTemplate.Application.Common.Interfaces.Security;
+using ApiTemplate.Domain.Common.Security;
+using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -20,7 +23,7 @@ public class CurrentUserProvider(IHttpContextAccessor _httpContextAccessor) : IC
         var lastName = GetSingleClaimValue(ClaimTypes.Surname);
         var email = GetSingleClaimValue(ClaimTypes.Email);
 
-        return new CurrentUser(id, firstName, lastName, email, permissions, roles);
+        return new CurrentUser(new UserId(id), firstName, lastName, email, permissions, roles);
     }
 
     private List<string> GetClaimValues(string claimType) =>

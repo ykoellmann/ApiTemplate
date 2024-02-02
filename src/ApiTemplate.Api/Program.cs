@@ -1,6 +1,11 @@
 using ApiTemplate.Api;
 using ApiTemplate.Application;
+using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Infrastructure;
+using ApiTemplate.Infrastructure.Authentication;
+using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
+using ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
 using Serilog;
 using Endpoint = Microsoft.AspNetCore.Http.Endpoint;
 
@@ -8,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
     builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
+    builder.Services.AddScoped<IPolicyEnforcer, PolicyEnforcer>();
+    builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
     builder.Services
         .AddPresentation()
         .AddApplication()

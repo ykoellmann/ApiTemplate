@@ -1,7 +1,9 @@
-﻿namespace ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
+﻿using ApiTemplate.Domain.Users.ValueObjects;
+
+namespace ApiTemplate.Domain.Common.Security;
 
 public record CurrentUser(
-    Guid Id,
+    UserId Id,
     string FirstName,
     string LastName,
     string Email,

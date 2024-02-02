@@ -23,21 +23,22 @@ public class JwtTokenProvider : IJwtTokenProvider
 
     public string GenerateToken(User user)
     {
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim("id", user.Id.Value.ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, user.FirstName),
-            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new("id", user.Id.Value.ToString()),
+            new(JwtRegisteredClaimNames.Name, user.FirstName),
+            new(ClaimTypes.Surname, user.LastName),
+            new(ClaimTypes.Email, user.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
         
         user.UserPermissions.ToList().ForEach(permission =>
         {
-            claims.Append(new Claim("permission", permission.Permission.Name));
+            claims.Add(new Claim("permissions", permission.Permission.Feature));
         });
         user.UserRoles.ToList().ForEach(role =>
         {
-            claims.Append(new Claim(ClaimTypes.Role, role.Role.Name));
+            claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
         });
 
         var signingCredentials = new SigningCredentials(

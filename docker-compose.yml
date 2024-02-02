@@ -127,9 +127,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
-      - ReverseProxy__Clusters__api__Destinations__green__Address=http://api.green:80
-      - ReverseProxy__Clusters__api__Destinations__blue__Address=http://api.blue:80
-      - ReverseProxy__Clusters__api__Destinations__white__Address=http://api.white:80
+      - ReverseProxy__Clusters__api__Destinations__green__Address=http://apitemplate.api.green:80
+      - ReverseProxy__Clusters__api__Destinations__blue__Address=http://apitemplate.api.blue:80
+      - ReverseProxy__Clusters__api__Destinations__white__Address=http://apitemplate.api.white:80
       - ReverseProxy__Clusters__api__LoadBalancingPolicy=RoundRobin
       - ReverseProxy__Routes__api__ClusterId=api
       - ReverseProxy__Routes__api__Match__Path={**catch-all}

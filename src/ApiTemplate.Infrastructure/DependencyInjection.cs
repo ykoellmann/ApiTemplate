@@ -38,6 +38,7 @@ public static class DependencyInjection
 
         services.AddDbContext<ApiTemplateDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DbConnection")));
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         services.AddRepositories();
 

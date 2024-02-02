@@ -3,6 +3,7 @@ using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Users;
+using ApiTemplate.Domain.Users.Specifications;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
@@ -30,6 +31,8 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
         if (!user.Password.Equals(query.Password))
             return Errors.Authentication.InvalidCredentials;
+        
+        user = await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization);
 
         var token = _jwtTokenProvider.GenerateToken(user);
         var newRefreshToken =

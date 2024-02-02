@@ -29,7 +29,7 @@ internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand,
     {
         //Get user with userId and check if given refresh token is users last refresh token. Only one can be valid for one user at a time.
         var user = await _userRepository.GetByIdAsync(request.UserId, ct,
-            Specifications.User.IncludeRefreshToken);
+            Specifications.User.IncludeAuthorization);
 
         if (user is null)
             return Errors.User.UserNotFound;
