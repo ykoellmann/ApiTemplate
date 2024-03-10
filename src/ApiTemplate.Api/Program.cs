@@ -12,10 +12,6 @@ using Endpoint = Microsoft.AspNetCore.Http.Endpoint;
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
-    builder.Services.AddHttpContextAccessor();
-    builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
-    builder.Services.AddScoped<IPolicyEnforcer, PolicyEnforcer>();
-    builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
     builder.Services
         .AddPresentation()
         .AddApplication()

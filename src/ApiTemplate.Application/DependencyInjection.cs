@@ -21,6 +21,8 @@ public static class DependencyInjection
         services.AddPipelineBehaviours();
         
         services.AddMapping();
+        
+        services.AddHttpContextAccessor();
 
         return services;
     }

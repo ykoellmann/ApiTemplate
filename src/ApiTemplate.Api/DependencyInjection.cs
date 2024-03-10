@@ -1,5 +1,10 @@
 ﻿using System.Reflection;
 using ApiTemplate.Api.Common.Errors;
+using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Security;
+using ApiTemplate.Infrastructure.Authentication;
+using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
+using ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
@@ -44,8 +49,17 @@ public static class DependencyInjection
 
         services.AddSingleton<ProblemDetailsFactory, ApiTemplateProblemDetailsFactory>();
 
+        services.AddSecurity();
+        
+        services.AddRateLimiting();
+
         services.AddMapping();
 
+        return services;
+    }
+
+    private static void AddRateLimiting(this IServiceCollection services)
+    {
         services.AddRateLimiter(rateLimiterOptions =>
         {
             rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -75,8 +89,6 @@ public static class DependencyInjection
                 options.PermitLimit = 5;
             });
         });
-
-        return services;
     }
 
     public static void AddMapping(this IServiceCollection services)
@@ -86,5 +98,12 @@ public static class DependencyInjection
 
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
+    }
+    
+    private static void AddSecurity(this IServiceCollection services)
+    {
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
+        services.AddScoped<IPolicyEnforcer, PolicyEnforcer>();
+        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
     }
 }
