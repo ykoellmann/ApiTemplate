@@ -4,9 +4,9 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Domain.Users;
 
-public class UserNameDto : IDto<UserNameDto, User, UserId>
+public class UserNameDtoOld : IDtoOld<UserNameDtoOld, User, UserId>
 {
-    public UserNameDto(UserId id, string firstName, string lastName)
+    public UserNameDtoOld(UserId id, string firstName, string lastName)
     {
         Id = id;
         FirstName = firstName;
@@ -17,6 +17,6 @@ public class UserNameDto : IDto<UserNameDto, User, UserId>
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    public static Expression<Func<User, UserNameDto>> Map() =>
-        user => new UserNameDto(user.Id, user.FirstName, user.LastName);
+    public static Expression<Func<User, UserNameDtoOld>> Map() =>
+        user => new UserNameDtoOld(user.Id, user.FirstName, user.LastName);
 }

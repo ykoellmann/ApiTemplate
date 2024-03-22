@@ -10,14 +10,19 @@ public interface IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : Id<TId>
 {
-    public Task<List<TEntity>> GetListAsync(CancellationToken ct, Specification<TEntity, TId> specification = null);
-    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct)
-        where TDto : IDto<TDto, TEntity, TId>, new();
-    
-    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct, Specification<TEntity, TId> specification = null);
+    Task<List<TEntity>> GetListAsync(CancellationToken ct,
+        Specification<TEntity, TId> specification = null);
 
-    Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
-        where TDto : IDto<TDto, TEntity, TId>, new();
+    Task<List<TDto>> GetListAsync<TDto>(CancellationToken ct,
+        Specification<TEntity, TId, TDto> specification)
+        where TDto : IDto<TId>;
+
+    Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct,
+        Specification<TEntity, TId> specification = null);
+
+    Task<TDto?> GetByIdAsync<TDto>(TId id, CancellationToken ct,
+        Specification<TEntity, TId, TDto> specification)
+        where TDto : IDto<TId>;
 
     public Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct);
     

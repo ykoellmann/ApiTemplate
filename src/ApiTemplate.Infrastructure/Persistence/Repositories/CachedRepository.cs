@@ -43,7 +43,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         yield return new CacheKey<TEntity>(nameof(GetByIdAsync),
             changedEvent.Changed.Id.Value.ToString());
         yield return new CacheKey<TEntity>(nameof(GetListAsync));
-        
+
         await foreach (var cacheKey in GetCacheKeysAsync(changedEvent))
         {
             yield return cacheKey;
@@ -56,32 +56,30 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     #endregion
 
     #region Implementation of IRepository
-    
+
     public virtual async Task<List<TEntity>> GetListAsync(CancellationToken ct,
         Specification<TEntity, TId> specification = null)
     {
         var cacheKey = new CacheKey<TEntity>(nameof(GetListAsync));
-        
+
         if (specification is not null)
             return await _decorated.GetListAsync(ct, specification);
-        
+
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
             _ => _decorated.GetListAsync(ct, specification));
     }
 
-    public Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct) where TDto : IDto<TDto, TEntity, TId>, new()
+    public async Task<List<TDto>> GetListAsync<TDto>(CancellationToken ct,
+        Specification<TEntity, TId, TDto> specification) where TDto : IDto<TId>
     {
-        var cacheKey = new CacheKey<TEntity>(nameof(GetDtoListAsync), typeof(TDto).Name);
-        
-        return Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
-            _ => _decorated.GetDtoListAsync<TDto>(ct));
+        return await _decorated.GetListAsync(ct, specification);
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct,
         Specification<TEntity, TId> specification = null)
     {
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), id.Value.ToString());
-        
+
         if (specification is not null)
             return await _decorated.GetByIdAsync(id, ct, specification);
 
@@ -89,14 +87,10 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
             _ => _decorated.GetByIdAsync(id, ct, specification));
     }
 
-    public async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
-        where TDto : IDto<TDto, TEntity, TId>, new()
+    public async Task<TDto?> GetByIdAsync<TDto>(TId id, CancellationToken ct,
+        Specification<TEntity, TId, TDto> specification) where TDto : IDto<TId>
     {
-        var cacheKey =
-            new CacheKey<TEntity>(nameof(GetDtoByIdAsync), typeof(TDto).Name, id.Value.ToString());
-
-        return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration,
-            _ => _decorated.GetDtoByIdAsync<TDto>(id, ct));
+        return await _decorated.GetByIdAsync(id, ct, specification);
     }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct)

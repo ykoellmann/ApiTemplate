@@ -1,14 +1,24 @@
 ﻿using ApiTemplate.Domain.Common.Specification;
+using ApiTemplate.Domain.Common.Specification.Include;
+using ApiTemplate.Domain.Common.Specification.Order;
 using ApiTemplate.Domain.Users.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Domain.Users.Specifications;
 
 public class UserIncludeAuthorizationSpecification : Specification<User, UserId>
 {
-    public override IQueryable<User> Specificate(IQueryable<User> query)
+    public override IOrderedSpecification<User> Order()
     {
-        return query.Include(u => u.RefreshTokens)
+        return OrderedSpecification<User>
+            .OrderByDescending(x => x.RefreshTokens.Single().Expired);
+    }
+
+    public override IIncludableSpecification<User> Include()
+    {
+        return IncludableSpecification<User>
+            .Include(u => u.RefreshTokens)
+            .ThenInclude(x => x.User)
+            .ThenInclude(x => x.RefreshTokens)
             .Include(u => u.UserPermissions)
             .ThenInclude(up => up.Permission)
             .Include(u => u.UserRoles)

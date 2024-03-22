@@ -27,12 +27,13 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
             .Specificate(specification)
             .ToListAsync(ct);
     }
-    
-    public virtual async Task<List<TDto>> GetDtoListAsync<TDto>(CancellationToken ct)
-        where TDto : IDto<TDto, TEntity, TId>, new()
+
+    public virtual async Task<List<TDto>> GetListAsync<TDto>(CancellationToken ct,
+        Specification<TEntity, TId, TDto> specification)
+        where TDto : IDto<TId>
     {
         return await _dbContext.Set<TEntity>()
-            .Select(TDto.Map())
+            .Specificate(specification)
             .ToListAsync(ct);
     }
 
@@ -44,11 +45,12 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
     }
 
-    public virtual async Task<TDto?> GetDtoByIdAsync<TDto>(TId id, CancellationToken ct)
-        where TDto : IDto<TDto, TEntity, TId>, new()
+    public virtual async Task<TDto?> GetByIdAsync<TDto>(TId id, CancellationToken ct,
+        Specification<TEntity, TId, TDto> specification)
+        where TDto : IDto<TId>
     {
         return await _dbContext.Set<TEntity>()
-            .Select(TDto.Map())
+            .Specificate(specification)
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
     }
 
@@ -78,7 +80,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken ct)
     {
         var entity = await _dbContext.Set<TEntity>()
-            .FindAsync(new object?[] { id }, cancellationToken: ct);
+            .FindAsync([id], cancellationToken: ct);
         await entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
 
         _dbContext.Set<TEntity>().Remove(entity);
