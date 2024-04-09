@@ -1,8 +1,11 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using ApiTemplate.Domain.Common.Specification.Include;
 using ApiTemplate.Domain.Common.Specification.Order;
 using ApiTemplate.Domain.Models;
+using ApiTemplate.Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace ApiTemplate.Domain.Common.Specification;
 
@@ -65,9 +68,35 @@ public class Specification<TEntity, TId> : ISpecification<TEntity, TId>
             Include(query, sub);
         }
 
-        query.Include(includable.NavigationPropertyPath.ToString());
+
+        if (includable.ThenInclude)
+        {
+            var thenInclude = typeof(EntityFrameworkQueryableExtensions).GetMethod("ThenInclude",
+                [typeof(IQueryable<TEntity>), includable.NavigationPropertyPath.GetType()])!;
+            query = (IQueryable<TEntity>)thenInclude.Invoke(null, [query, includable.NavigationPropertyPath]);
+        }
+        else
+        {
+            query = IncludeProperty(query, includable.NavigationPropertyPath, includable.NavigationPropertyType);
+        }
 
         return query;
+    }
+
+    private IQueryable<TEntity> IncludeProperty(IQueryable<TEntity> query, Expression navigationPropertyPath,
+        Type navigationPropertyType)
+    {
+        
+        
+        // Get the Include method from the IQueryable<TEntity> interface
+        var includeMethodInfo = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include",
+            [typeof(IQueryable<TEntity>), typeof(Expression<Func<TEntity, IReadOnlyList<RefreshToken>>>)])!;
+        
+        // Create a MethodInfo object that represents the Include method with the specific type parameters
+        var genericIncludeMethodInfo = includeMethodInfo.MakeGenericMethod(typeof(TEntity), navigationPropertyType);
+
+        // Call the Include method
+        return (IQueryable<TEntity>)genericIncludeMethodInfo.Invoke(null, [query, navigationPropertyPath]);
     }
 
     public virtual IOrderedSpecification<TEntity> Order()

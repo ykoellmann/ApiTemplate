@@ -1,39 +1,5 @@
 # This is a generated file. Not intended for manual editing.
 services:
-  apitemplate.api.blue:
-    build:
-      context: "C:\\Users\\yanko\\RiderProjects\\ApiTemplate"
-      dockerfile: "src/apitemplate.Api/Dockerfile"
-      target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
-    command: []
-    entrypoint:
-    - "/opt/rider-debugger/linux-x64/dotnet/dotnet"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.exe"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
-    environment:
-      DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
-    image: "apitemplate.api:dev"
-    ports:
-    - "127.0.0.1:57005:57100"
-    - "127.0.0.1:57205:57300"
-    volumes:
-    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
-    - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.3\\\
-      Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\Programs\\Rider\\bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_3_23_00_23_01:/var/opt/rider-debugger:rw"
-    working_dir: "/app"
   apitemplate.api.green:
     build:
       context: "C:\\Users\\yanko\\RiderProjects\\ApiTemplate"
@@ -55,8 +21,8 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57006:57100"
-    - "127.0.0.1:57206:57300"
+    - "127.0.0.1:57027:57100"
+    - "127.0.0.1:57227:57300"
     volumes:
     - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
     - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
@@ -66,72 +32,5 @@ services:
       Linux64:/opt/rider-debugger"
     - "C:\\Users\\yanko\\AppData\\Local\\Programs\\Rider\\bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_3_23_00_23_01:/var/opt/rider-debugger:rw"
-    working_dir: "/app"
-  apitemplate.api.white:
-    build:
-      context: "C:\\Users\\yanko\\RiderProjects\\ApiTemplate"
-      dockerfile: "src/apitemplate.Api/Dockerfile"
-      target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
-    command: []
-    entrypoint:
-    - "/opt/rider-debugger/linux-x64/dotnet/dotnet"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.exe"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
-    environment:
-      DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
-    image: "apitemplate.api:dev"
-    ports:
-    - "127.0.0.1:57007:57100"
-    - "127.0.0.1:57207:57300"
-    volumes:
-    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
-    - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.3\\\
-      Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\Programs\\Rider\\bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_3_23_00_23_01:/var/opt/rider-debugger:rw"
-    working_dir: "/app"
-  apitemplate.loadbalancer:
-    build:
-      context: "C:\\Users\\yanko\\RiderProjects\\ApiTemplate"
-      dockerfile: "src/apitemplate.LoadBalancer/Dockerfile"
-      target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
-    command: []
-    entrypoint:
-    - "/opt/rider-debugger/linux-x64/dotnet/dotnet"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.exe"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
-    environment:
-      DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
-    image: "apitemplate.loadbalancer:dev"
-    ports:
-    - "127.0.0.1:57008:57100"
-    - "127.0.0.1:57208:57300"
-    volumes:
-    - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.LoadBalancer:/app:rw"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.3\\\
-      Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\Programs\\Rider\\bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_3_23_00_23_01:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2024_4_02_21_19_58:/var/opt/rider-debugger:rw"
     working_dir: "/app"

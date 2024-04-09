@@ -10,7 +10,7 @@ public static class IncludableSpecificationExtensions
         where TEntity : class
         where TProperty : class
     {
-        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, source);
+        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, false, source);
     }
 
     public static IIncludableSpecification<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(
@@ -20,7 +20,7 @@ public static class IncludableSpecificationExtensions
         where TPreviousProperty : class
         where TProperty : class
     {
-        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, source);
+        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, true, source);
     }
 
     public static IIncludableSpecification<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(
@@ -30,6 +30,6 @@ public static class IncludableSpecificationExtensions
         where TPreviousProperty : class
         where TProperty : class
     {
-        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, source);
+        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, true, source);
     }
 }

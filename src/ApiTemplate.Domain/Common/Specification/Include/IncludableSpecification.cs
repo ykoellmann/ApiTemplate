@@ -21,25 +21,32 @@ namespace ApiTemplate.Domain.Common.Specification.Include;
 public class IncludableSpecification<TEntity> : IIncludableSpecification<TEntity>
     where TEntity : class
 {
-    
-    public IncludableSpecification(Expression navigationPropertyPath)
+    public IncludableSpecification(Expression navigationPropertyPath, bool thenInclude)
     {
         NavigationPropertyPath = navigationPropertyPath;
+        ThenInclude = thenInclude;
+        NavigationPropertyType = navigationPropertyPath.GetType();
     }
-    public IncludableSpecification(Expression navigationPropertyPath, IIncludableSpecification<TEntity>? sub)
+
+    public IncludableSpecification(Expression navigationPropertyPath, bool thenInclude,
+        IIncludableSpecification<TEntity>? sub)
     {
         NavigationPropertyPath = navigationPropertyPath;
+        ThenInclude = thenInclude;
+        NavigationPropertyType = navigationPropertyPath.GetType();
         Sub = sub;
     }
 
     public IIncludableSpecification<TEntity>? Sub { get; set; }
     public Expression NavigationPropertyPath { get; set; }
+    public Type NavigationPropertyType { get; set; }
+    public bool ThenInclude { get; set; }
 
     public static IIncludableSpecification<TEntity, TProperty> Include<TProperty>(
         Expression<Func<TEntity, TProperty>> navigationPropertyPath)
         where TProperty : class
     {
-        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath);
+        return new IncludableSpecification<TEntity, TProperty>(navigationPropertyPath, false);
     }
 }
 
@@ -47,11 +54,12 @@ public class IncludableSpecification<TEntity, TProperty> : IncludableSpecificati
     IIncludableSpecification<TEntity, TProperty>
     where TEntity : class
 {
-    public IncludableSpecification(Expression navigationPropertyPath) : base(navigationPropertyPath)
+    public IncludableSpecification(Expression navigationPropertyPath, bool thenInclude) : base(navigationPropertyPath, thenInclude)
     {
     }
 
-    public IncludableSpecification(Expression navigationPropertyPath, IIncludableSpecification<TEntity>? sub) : base(navigationPropertyPath, sub)
+    public IncludableSpecification(Expression navigationPropertyPath, bool thenInclude, IIncludableSpecification<TEntity>? sub) : base(
+        navigationPropertyPath, thenInclude, sub)
     {
     }
 }
