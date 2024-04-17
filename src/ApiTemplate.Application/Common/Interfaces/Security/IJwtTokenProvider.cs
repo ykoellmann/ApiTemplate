@@ -1,6 +1,6 @@
 ﻿using ApiTemplate.Domain.Users;
 
-namespace ApiTemplate.Application.Common.Interfaces.Authentication;
+namespace ApiTemplate.Application.Common.Interfaces.Security;
 
 public interface IJwtTokenProvider
 {

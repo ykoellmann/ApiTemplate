@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
 using ApiTemplate.Api.Common.Errors;
-using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Security;
-using ApiTemplate.Infrastructure.Authentication;
-using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
-using ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
+using ApiTemplate.Infrastructure.Security;
+using ApiTemplate.Infrastructure.Security.CurrentUserProvider;
+using ApiTemplate.Infrastructure.Security.PolicyEnforcer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;

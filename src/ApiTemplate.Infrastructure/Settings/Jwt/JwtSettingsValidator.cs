@@ -1,5 +1,4 @@
-﻿using ApiTemplate.Infrastructure.Authentication;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace ApiTemplate.Infrastructure.Settings.Jwt;
 

@@ -9,14 +9,14 @@ public static class OrderedSpecificationExtensions
         Expression<Func<TEntity, TProperty>> orderBy)
         where TEntity : class
     {
-        return new OrderedSpecification<TEntity>(orderBy, false);
+        return null;
     }
-
+    
     public static IOrderedSpecification<TEntity> OrderByDescending<TEntity, TProperty>(
         this IOrderedSpecification<TEntity> source, 
         Expression<Func<TEntity, TProperty>> orderByDescending) 
         where TEntity : class
     {
-        return new OrderedSpecification<TEntity>(orderByDescending, true);
+        return null;
     }
 }

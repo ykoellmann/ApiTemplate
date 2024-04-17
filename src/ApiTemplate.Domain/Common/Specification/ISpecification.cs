@@ -7,13 +7,12 @@ public interface ISpecification<TEntity, TId, TResult>
     where TEntity : Entity<TId>
     where TId : Id<TId>
 {
-    Expression<Func<TEntity, TResult>> Map();
+    IQueryable<TResult> Specificate(IQueryable<TEntity> query);
 }
 
 public interface ISpecification<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : Id<TId>
 {
+    IQueryable<TEntity> Specificate(IQueryable<TEntity> query);
 }
-
-

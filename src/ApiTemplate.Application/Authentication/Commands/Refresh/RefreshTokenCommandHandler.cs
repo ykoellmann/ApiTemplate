@@ -1,7 +1,7 @@
 ﻿using ApiTemplate.Application.Authentication.Common;
-using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.MediatR.Handlers;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
 using ErrorOr;
@@ -10,7 +10,7 @@ using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Commands.Refresh;
 
-internal class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, AuthenticationResult>
+public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, AuthenticationResult>
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;

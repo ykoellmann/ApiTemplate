@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Application.Common.Security.Request;
 using ErrorOr;
 using MediatR;

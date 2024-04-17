@@ -5,7 +5,7 @@ using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
+namespace ApiTemplate.Infrastructure.Security.CurrentUserProvider;
 
 public class CurrentUserProvider(IHttpContextAccessor _httpContextAccessor) : ICurrentUserProvider
 {

@@ -148,4 +148,3 @@ services:
 
 volumes:
   appdata:
-    

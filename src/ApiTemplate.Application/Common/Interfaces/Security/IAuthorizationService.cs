@@ -1,8 +1,7 @@
-﻿using ApiTemplate.Application.Common.Security.Request;
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 
-namespace ApiTemplate.Application.Common.Interfaces.Authentication;
+namespace ApiTemplate.Application.Common.Interfaces.Security;
 
 public interface IAuthorizationService
 {

@@ -1,6 +1,6 @@
 ﻿using ApiTemplate.Application.Authentication.Commands.Refresh;
-using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
+using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;

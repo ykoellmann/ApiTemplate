@@ -1,14 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ApiTemplate.Application.Common.Interfaces.Authentication;
+using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Infrastructure.Settings.Jwt;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ApiTemplate.Infrastructure.Authentication;
+namespace ApiTemplate.Infrastructure.Security;
 
 public class JwtTokenProvider : IJwtTokenProvider
 {

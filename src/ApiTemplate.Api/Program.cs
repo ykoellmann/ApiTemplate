@@ -1,11 +1,7 @@
 using ApiTemplate.Api;
 using ApiTemplate.Application;
-using ApiTemplate.Application.Common.Interfaces.Authentication;
 using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Infrastructure;
-using ApiTemplate.Infrastructure.Authentication;
-using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
-using ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
 using Serilog;
 using Endpoint = Microsoft.AspNetCore.Http.Endpoint;
 

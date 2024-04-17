@@ -2,15 +2,16 @@
 services:
   apitemplate.api.green:
     build:
-      context: "C:\\Users\\yanko\\RiderProjects\\ApiTemplate"
+      context: "C:\\Users\\Yannik\\RiderProjects\\ApiTemplate"
       dockerfile: "src/apitemplate.Api/Dockerfile"
       target: "base"
       args:
         BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/rider-debugger/linux-x64/dotnet/dotnet"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.exe"
+    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
     - "--mode=server"
     - "--frontend-port=57100"
     - "--backend-port=57300"
@@ -21,16 +22,16 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "apitemplate.api:dev"
     ports:
-    - "127.0.0.1:57027:57100"
-    - "127.0.0.1:57227:57300"
+    - "127.0.0.1:57006:57100"
+    - "127.0.0.1:57206:57300"
     volumes:
-    - "C:\\Users\\yanko\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
-    - "C:\\Users\\yanko\\.nuget\\packages:/root/.nuget/packages"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
-    - "C:\\Users\\yanko\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.3.3\\\
+    - "C:\\Users\\Yannik\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
+    - "C:\\Users\\Yannik\\.nuget\\packages:/root/.nuget/packages"
+    - "C:\\Users\\Yannik\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
+    - "C:\\Users\\Yannik\\RiderProjects\\ApiTemplate:/src:rw"
+    - "C:\\Users\\Yannik\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.1\\\
       Linux64:/opt/rider-debugger"
-    - "C:\\Users\\yanko\\AppData\\Local\\Programs\\Rider\\bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "C:\\Users\\yanko\\AppData\\Local\\JetBrains\\Rider2023.3\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_4_02_21_19_58:/var/opt/rider-debugger:rw"
+    - "C:\\Users\\Yannik\\AppData\\Local\\Programs\\Rider\\bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "C:\\Users\\Yannik\\AppData\\Local\\JetBrains\\Rider2024.1\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2024_4_17_20_21_14:/var/opt/rider-debugger:rw"
     working_dir: "/app"

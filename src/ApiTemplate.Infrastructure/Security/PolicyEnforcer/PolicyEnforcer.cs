@@ -1,12 +1,10 @@
 ﻿using ApiTemplate.Application.Common.Security.Policies;
-using ApiTemplate.Application.Common.Security.Request;
 using ApiTemplate.Application.Common.Security.Roles;
 using ApiTemplate.Domain.Common.Security;
-using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
 using ErrorOr;
 using MediatR;
 
-namespace ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
+namespace ApiTemplate.Infrastructure.Security.PolicyEnforcer;
 
 public class PolicyEnforcer : IPolicyEnforcer
 {

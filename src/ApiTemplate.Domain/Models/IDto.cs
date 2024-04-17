@@ -3,5 +3,5 @@
 public interface IDto<TId>
     where TId : Id<TId>
 {
-    TId Id { get; set; }
+    TId Id { get; init; }
 }

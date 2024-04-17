@@ -1,12 +1,9 @@
-﻿using ApiTemplate.Application.Common.Interfaces.Authentication;
-using ApiTemplate.Application.Common.Interfaces.Security;
-using ApiTemplate.Application.Common.Security.Request;
-using ApiTemplate.Infrastructure.Authentication.CurrentUserProvider;
-using ApiTemplate.Infrastructure.Authentication.PolicyEnforcer;
+﻿using ApiTemplate.Application.Common.Interfaces.Security;
+using ApiTemplate.Infrastructure.Security.PolicyEnforcer;
 using ErrorOr;
 using MediatR;
 
-namespace ApiTemplate.Infrastructure.Authentication;
+namespace ApiTemplate.Infrastructure.Security;
 
 public class AuthorizationService : IAuthorizationService
 {
