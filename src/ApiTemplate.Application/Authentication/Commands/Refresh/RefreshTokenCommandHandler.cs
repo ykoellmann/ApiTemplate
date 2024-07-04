@@ -37,7 +37,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, A
         if (!user.HasActiveRefreshToken)
             return Errors.Authentication.RefreshTokenExpired;
 
-        if (user.ActiveRefreshToken.Token != request.TokenToRefresh)
+        if (user.ActiveRefreshToken!.Token != request.TokenToRefresh)
             return Errors.Authentication.InvalidRefreshToken;
 
         var newRefreshToken =

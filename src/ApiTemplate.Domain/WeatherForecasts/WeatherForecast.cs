@@ -5,7 +5,7 @@ namespace ApiTemplate.Domain.WeatherForecasts;
 
 public class WeatherForecast : AggregateRoot<WeatherForecastId>
 {
-    public WeatherForecast(DateTime date, int temperatureC, string summary) : base(new WeatherForecastId())
+    public WeatherForecast(DateTime date, int temperatureC, string summary)
     {
         Date = date;
         TemperatureC = temperatureC;

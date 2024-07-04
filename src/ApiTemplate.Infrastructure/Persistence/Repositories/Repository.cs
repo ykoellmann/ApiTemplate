@@ -11,7 +11,7 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories;
 
 public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
-    where TId : Id<TId>
+    where TId : Id<TId>, new()
 {
     private readonly ApiTemplateDbContext _dbContext;
 

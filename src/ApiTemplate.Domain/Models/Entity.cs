@@ -5,13 +5,13 @@ using ApiTemplate.Domain.Users.ValueObjects;
 namespace ApiTemplate.Domain.Models;
 
 public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
-    where TId : Id<TId>
+    where TId : Id<TId>, new()
 {
     private readonly List<IDomainEvent> _domainEvents = new();
     
     
     [Column(Order = 0)]
-    public TId Id { get; set; }
+    public TId Id { get; }
     
     [Column(Order = 9996)]
     public virtual UserId CreatedBy { get; set; }
@@ -33,10 +33,10 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     {
         _domainEvents.Clear();
     }
-
-    protected Entity(TId id)
+    
+    protected Entity()
     {
-        Id = id;
+        Id = new TId();
     }
     
     public async Task AddDomainEventAsync(IDomainEvent eventItem)

@@ -25,7 +25,7 @@ public class Permission : Entity<PermissionId>
     public override User UpdatedByUser { get; set; } = null!;
     public IReadOnlyList<UserPermission> UserPermissions => _userPermissions.AsReadOnly();
 
-    public Permission(string feature, string name) : base(new PermissionId())
+    public Permission(string feature, string name)
     {
         Feature = feature;
         Name = name;

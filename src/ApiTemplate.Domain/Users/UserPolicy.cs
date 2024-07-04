@@ -6,7 +6,7 @@ namespace ApiTemplate.Domain.Users;
 
 public class UserPolicy : Entity<UserPolicyId>
 {
-    public UserPolicy(PolicyId policyId, UserId userId) : base(new UserPolicyId())
+    public UserPolicy(PolicyId policyId, UserId userId)
     {
         PolicyId = policyId;
         UserId = userId;

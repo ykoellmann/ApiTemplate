@@ -39,7 +39,7 @@ public class User : AggregateRoot<UserId>
     [NotMapped, Obsolete("Because of generic AggregateRoot")]
     public override User UpdatedByUser { get; set; } = null!;
     
-    public User(string firstName, string lastName, string email, string password) : base(new UserId())
+    public User(string firstName, string lastName, string email, string password)
     {
         FirstName = firstName;
         LastName = lastName;

@@ -35,8 +35,12 @@ internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, 
         //Create user
         var user = new User(command.FirstName, command.LastName, command.Email, command.Password);
         await _userRepository.AddAsync(user, ct);
-        
-        user = await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization);
+
+        user =
+            (await _userRepository.GetByIdAsync(
+                user.Id,
+                ct,
+                Specifications.User.IncludeAuthorization))!;
 
         //Generate token
         var token = _jwtTokenProvider.GenerateToken(user);

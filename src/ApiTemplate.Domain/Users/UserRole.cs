@@ -25,7 +25,7 @@ public class UserRole : Entity<UserRoleId>
     [NotMapped, Obsolete("Because of generic AggregateRoot")]
     public override User UpdatedByUser { get; set; } = null!;
     
-    public UserRole(UserId userId, RoleId roleId) : base(new UserRoleId())
+    public UserRole(UserId userId, RoleId roleId)
     {
         UserId = userId;
         RoleId = roleId;

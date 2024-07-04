@@ -6,7 +6,7 @@ namespace ApiTemplate.Domain.Users;
 
 public class Policy : Entity<PolicyId>
 {
-    public Policy(string name) : base(new PolicyId())
+    public Policy(string name)
     {
         Name = name;
     }

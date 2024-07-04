@@ -7,7 +7,7 @@ namespace ApiTemplate.Domain.Users;
 public class UserPermission : Entity<UserPermissionId>
 {
 
-    public UserPermission(UserId userId, PermissionId permissionId) : base(new UserPermissionId())
+    public UserPermission(UserId userId, PermissionId permissionId)
     {
         UserId = userId;
         PermissionId = permissionId;

@@ -7,7 +7,7 @@ namespace ApiTemplate.Domain.Common.Specification;
 
 public class SpecificationBase<TEntity, TId>
     where TEntity : Entity<TId>
-    where TId : Id<TId>
+    where TId : Id<TId>, new()
 {
     protected virtual bool AsNoTracking => false;
     protected virtual bool AsSplitQuery => false;

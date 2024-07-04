@@ -6,8 +6,7 @@ namespace ApiTemplate.Domain.Users;
 
 public class Role : Entity<RoleId>
 {
-    public Role(string name) : base(new RoleId())
-    
+    public Role(string name)
     {
         Name = name;
     }

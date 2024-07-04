@@ -13,7 +13,7 @@ public class RefreshToken : Entity<RefreshTokenId>
     public UserId UserId { get; set; } = null!;
     public User User { get; set; } = null!;
     
-    public RefreshToken(UserId userId) : base(new RefreshTokenId())
+    public RefreshToken(UserId userId)
     {
         Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         Expires = DateTime.UtcNow.AddMinutes(10);
