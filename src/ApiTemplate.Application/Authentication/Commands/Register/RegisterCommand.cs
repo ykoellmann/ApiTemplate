@@ -9,4 +9,4 @@ public record RegisterCommand(
     string FirstName,
     string LastName,
     string Email,
-    string Password) : ICommand<AuthenticationResult>;
+    string Password) : IIdempotentCommand<AuthenticationResult>;
