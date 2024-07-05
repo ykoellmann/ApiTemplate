@@ -4,5 +4,5 @@ public interface IHasDomainEvents
 {
     public IReadOnlyList<IDomainEvent> DomainEvents { get; }
 
-    public Task ClearDomainEventsAsync();
+    public void ClearDomainEvents();
 }

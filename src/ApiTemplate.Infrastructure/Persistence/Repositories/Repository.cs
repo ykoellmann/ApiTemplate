@@ -69,7 +69,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
     {
-        entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
+        entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
         await _dbContext.SaveChangesAsync(ct);
 
@@ -81,7 +81,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     {
         var entity = await _dbContext.Set<TEntity>()
             .FindAsync([id], cancellationToken: ct);
-        await entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
+        entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
         _dbContext.Set<TEntity>().Remove(entity);
         await _dbContext.SaveChangesAsync(ct);

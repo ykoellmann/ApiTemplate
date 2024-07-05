@@ -14,22 +14,22 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     public TId Id { get; }
     
     [Column(Order = 9996)]
-    public virtual UserId CreatedBy { get; set; }
-    
+    public virtual UserId CreatedBy { get; set; } = null!;
+
     [Column(Order = 9997)]
     public virtual DateTime CreatedAt { get; set; }
     
     [Column(Order = 9998)]
-    public virtual UserId UpdatedBy { get; set; }
-    
+    public virtual UserId UpdatedBy { get; set; } = null!;
+
     [Column(Order = 9999)]
     public virtual DateTime UpdatedAt { get; set; }
     
     
-    public virtual User CreatedByUser { get; set; }
-    public virtual User UpdatedByUser { get; set; }
+    public virtual User CreatedByUser { get; set; } = null!;
+    public virtual User UpdatedByUser { get; set; } = null!;
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
-    public async Task ClearDomainEventsAsync()
+    public void ClearDomainEvents()
     {
         _domainEvents.Clear();
     }
@@ -39,7 +39,7 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
         Id = new TId();
     }
     
-    public async Task AddDomainEventAsync(IDomainEvent eventItem)
+    public void AddDomainEvent(IDomainEvent eventItem)
     {
         _domainEvents.Add(eventItem);
     }

@@ -44,7 +44,7 @@ public class CachedUserRepository : CachedRepository<User, UserId>, IUserReposit
 
     public async Task<User> AddAsync(User entity, CancellationToken ct)
     {
-        await entity.AddDomainEventAsync(new ClearCacheEvent<User, UserId>(entity));
+        entity.AddDomainEvent(new ClearCacheEvent<User, UserId>(entity));
 
         var addedEntity = await _decorated.AddAsync(entity, ct);
         var cacheKey = new CacheKey<User>(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());

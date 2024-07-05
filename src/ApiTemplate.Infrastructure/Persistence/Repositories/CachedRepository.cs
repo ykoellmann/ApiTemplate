@@ -95,7 +95,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct)
     {
-        await entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
+        entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
         var addedEntity = await _decorated.AddAsync(entity, userId, ct);
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), addedEntity.Id.Value.ToString());
@@ -105,7 +105,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
     {
-        await entity.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
+        entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
         var updatedEntity = await _decorated.UpdateAsync(entity, ct);
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), updatedEntity.Id.Value.ToString());
@@ -117,7 +117,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     {
         var entity = await _decorated.GetByIdAsync(id, ct);
 
-        await entity!.AddDomainEventAsync(new ClearCacheEvent<TEntity, TId>(entity));
+        entity!.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
         return await _decorated.DeleteAsync(id, ct);
     }

@@ -26,7 +26,7 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>,
         refreshTokens.ForEach(async rt =>
         {
             rt.Disabled = true;
-            await entity.AddDomainEventAsync(new ClearCacheEvent<RefreshToken, RefreshTokenId>(rt));
+            entity.AddDomainEvent(new ClearCacheEvent<RefreshToken, RefreshTokenId>(rt));
         });
         
         return await base.AddAsync(entity, userId, ct);

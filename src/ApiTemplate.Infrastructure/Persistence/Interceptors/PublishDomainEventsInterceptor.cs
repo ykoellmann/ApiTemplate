@@ -41,8 +41,8 @@ public class PublishDomainEventsInterceptor : SaveChangesInterceptor
             .SelectMany(entity => entity.DomainEvents)
             .ToList();
         
-        entitiesWithDomainEvents.ForEach(async entity => await entity.ClearDomainEventsAsync());
+        entitiesWithDomainEvents.ForEach(entity => entity.ClearDomainEvents());
         
-        domainEvents.ForEach(async domainEvent => await _mediator.Publish(domainEvent));
+        foreach (var domainEvent in domainEvents) await _mediator.Publish(domainEvent);
     }
 }

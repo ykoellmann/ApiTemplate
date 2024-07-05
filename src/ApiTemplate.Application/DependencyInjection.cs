@@ -17,16 +17,16 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly);
             // cfg.RegisterServicesFromAssemblies(typeof(Domain.Common.Events.UpdatedEvent<,>).Assembly);
         });
-        
+
         services.AddPipelineBehaviours();
-        
+
         services.AddMapping();
-        
+
         services.AddHttpContextAccessor();
 
         return services;
     }
-    
+
     private static void AddMapping(this IServiceCollection services)
     {
         var config = TypeAdapterConfig.GlobalSettings;
@@ -35,17 +35,20 @@ public static class DependencyInjection
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
     }
-    
+
     private static void AddPipelineBehaviours(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddScoped(typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>));
 
-        services.AddScoped(typeof(IPipelineBehavior<,>), 
+        services.AddScoped(typeof(IPipelineBehavior<,>),
             typeof(LoggingBehaviour<,>));
 
         services.AddScoped(typeof(IPipelineBehavior<,>),
             typeof(AuthorizationBehavior<,>));
+
+        services.AddScoped(typeof(IPipelineBehavior<,>),
+            typeof(IdempotentCommandPipelineBehaviour<,>));
     }
 }

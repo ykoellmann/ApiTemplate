@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		.env = .env
 		README.md = README.md
+		qodana.yaml = qodana.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTemplate.Infrastructure.UnitTests", "test\ApiTemplate.Infrastructure.UnitTests\ApiTemplate.Infrastructure.UnitTests.csproj", "{DE7247C8-D7A4-478E-8B04-6E12EF427470}"
