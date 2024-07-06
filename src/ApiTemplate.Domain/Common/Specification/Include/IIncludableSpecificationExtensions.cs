@@ -10,9 +10,9 @@ public static class IIncludableSpecificationExtensions
         where TEntity : class
         where TProperty : class
     {
-        return null;
+        return null!;
     }
-    
+
     public static IIncludableSpecification<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(
         this IIncludableSpecification<TEntity, IReadOnlyList<TPreviousProperty>> source,
         Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
@@ -20,16 +20,16 @@ public static class IIncludableSpecificationExtensions
         where TPreviousProperty : class
         where TProperty : class
     {
-        return null;
+        return null!;
     }
-    
+
     public static IIncludableSpecification<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(
         this IIncludableSpecification<TEntity, TPreviousProperty> source,
         Expression<Func<TPreviousProperty, TProperty>> navigationPropertyPath)
         where TEntity : class
         where TPreviousProperty : class
         where TProperty : class
-    {        
-        return null;
+    {
+        return null!;
     }
 }

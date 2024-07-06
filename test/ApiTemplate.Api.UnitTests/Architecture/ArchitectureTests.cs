@@ -8,7 +8,7 @@ namespace ApiTemplate.Api.UnitTests.Architecture;
 public class ArchitectureTests
 {
     private readonly Assembly _apiAssembly = typeof(DependencyInjection).Assembly;
-    
+
     [Fact]
     public void AsyncMethods_Should_HaveSuffix_Async()
     {
@@ -18,7 +18,7 @@ public class ArchitectureTests
             .Should()
             .MeetCustomRule(new AsyncMethodsHaveSuffixAsyncRule())
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 }

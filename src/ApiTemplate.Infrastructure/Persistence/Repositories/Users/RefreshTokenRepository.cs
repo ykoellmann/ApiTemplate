@@ -23,12 +23,12 @@ public class RefreshTokenRepository : Repository<RefreshToken, RefreshTokenId>,
             .Where(rt => rt.UserId == userId && !rt.Disabled)
             .ToListAsync(ct);
 
-        refreshTokens.ForEach(async rt =>
+        refreshTokens.ForEach(rt =>
         {
             rt.Disabled = true;
             entity.AddDomainEvent(new ClearCacheEvent<RefreshToken, RefreshTokenId>(rt));
         });
-        
+
         return await base.AddAsync(entity, userId, ct);
     }
 }

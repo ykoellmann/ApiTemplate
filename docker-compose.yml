@@ -8,7 +8,7 @@ services:
     image: redis:latest
     restart: always
     ports:
-#      - "${ADDRESS}:8003:6379"
+      #      - "${ADDRESS}:8003:6379"
       - 8003:6379
     networks:
       - apitemplate-backend
@@ -23,7 +23,7 @@ services:
     volumes:
       - appdata:/var/lib/postgresql/data
     ports:
-#      - "${ADDRESS}:8002:5432"
+      #      - "${ADDRESS}:8002:5432"
       - 8002:5432
     networks:
       - apitemplate-backend
@@ -34,8 +34,8 @@ services:
     environment:
       - ACCEPT_EULA=Y
     ports:
-#      - "${ADDRESS}:5341:5341"
-#      - "${ADDRESS}:8004:80"
+      #      - "${ADDRESS}:5341:5341"
+      #      - "${ADDRESS}:8004:80"
       - 5341:5341
       - 8004:80
     networks:
@@ -56,7 +56,7 @@ services:
       - JwtSettings__Issuer=ApiTemplate
       - JwtSettings__Audience=ApiTemplate
     ports:
-#      - "${ADDRESS}:8100:80"
+      #      - "${ADDRESS}:8100:80"
       - 8100:80
     depends_on:
       - apitemplate.db

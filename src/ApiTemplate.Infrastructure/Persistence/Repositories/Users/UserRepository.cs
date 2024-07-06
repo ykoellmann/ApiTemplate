@@ -1,7 +1,6 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
-using ApiTemplate.Infrastructure.Cache.CustomCacheAttributes;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
@@ -17,12 +16,12 @@ public class UserRepository : Repository<User, UserId>, IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken ct)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: ct);
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, ct);
     }
 
     public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken ct)
     {
-        return await _dbContext.Users.AllAsync(u => u.Email != email, cancellationToken: ct);
+        return await _dbContext.Users.AllAsync(u => u.Email != email, ct);
     }
 
     public async Task<User> AddAsync(User entity, CancellationToken ct)

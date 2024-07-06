@@ -2,7 +2,4 @@
 
 namespace ApiTemplate.Domain.Models;
 
-public interface IDomainEvent : INotification
-{
-    
-}
+public interface IDomainEvent : INotification;

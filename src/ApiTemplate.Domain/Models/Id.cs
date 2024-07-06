@@ -1,5 +1,3 @@
-using BindingFlags = System.Reflection.BindingFlags;
-
 namespace ApiTemplate.Domain.Models;
 
 public class Id<TIdObject> : ValueObject
@@ -9,8 +7,7 @@ public class Id<TIdObject> : ValueObject
     {
         Value = value;
     }
-    
-    
+
     public Id()
     {
         Value = Guid.NewGuid();

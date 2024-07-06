@@ -5,7 +5,6 @@ using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Queries.Login;
@@ -13,8 +12,8 @@ namespace ApiTemplate.Application.Authentication.Queries.Login;
 internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResult>
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
-    private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IUserRepository _userRepository;
 
     public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository)
@@ -27,13 +26,13 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken ct)
     {
         var t = await _userRepository.GetListAsync(ct, Specifications.User.IncludeAuthorization);
-        
+
         if (await _userRepository.GetByEmailAsync(query.Email, ct) is not User user)
             return Errors.Authentication.InvalidCredentials;
 
         if (!user.Password.Equals(query.Password))
             return Errors.Authentication.InvalidCredentials;
-        
+
         user = await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization);
 
         var token = _jwtTokenProvider.GenerateToken(user);

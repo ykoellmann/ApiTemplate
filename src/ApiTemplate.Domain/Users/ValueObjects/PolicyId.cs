@@ -7,7 +7,7 @@ public class PolicyId : Id<PolicyId>
     public PolicyId()
     {
     }
-    
+
     public PolicyId(Guid value) : base(value)
     {
     }

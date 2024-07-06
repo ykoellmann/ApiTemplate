@@ -19,10 +19,7 @@ public class ApiController : ControllerBase
         get
         {
             var claimValue = User?.Claims.FirstOrDefault(c => c.Type == UserIdClaimType)?.Value;
-            if (claimValue is string && Guid.TryParse(claimValue, out var guid))
-            {
-                return new UserId(guid);
-            }
+            if (claimValue != null && Guid.TryParse(claimValue, out var guid)) return new UserId(guid);
 
             return null;
         }
@@ -30,7 +27,7 @@ public class ApiController : ControllerBase
 
     protected IActionResult Problem(List<Error> errors)
     {
-        if (!errors.Any())
+        if (errors.Count > 0)
             return Problem();
 
         if (errors.TrueForAll(error => error.Type == ErrorType.Validation)) return ValidationProblem(errors);

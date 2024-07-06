@@ -27,10 +27,7 @@ public class AuthorizationBehavior<TRequest, TResponse>
             .GetCustomAttributes<AuthorizeAttribute>()
             .ToList();
 
-        if (authorizationAttributes.Count == 0)
-        {
-            return await next();
-        }
+        if (authorizationAttributes.Count == 0) return await next();
 
         var requiredPermissions = authorizationAttributes
             .SelectMany(authorizationAttribute => authorizationAttribute.Permissions?.Split(',') ?? [])

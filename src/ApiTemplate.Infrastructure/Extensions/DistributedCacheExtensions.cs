@@ -10,16 +10,13 @@ public static class DistributedCacheExtensions
         Func<DistributedCacheEntryOptions, Task<T>> factory)
     {
         var cached = await cache.GetStringAsync(key);
-        if (!string.IsNullOrEmpty(cached))
-        {
-            return JsonConvert.DeserializeObject<T>(cached)!;
-        }
+        if (!string.IsNullOrEmpty(cached)) return JsonConvert.DeserializeObject<T>(cached)!;
 
         var entry = new DistributedCacheEntryOptions();
         entry.SetAbsoluteExpiration(cacheExpiration);
         var created = await factory(entry);
 
-        await cache.SetStringAsync(key, JsonConvert.SerializeObject(created, settings: new JsonSerializerSettings
+        await cache.SetStringAsync(key, JsonConvert.SerializeObject(created, new JsonSerializerSettings
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         }), entry);

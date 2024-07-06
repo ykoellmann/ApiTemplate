@@ -8,7 +8,7 @@ public static class SpecificationConstants
         public const string Order = "Order";
         public const string Map = "Map";
     }
-    
+
     public static class Properties
     {
         public const string AsNoTracking = "AsNoTracking";

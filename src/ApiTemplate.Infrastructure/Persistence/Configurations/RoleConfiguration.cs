@@ -23,7 +23,7 @@ public class RoleConfiguration : BaseConfiguration<Role, RoleId>
 
         ConfigureEntity(builder);
     }
-    
+
     public override void ConfigureEntity(EntityTypeBuilder<Role> builder)
     {
         builder.ToTable("Role");
@@ -31,9 +31,5 @@ public class RoleConfiguration : BaseConfiguration<Role, RoleId>
         builder.Property(r => r.Name)
             .IsRequired()
             .HasMaxLength(128);
-        
-        // builder.HasData(typeof(Application.Common.Security.Roles.Role)
-        //     .GetFields()
-        //     .Select(x => new Role(x.Name)));
     }
 }

@@ -1,45 +1,45 @@
 {
-    "$schema": "http://json.schemastore.org/template",
-    "author": "yannikkoellmann",
-    "classifications": [
-        "AspNetCore",
-        "Solution",
-        "Api"
-    ],
-    "name": "ASP.NET Api with Clean Architecture",
-    "identity": "WebApi.CleanArchitecture",
-    "shortName": "WebApiCA",
-    "tags": {
-        "language": "C#",
-        "type":"solution"
+  "$schema": "http://json.schemastore.org/template",
+  "author": "yannikkoellmann",
+  "classifications": [
+    "AspNetCore",
+    "Solution",
+    "Api"
+  ],
+  "name": "ASP.NET Api with Clean Architecture",
+  "identity": "WebApi.CleanArchitecture",
+  "shortName": "WebApiCA",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sourceName": "ApiTemplate",
+  "preferNameDirectory": "true",
+  "sources": [
+    {
+      "source": "./src/",
+      "include": [
+        "**/*"
+      ],
+      "target": "./src/"
     },
-    "sourceName": "ApiTemplate",
-    "preferNameDirectory": "true",
-    "sources": [
-        {
-            "source": "./src/",
-            "include": [
-                "**/*"
-            ],
-            "target": "./src/"
-        },
-        {
-            "source": "./test/",
-            "include": [
-                "**/*"
-            ],
-            "target": "./test/"
-        },
-        {
-            "source": "./",
-            "include": [
-                "docker-compose.yml",
-                ".gitignore",
-                ".dockerignore",
-                "ApiTemplate.sln",
-                ".env"
-            ],
-            "target": "./"
-        }
-    ]
+    {
+      "source": "./test/",
+      "include": [
+        "**/*"
+      ],
+      "target": "./test/"
+    },
+    {
+      "source": "./",
+      "include": [
+        "docker-compose.yml",
+        ".gitignore",
+        ".dockerignore",
+        "ApiTemplate.sln",
+        ".env"
+      ],
+      "target": "./"
+    }
+  ]
 }

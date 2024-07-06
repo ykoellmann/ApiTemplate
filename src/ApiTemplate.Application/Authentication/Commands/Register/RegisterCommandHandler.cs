@@ -4,9 +4,7 @@ using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
-using ApiTemplate.Domain.Users.ValueObjects;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Commands.Register;
@@ -14,8 +12,8 @@ namespace ApiTemplate.Application.Authentication.Commands.Register;
 internal sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, AuthenticationResult>
 {
     private readonly IJwtTokenProvider _jwtTokenProvider;
-    private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IUserRepository _userRepository;
 
     public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenProvider jwtTokenProvider,
         IRefreshTokenRepository refreshTokenRepository)

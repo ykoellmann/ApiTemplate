@@ -7,7 +7,7 @@ public class UserRoleId : Id<UserRoleId>
     public UserRoleId()
     {
     }
-    
+
     public UserRoleId(Guid value) : base(value)
     {
     }

@@ -23,7 +23,7 @@ public class UserPolicyConfiguration : BaseConfiguration<UserPolicy, UserPolicyI
 
         ConfigureEntity(builder);
     }
-    
+
     public override void ConfigureEntity(EntityTypeBuilder<UserPolicy> builder)
     {
         builder.ToTable("UserPolicy");

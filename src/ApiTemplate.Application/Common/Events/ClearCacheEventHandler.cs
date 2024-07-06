@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.Events;
 
-public class ClearCacheEventHandler<TIRepository, TEntity, TId, TChanged> : INotificationHandler<TChanged> 
+public class ClearCacheEventHandler<TIRepository, TEntity, TId, TChanged> : INotificationHandler<TChanged>
     where TChanged : ClearCacheEvent<TEntity, TId>
     where TIRepository : IRepository<TEntity, TId>
     where TEntity : Entity<TId>

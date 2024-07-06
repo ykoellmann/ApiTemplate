@@ -16,12 +16,14 @@ public class PolicyEnforcer : IPolicyEnforcer
         return policy switch
         {
             Policy.SelfOrAdmin => SelfOrAdminPolicy(request, currentUser),
-            _ => Error.Unexpected(description: "Unknown policy name"),
+            _ => Error.Unexpected(description: "Unknown policy name")
         };
     }
 
-    private static ErrorOr<Success> SelfOrAdminPolicy<T>(IRequest<T> request, CurrentUser currentUser) =>
-        currentUser.Roles.Contains(Role.Admin)
+    private static ErrorOr<Success> SelfOrAdminPolicy<T>(IRequest<T> request, CurrentUser currentUser)
+    {
+        return currentUser.Roles.Contains(Role.Admin)
             ? Result.Success
             : Error.Unauthorized(description: "Requesting user failed policy requirement");
+    }
 }

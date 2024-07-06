@@ -1,9 +1,8 @@
-﻿using System.Linq.Expressions;
-using ApiTemplate.Domain.Models;
+﻿using ApiTemplate.Domain.Models;
 
 namespace ApiTemplate.Domain.Common.Specification;
 
-public interface ISpecification<TEntity, TId, TResult>
+public interface ISpecification<in TEntity, TId, out TResult>
     where TEntity : Entity<TId>
     where TId : Id<TId>, new()
 {

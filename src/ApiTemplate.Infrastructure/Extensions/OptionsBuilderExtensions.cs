@@ -11,7 +11,7 @@ public static class OptionsBuilderExtensions
     {
         builder.Services.AddSingleton<IValidateOptions<TOptions>>(
             provider => new FluentValidateOptions<TOptions>(provider, builder.Name));
-        
+
         return builder;
     }
 }

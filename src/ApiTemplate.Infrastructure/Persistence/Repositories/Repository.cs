@@ -15,13 +15,13 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
 {
     private readonly ApiTemplateDbContext _dbContext;
 
-    public Repository(ApiTemplateDbContext dbContext)
+    protected Repository(ApiTemplateDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
     public virtual async Task<List<TEntity>> GetListAsync(CancellationToken ct,
-        Specification<TEntity, TId> specification = null)
+        Specification<TEntity, TId>? specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
@@ -38,11 +38,11 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct,
-        Specification<TEntity, TId> specification = null)
+        Specification<TEntity, TId>? specification = null)
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
-            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
+            .FirstOrDefaultAsync(e => e.Id == id, ct);
     }
 
     public virtual async Task<TDto?> GetByIdAsync<TDto>(TId id, CancellationToken ct,
@@ -51,7 +51,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     {
         return await _dbContext.Set<TEntity>()
             .Specificate(specification)
-            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: ct);
+            .FirstOrDefaultAsync(e => e.Id == id, ct);
     }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, UserId userId, CancellationToken ct)
@@ -64,24 +64,27 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
         await _dbContext.SaveChangesAsync(ct);
 
         return await _dbContext.Set<TEntity>()
-            .SingleAsync(e => e.Id == entity.Id, cancellationToken: ct);
+            .SingleAsync(e => e.Id == entity.Id, ct);
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, UserId userId, CancellationToken ct)
     {
         entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
+
+        entity.UpdatedAt = DateTime.UtcNow;
+        entity.UpdatedBy = entity.CreatedBy;
 
         await _dbContext.SaveChangesAsync(ct);
 
         return await _dbContext.Set<TEntity>()
-            .SingleAsync(e => e.Id == entity.Id, cancellationToken: ct);
+            .SingleAsync(e => e.Id == entity.Id, ct);
     }
 
     public virtual async Task<Deleted> DeleteAsync(TId id, CancellationToken ct)
     {
         var entity = await _dbContext.Set<TEntity>()
-            .FindAsync([id], cancellationToken: ct);
-        entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
+            .FindAsync([id], ct);
+        entity!.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
         _dbContext.Set<TEntity>().Remove(entity);
         await _dbContext.SaveChangesAsync(ct);
@@ -92,5 +95,7 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
 
     [Obsolete("This method is only available in the cached repository")]
     public Task ClearCacheAsync<TChanged>(TChanged changedEvent) where TChanged : ClearCacheEvent<TEntity, TId>
-        => throw new NotImplementedException("This method is only available in the cached repository");
+    {
+        throw new NotImplementedException("This method is only available in the cached repository");
+    }
 }

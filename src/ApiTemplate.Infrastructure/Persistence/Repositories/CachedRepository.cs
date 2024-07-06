@@ -13,12 +13,12 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     where TEntity : Entity<TId>
     where TId : Id<TId>, new()
 {
-    public readonly TimeSpan CacheExpiration;
     private readonly IRepository<TEntity, TId> _decorated;
 
     protected readonly IDistributedCache Cache;
+    protected readonly TimeSpan CacheExpiration;
 
-    public CachedRepository(IRepository<TEntity, TId> decorated, IDistributedCache cache,
+    protected CachedRepository(IRepository<TEntity, TId> decorated, IDistributedCache cache,
         int cacheExpirationMinutes = 10)
     {
         _decorated = decorated;
@@ -31,10 +31,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     public async Task ClearCacheAsync<TChanged>(TChanged changedEvent)
         where TChanged : ClearCacheEvent<TEntity, TId>
     {
-        await foreach (string cacheKey in GetBaseCacheKeysAsync(changedEvent))
-        {
-            await Cache.RemoveAsync(cacheKey);
-        }
+        await foreach (string cacheKey in GetBaseCacheKeysAsync(changedEvent)) await Cache.RemoveAsync(cacheKey);
     }
 
     private async IAsyncEnumerable<CacheKey<TEntity>> GetBaseCacheKeysAsync<TChanged>(TChanged changedEvent)
@@ -44,10 +41,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
             changedEvent.Changed.Id.Value.ToString());
         yield return new CacheKey<TEntity>(nameof(GetListAsync));
 
-        await foreach (var cacheKey in GetCacheKeysAsync(changedEvent))
-        {
-            yield return cacheKey;
-        }
+        await foreach (var cacheKey in GetCacheKeysAsync(changedEvent)) yield return cacheKey;
     }
 
     protected abstract IAsyncEnumerable<CacheKey<TEntity>> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
@@ -70,7 +64,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     }
 
     public async Task<List<TDto>> GetListAsync<TDto>(CancellationToken ct,
-        Specification<TEntity, TId, TDto>? specification = null) where TDto : IDto<TId>
+        Specification<TEntity, TId, TDto> specification) where TDto : IDto<TId>
     {
         return await _decorated.GetListAsync(ct, specification);
     }
@@ -88,7 +82,7 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
     }
 
     public async Task<TDto?> GetByIdAsync<TDto>(TId id, CancellationToken ct,
-        Specification<TEntity, TId, TDto>? specification = null) where TDto : IDto<TId>
+        Specification<TEntity, TId, TDto> specification) where TDto : IDto<TId>
     {
         return await _decorated.GetByIdAsync(id, ct, specification);
     }
@@ -103,11 +97,11 @@ public abstract class CachedRepository<TEntity, TId> : IRepository<TEntity, TId>
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration, async _ => addedEntity);
     }
 
-    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, UserId userId, CancellationToken ct)
     {
         entity.AddDomainEvent(new ClearCacheEvent<TEntity, TId>(entity));
 
-        var updatedEntity = await _decorated.UpdateAsync(entity, ct);
+        var updatedEntity = await _decorated.UpdateAsync(entity, userId, ct);
         var cacheKey = new CacheKey<TEntity>(nameof(GetByIdAsync), updatedEntity.Id.Value.ToString());
 
         return await Cache.GetOrCreateAsync(cacheKey, CacheExpiration, async _ => updatedEntity);

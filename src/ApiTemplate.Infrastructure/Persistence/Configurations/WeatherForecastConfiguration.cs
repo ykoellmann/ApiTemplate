@@ -10,10 +10,10 @@ public class WeatherForecastConfiguration : BaseConfiguration<WeatherForecast, W
     public override void ConfigureEntity(EntityTypeBuilder<WeatherForecast> builder)
     {
         builder.ToTable("WeatherForecast");
-        
+
         builder.Property(e => e.Date)
             .IsRequired();
-        
+
         builder.Property(e => e.TemperatureC)
             .IsRequired();
 
