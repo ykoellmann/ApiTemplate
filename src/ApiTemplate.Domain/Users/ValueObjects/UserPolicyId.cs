@@ -7,7 +7,7 @@ public class UserPolicyId : Id<UserPolicyId>
     public UserPolicyId()
     {
     }
-    
+
     public UserPolicyId(Guid value) : base(value)
     {
     }

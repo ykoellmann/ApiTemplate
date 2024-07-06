@@ -7,7 +7,7 @@ public class UserId : Id<UserId>
     public UserId()
     {
     }
-    
+
     public UserId(Guid value) : base(value)
     {
     }

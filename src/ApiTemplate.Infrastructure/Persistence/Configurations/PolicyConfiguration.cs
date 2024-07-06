@@ -23,11 +23,11 @@ public class PolicyConfiguration : BaseConfiguration<Policy, PolicyId>
 
         ConfigureEntity(builder);
     }
-    
+
     public override void ConfigureEntity(EntityTypeBuilder<Policy> builder)
     {
         builder.ToTable("Policy");
-        
+
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Name)
             .IsUnique();
@@ -35,7 +35,7 @@ public class PolicyConfiguration : BaseConfiguration<Policy, PolicyId>
         builder.Property(r => r.Name)
             .IsRequired()
             .HasMaxLength(128);
-        
+
         // builder.HasData(typeof(Application.Common.Security.Policies.Policy)
         //     .GetFields()
         //     .Select(x => new Policy(x.Name)));

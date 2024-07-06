@@ -1,9 +1,6 @@
-﻿using System.Linq.Expressions;
-using ApiTemplate.Domain.Common.Specification;
+﻿using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Common.Specification.Include;
-using ApiTemplate.Domain.Common.Specification.Order;
 using ApiTemplate.Domain.Users.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApiTemplate.Domain.Users.Specifications;
 

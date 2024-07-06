@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApiTemplate.Infrastructure.Persistence.Configurations;
 
-public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity> 
+public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity>
     where TId : Id<TId>, new()
-    where TEntity : Entity<TId> 
+    where TEntity : Entity<TId>
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.Property(e => e.Id)
             .HasColumnOrder(0)
             .HasConversion(id => id.Value,
-                value => new TId {Value = value})
+                value => new TId { Value = value })
             .IsRequired();
-        
+
         builder.Property(e => e.CreatedBy)
             .HasConversion(userId => userId.Value,
                 guid => new UserId(guid))
@@ -33,19 +33,19 @@ public abstract class BaseConfiguration<TEntity, TId> : IEntityTypeConfiguration
         builder.Property(e => e.UpdatedAt)
             .HasColumnOrder(104)
             .IsRequired();
-        
+
         builder.HasOne(e => e.CreatedByUser)
             .WithMany()
             .HasForeignKey(e => e.CreatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        
+
         builder.HasOne(e => e.UpdatedByUser)
             .WithMany()
             .HasForeignKey(e => e.UpdatedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.NoAction);
-        
+
         ConfigureEntity(builder);
     }
 

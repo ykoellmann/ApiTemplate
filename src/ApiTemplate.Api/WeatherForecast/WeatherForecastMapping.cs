@@ -11,7 +11,7 @@ public class WeatherForecastMapping : IRegister
     {
         config.NewConfig<AddForecastRequest, AddForecastCommand>()
             .MapToConstructor(true);
-        
+
         config.NewConfig<Domain.WeatherForecasts.WeatherForecast, WeatherForecastResult>()
             .MapWith(forecast => new WeatherForecastResult(forecast.Date, forecast.TemperatureC, forecast.Summary));
     }

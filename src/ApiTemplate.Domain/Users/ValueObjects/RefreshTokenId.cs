@@ -7,7 +7,7 @@ public class RefreshTokenId : Id<RefreshTokenId>
     public RefreshTokenId()
     {
     }
-    
+
     public RefreshTokenId(Guid value) : base(value)
     {
     }

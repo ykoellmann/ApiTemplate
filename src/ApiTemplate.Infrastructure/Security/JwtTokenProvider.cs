@@ -31,15 +31,12 @@ public class JwtTokenProvider : IJwtTokenProvider
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-        
+
         user.UserPermissions.ToList().ForEach(permission =>
         {
             claims.Add(new Claim("permissions", permission.Permission.Feature));
         });
-        user.UserRoles.ToList().ForEach(role =>
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
-        });
+        user.UserRoles.ToList().ForEach(role => { claims.Add(new Claim(ClaimTypes.Role, role.Role.Name)); });
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),

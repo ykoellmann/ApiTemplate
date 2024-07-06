@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using ErrorOr;
 using Serilog;
+using IErrorOr = ErrorOr.IErrorOr;
 
 namespace ApiTemplate.Application.Common.Behaviours;
 
@@ -25,12 +25,10 @@ public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
         var result = await next();
 
         if (result.IsError)
-        {
             _logger.Error("Request failure {@RequestName}, {@Error}, {@DateTimeNow}",
                 typeof(TRequest).Name,
                 result.Errors,
                 DateTime.UtcNow);
-        }
 
         _logger.Information("Request finished {@RequestName}, {@DateTimeNow} {@Request}",
             typeof(TRequest).Name,

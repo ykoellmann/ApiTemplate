@@ -11,10 +11,7 @@ public class CurrentUserProvider(IHttpContextAccessor _httpContextAccessor) : IC
 {
     public CurrentUser GetCurrentUser()
     {
-        if (_httpContextAccessor.HttpContext is null)
-        {
-            throw new NullReferenceException("HttpContext is null");
-        }
+        if (_httpContextAccessor.HttpContext is null) throw new NullReferenceException("HttpContext is null");
 
         var id = Guid.Parse(GetSingleClaimValue("id"));
         var permissions = GetClaimValues("permissions");
@@ -26,14 +23,18 @@ public class CurrentUserProvider(IHttpContextAccessor _httpContextAccessor) : IC
         return new CurrentUser(new UserId(id), firstName, lastName, email, permissions, roles);
     }
 
-    private List<string> GetClaimValues(string claimType) =>
-        _httpContextAccessor.HttpContext!.User.Claims
+    private List<string> GetClaimValues(string claimType)
+    {
+        return _httpContextAccessor.HttpContext!.User.Claims
             .Where(claim => claim.Type == claimType)
             .Select(claim => claim.Value)
             .ToList();
+    }
 
-    private string GetSingleClaimValue(string claimType) =>
-        _httpContextAccessor.HttpContext!.User.Claims
+    private string GetSingleClaimValue(string claimType)
+    {
+        return _httpContextAccessor.HttpContext!.User.Claims
             .Single(claim => claim.Type == claimType)
             .Value;
+    }
 }

@@ -4,11 +4,11 @@ using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Infrastructure.Security;
 using ApiTemplate.Infrastructure.Security.CurrentUserProvider;
 using ApiTemplate.Infrastructure.Security.PolicyEnforcer;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
-using Mapster;
-using MapsterMapper;
 
 namespace ApiTemplate.Api;
 
@@ -37,8 +37,8 @@ public static class DependencyInjection
                     {
                         Reference = new OpenApiReference
                         {
-                            Type=ReferenceType.SecurityScheme,
-                            Id="Bearer"
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
                         }
                     },
                     Array.Empty<string>()
@@ -49,7 +49,7 @@ public static class DependencyInjection
         services.AddSingleton<ProblemDetailsFactory, ApiTemplateProblemDetailsFactory>();
 
         services.AddSecurity();
-        
+
         services.AddRateLimiting();
 
         services.AddMapping();
@@ -62,20 +62,20 @@ public static class DependencyInjection
         services.AddRateLimiter(rateLimiterOptions =>
         {
             rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            
+
             rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
             {
                 options.Window = TimeSpan.FromSeconds(10);
                 options.PermitLimit = 5;
             });
-            
+
             rateLimiterOptions.AddSlidingWindowLimiter("sliding", options =>
             {
                 options.Window = TimeSpan.FromSeconds(15);
                 options.SegmentsPerWindow = 3;
                 options.PermitLimit = 5;
             });
-            
+
             rateLimiterOptions.AddTokenBucketLimiter("token", options =>
             {
                 options.TokenLimit = 100;
@@ -83,10 +83,7 @@ public static class DependencyInjection
                 options.TokensPerPeriod = 10;
             });
 
-            rateLimiterOptions.AddConcurrencyLimiter("concurrency", options =>
-            {
-                options.PermitLimit = 5;
-            });
+            rateLimiterOptions.AddConcurrencyLimiter("concurrency", options => { options.PermitLimit = 5; });
         });
     }
 
@@ -98,7 +95,7 @@ public static class DependencyInjection
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
     }
-    
+
     private static void AddSecurity(this IServiceCollection services)
     {
         services.AddScoped<IAuthorizationService, AuthorizationService>();

@@ -5,16 +5,15 @@ using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.Specifications;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Application.Authentication.Commands.Refresh;
 
 public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, AuthenticationResult>
 {
+    private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenProvider _jwtTokenProvider;
 
     public RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository,
         IJwtTokenProvider jwtTokenProvider)

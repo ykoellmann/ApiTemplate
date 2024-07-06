@@ -12,7 +12,7 @@ namespace ApiTemplate.Application.UnitTests.Architecture;
 public class ArchitectureTests
 {
     private readonly Assembly _applicationAssembly = typeof(DependencyInjection).Assembly;
-    
+
     [Fact]
     public void QueryHandler_Should_HaveNameEndingWith_QueryHandler()
     {
@@ -22,10 +22,10 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("QueryHandler")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void Query_Should_HaveNameEndingWith_Query()
     {
@@ -35,10 +35,10 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("Query")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void CommandHandler_Should_HaveNameEndingWith_CommandHandler()
     {
@@ -48,10 +48,10 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("CommandHandler")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void Command_Should_HaveNameEndingWith_Command()
     {
@@ -61,10 +61,10 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("Command")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     // [Fact]
     // public void EventHandler_Should_HaveNameEndingWith_EventHandler()
     // {
@@ -79,7 +79,7 @@ public class ArchitectureTests
     //     
     //     result.IsSuccessful.Should().BeTrue();
     // }
-    
+
     [Fact]
     public void Event_Should_HaveNameEndingWith_Event()
     {
@@ -89,7 +89,7 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("Event")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 
@@ -102,10 +102,10 @@ public class ArchitectureTests
             .Should()
             .MeetCustomRule(new IRepositoryHasRepositoryAndCacheRule())
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void Validator_Should_HaveNameEndingWith_Validator()
     {
@@ -115,10 +115,10 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("Validator")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void IPipelineBehavior_Should_HaveNameEndingWith_Behaviour()
     {
@@ -128,10 +128,10 @@ public class ArchitectureTests
             .Should()
             .HaveNameEndingWith("Behaviour`2")
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Fact]
     public void AsyncMethods_Should_HaveSuffix_Async()
     {
@@ -151,7 +151,7 @@ public class ArchitectureTests
             .Should()
             .MeetCustomRule(new AsyncMethodsHaveSuffixAsyncRule())
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 }

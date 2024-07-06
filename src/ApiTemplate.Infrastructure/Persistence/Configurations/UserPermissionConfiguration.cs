@@ -23,7 +23,7 @@ public class UserPermissionConfiguration : BaseConfiguration<UserPermission, Use
 
         ConfigureEntity(builder);
     }
-    
+
     public override void ConfigureEntity(EntityTypeBuilder<UserPermission> builder)
     {
         builder.ToTable("UserPermission");

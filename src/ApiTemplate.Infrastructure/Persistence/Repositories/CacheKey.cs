@@ -2,10 +2,6 @@
 
 public class CacheKey<TEntity>
 {
-    public string Usage { get; }
-    public string? Dto { get; }
-    public string? Value { get; }
-
     public CacheKey(string usage)
     {
         Usage = usage;
@@ -25,13 +21,20 @@ public class CacheKey<TEntity>
         Dto = dto;
     }
 
-    public static implicit operator string(CacheKey<TEntity> cacheKey) => cacheKey.ToString();
+    private string Usage { get; }
+    private string? Dto { get; }
+    private string? Value { get; }
+
+    public static implicit operator string(CacheKey<TEntity> cacheKey)
+    {
+        return cacheKey.ToString();
+    }
 
     public override string ToString()
     {
         if (Value is null)
             return $"{typeof(TEntity).Name}:{Usage}";
-        
+
         return Dto is null
             ? $"{typeof(TEntity).Name}:{Usage}:{Value}"
             : $"{typeof(TEntity).Name}:{Dto}:{Usage}:{Value}";

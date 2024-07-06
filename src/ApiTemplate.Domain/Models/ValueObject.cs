@@ -6,7 +6,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         return Equals((object?)other);
     }
-    
+
     public override bool Equals(object? obj)
     {
         if (obj is null || GetType() != obj.GetType())

@@ -1,6 +1,6 @@
 ﻿namespace ApiTemplate.Application.Common.Security.Permission;
 
-public static partial class Permission
+public static class Permission
 {
     public static class WeatherForecast
     {

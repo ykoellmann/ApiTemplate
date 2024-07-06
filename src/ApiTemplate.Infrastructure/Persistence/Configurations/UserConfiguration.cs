@@ -1,5 +1,4 @@
-﻿using ApiTemplate.Domain.Models;
-using ApiTemplate.Domain.Users;
+﻿using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

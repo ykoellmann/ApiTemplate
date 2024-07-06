@@ -26,12 +26,12 @@ public class WeatherForecastController : ApiController
 
         return result.Match(Ok, Problem);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddForecast([FromBody] AddForecastRequest request)
     {
         var command = _mapper.Map<AddForecastCommand>(request);
-        
+
         var result = await _sender.Send(command);
 
         return result.Match(Ok, Problem);

@@ -5,8 +5,6 @@ using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Authentication.Queries.Login;
-using ApiTemplate.Domain.Users;
-using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +14,8 @@ using Errors = ApiTemplate.Domain.Users.Errors.Errors;
 
 namespace ApiTemplate.Api.Authentication;
 
-[Route("api/authentication"), Authorize]
+[Route("api/authentication")]
+[Authorize]
 public class AuthenticationController : ApiController
 {
     private readonly IMapper _mapper;
@@ -28,7 +27,9 @@ public class AuthenticationController : ApiController
         _mapper = mapper;
     }
 
-    [HttpPost("register"), EnableRateLimiting("sliding"), AllowAnonymous]
+    [HttpPost("register")]
+    [EnableRateLimiting("sliding")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register(RegisterRequest registerRequest, CancellationToken ct)
     {
         var command = _mapper.Map<RegisterCommand>(registerRequest);
@@ -40,7 +41,8 @@ public class AuthenticationController : ApiController
             Problem);
     }
 
-    [HttpPost("login"), AllowAnonymous]
+    [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(LoginRequest loginRequest, CancellationToken ct)
     {
         var query = _mapper.Map<LoginQuery>(loginRequest);
@@ -74,7 +76,7 @@ public class AuthenticationController : ApiController
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Expires = refreshToken.Expires,
+            Expires = refreshToken.Expires
         };
 
         Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);

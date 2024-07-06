@@ -12,21 +12,21 @@ namespace SourceGenerators.Specifications;
 [Generator]
 public class SpecificationSourceGenerator : ISourceGenerator
 {
+    private const string _methodSuffix = "Gen";
+
     private readonly List<string> _methods = new()
     {
         SpecificationConstants.Methods.Order,
         SpecificationConstants.Methods.Include,
-        SpecificationConstants.Methods.Map,
+        SpecificationConstants.Methods.Map
     };
 
     private readonly List<string> _properties = new()
     {
         SpecificationConstants.Properties.AsNoTracking,
         SpecificationConstants.Properties.AsSplitQuery,
-        SpecificationConstants.Properties.IgnoreQueryFilters,
+        SpecificationConstants.Properties.IgnoreQueryFilters
     };
-
-    private const string _methodSuffix = "Gen";
 
     public void Initialize(GeneratorInitializationContext context)
     {
@@ -173,7 +173,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
             if (!methods.Any() && !properties.Any())
                 continue;
 
-            string entityIdentifier = specification.BaseList
+            var entityIdentifier = specification.BaseList
                 .GetChildren<GenericNameSyntax>()
                 .Single(type => type.Identifier.ToString() == "Specification")
                 .TypeArgumentList.Arguments.First().ToString();
@@ -203,28 +203,21 @@ public class SpecificationSourceGenerator : ISourceGenerator
                     _ => throw new NotImplementedException()
                 };
 
-                if (method.Identifier.ToString() == SpecificationConstants.Methods.Map)
-                {
-                    mapReturn = true;
-                }
+                if (method.Identifier.ToString() == SpecificationConstants.Methods.Map) mapReturn = true;
 
                 members = members.AddStatements(statements.ToArray());
             }
 
             var returnIdentifier = entityIdentifier;
             if (!mapReturn)
-            {
                 members = members.AddStatements(
                     ReturnStatement(
                         IdentifierName("query")));
-            }
             else
-            {
                 returnIdentifier = specification.BaseList
                     .GetChildren<GenericNameSyntax>()
                     .Single(type => type.Identifier.ToString() == "Specification")
                     .TypeArgumentList.Arguments.Last().ToString();
-            }
 
             var file =
                 SingletonList<MemberDeclarationSyntax>(
@@ -251,7 +244,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
                                                 ]))
                                             .WithParameterList(
                                                 ParameterList(
-                                                    SingletonSeparatedList<ParameterSyntax>(
+                                                    SingletonSeparatedList(
                                                         Parameter(
                                                                 Identifier("query"))
                                                             .WithType(
@@ -267,7 +260,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
                 new List<UsingDirectiveSyntax>
                 {
                     UsingDirective(ParseName("Microsoft.EntityFrameworkCore")),
-                    UsingDirective(ParseName("Microsoft.EntityFrameworkCore.Query")),
+                    UsingDirective(ParseName("Microsoft.EntityFrameworkCore.Query"))
                 });
             usings = usings.AddRange(specification.GetParent<CompilationUnitSyntax>().Single()
                 .GetChildren<UsingDirectiveSyntax>());
@@ -288,10 +281,10 @@ public class SpecificationSourceGenerator : ISourceGenerator
 
     private List<StatementSyntax> BuildAsNoTrackingStatement()
     {
-        return new List<StatementSyntax>
-        {
+        return
+        [
             IfStatement(
-                IdentifierName("AsNoTracking"),
+                IdentifierName(SpecificationConstants.Properties.AsNoTracking),
                 Block(
                     SingletonList<StatementSyntax>(
                         ExpressionStatement(
@@ -302,16 +295,16 @@ public class SpecificationSourceGenerator : ISourceGenerator
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName("query"),
-                                        IdentifierName("AsNoTracking"))))))))
-        };
+                                        IdentifierName(SpecificationConstants.Properties.AsNoTracking))))))))
+        ];
     }
 
     private List<StatementSyntax> BuildAsSplitQueryStatement()
     {
-        return new List<StatementSyntax>
-        {
+        return
+        [
             IfStatement(
-                IdentifierName("AsSplitQuery"),
+                IdentifierName(SpecificationConstants.Properties.AsSplitQuery),
                 Block(
                     SingletonList<StatementSyntax>(
                         ExpressionStatement(
@@ -322,16 +315,16 @@ public class SpecificationSourceGenerator : ISourceGenerator
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName("query"),
-                                        IdentifierName("AsSplitQuery"))))))))
-        };
+                                        IdentifierName(SpecificationConstants.Properties.AsSplitQuery))))))))
+        ];
     }
 
     private List<StatementSyntax> BuildIgnoreQueryFiltersStatement()
     {
-        return new List<StatementSyntax>
-        {
+        return
+        [
             IfStatement(
-                IdentifierName("IgnoreQueryFilters"),
+                IdentifierName(SpecificationConstants.Properties.IgnoreQueryFilters),
                 Block(
                     SingletonList<StatementSyntax>(
                         ExpressionStatement(
@@ -342,8 +335,8 @@ public class SpecificationSourceGenerator : ISourceGenerator
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName("query"),
-                                        IdentifierName("IgnoreQueryFilters"))))))))
-        };
+                                        IdentifierName(SpecificationConstants.Properties.IgnoreQueryFilters))))))))
+        ];
     }
 
     private List<StatementSyntax> BuildIncludeStatement(string entityName, MethodDeclarationSyntax method)
@@ -351,7 +344,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
         var queryableType = GenericName(Identifier("IQueryable"))
             .WithTypeArgumentList(
                 TypeArgumentList(
-                    SingletonSeparatedList<TypeSyntax>(
+                    SingletonSeparatedList(
                         ((GenericNameSyntax)method.ReturnType)
                         .TypeArgumentList.Arguments.First())));
 
@@ -361,10 +354,10 @@ public class SpecificationSourceGenerator : ISourceGenerator
                         TypeArgumentList(
                             SingletonSeparatedList<TypeSyntax>(
                                 IdentifierName(entityName)))),
-                Identifier("IncludeGen"))
+                Identifier(SpecificationConstants.Methods.Include + _methodSuffix))
             .WithParameterList(
                 ParameterList(
-                    SingletonSeparatedList<ParameterSyntax>(
+                    SingletonSeparatedList(
                         Parameter(
                                 Identifier("includable"))
                             .WithType(
@@ -379,24 +372,20 @@ public class SpecificationSourceGenerator : ISourceGenerator
             .ToList();
 
         if (methodBody is not null)
-        {
             func = func.WithBody(Block(methodBody.Select(body => ParseStatement(body))));
-        }
         else
-        {
             func = func.WithExpressionBody(method.ExpressionBody!);
-        }
 
-        return new List<StatementSyntax>
-        {
+        return
+        [
             func,
             IfStatement(
                 IsPatternExpression(
                     InvocationExpression(
-                            IdentifierName("IncludeGen"))
+                            IdentifierName(SpecificationConstants.Methods.Include + _methodSuffix))
                         .WithArgumentList(
                             ArgumentList(
-                                SingletonSeparatedList<ArgumentSyntax>(
+                                SingletonSeparatedList(
                                     Argument(
                                         IdentifierName("query"))))),
                     RecursivePattern()
@@ -412,7 +401,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
                                 SyntaxKind.SimpleAssignmentExpression,
                                 IdentifierName("query"),
                                 IdentifierName("includable"))))))
-        };
+        ];
     }
 
     private List<StatementSyntax> BuildOrderStatement(string entityName, MethodDeclarationSyntax method)
@@ -420,7 +409,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
         var queryableType = GenericName(Identifier("IQueryable"))
             .WithTypeArgumentList(
                 TypeArgumentList(
-                    SingletonSeparatedList<TypeSyntax>(
+                    SingletonSeparatedList(
                         ((GenericNameSyntax)method.ReturnType)
                         .TypeArgumentList.Arguments.First())));
 
@@ -430,10 +419,10 @@ public class SpecificationSourceGenerator : ISourceGenerator
                         TypeArgumentList(
                             SingletonSeparatedList<TypeSyntax>(
                                 IdentifierName(entityName)))),
-                Identifier("OrderGen"))
+                Identifier(SpecificationConstants.Methods.Order + _methodSuffix))
             .WithParameterList(
                 ParameterList(
-                    SingletonSeparatedList<ParameterSyntax>(
+                    SingletonSeparatedList(
                         Parameter(
                                 Identifier("ordered"))
                             .WithType(
@@ -448,24 +437,20 @@ public class SpecificationSourceGenerator : ISourceGenerator
             .ToList();
 
         if (methodBody is not null)
-        {
             func = func.WithBody(Block(methodBody.Select(body => ParseStatement(body))));
-        }
         else
-        {
             func = func.WithExpressionBody(method.ExpressionBody!);
-        }
 
-        return new List<StatementSyntax>
-        {
+        return
+        [
             func,
             IfStatement(
                 IsPatternExpression(
                     InvocationExpression(
-                            IdentifierName("OrderGen"))
+                            IdentifierName(SpecificationConstants.Methods.Order + _methodSuffix))
                         .WithArgumentList(
                             ArgumentList(
-                                SingletonSeparatedList<ArgumentSyntax>(
+                                SingletonSeparatedList(
                                     Argument(
                                         IdentifierName("query"))))),
                     RecursivePattern()
@@ -481,7 +466,7 @@ public class SpecificationSourceGenerator : ISourceGenerator
                                 SyntaxKind.SimpleAssignmentExpression,
                                 IdentifierName("query"),
                                 IdentifierName("ordered"))))))
-        };
+        ];
     }
 
     private List<StatementSyntax> BuildMapStatement(MethodDeclarationSyntax method)
@@ -490,23 +475,19 @@ public class SpecificationSourceGenerator : ISourceGenerator
 
         var func = LocalFunctionStatement(
             returnTypeName,
-            Identifier("MapGen"));
+            Identifier(SpecificationConstants.Methods.Map + _methodSuffix));
 
         var methodBody = method.Body?.Statements
             .Select(statement => statement.ToString())
             .ToList();
 
         if (methodBody is not null)
-        {
             func = func.WithBody(Block(methodBody.Select(body => ParseStatement(body))));
-        }
         else
-        {
             func = func.WithExpressionBody(method.ExpressionBody!);
-        }
 
-        return new List<StatementSyntax>
-        {
+        return
+        [
             func,
             ReturnStatement(
                 InvocationExpression(
@@ -519,8 +500,8 @@ public class SpecificationSourceGenerator : ISourceGenerator
                             SingletonSeparatedList(
                                 Argument(
                                     InvocationExpression(
-                                        IdentifierName("MapGen")))))))
-        };
+                                        IdentifierName(SpecificationConstants.Methods.Map + _methodSuffix)))))))
+        ];
     }
 }
 
@@ -535,8 +516,6 @@ public class SpecificationSyntaxReceiver : ISyntaxReceiver
 
         var identifierTokens = classDeclarationSyntax.GetChildren<GenericNameSyntax>();
         if (identifierTokens.Any(node => node.Identifier.ToString() == "Specification"))
-        {
             Specifications.Add(classDeclarationSyntax);
-        }
     }
 }

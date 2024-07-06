@@ -1,6 +1,7 @@
 # ApiTemplate
 
 ### Description
+
 For creating a Solution using this template, use this command:
 ```dotnet new WebApiCA -n {projectname} -o ./'```
 
@@ -16,23 +17,23 @@ For creating a Solution using this template, use this command:
 - Review Template
 - Implement HealthCheck
 - Write documentation
-  - How to use
-  - How to extend
-  - What is included
-    - Swagger
-    - Serilog
-    - Entity Framework
-    - MediatR
-    - AutoMapper
-    - FluentValidation
-    - FluentAssertions
-    - xUnit
-    - Moq
-    - ...
+    - How to use
+    - How to extend
+    - What is included
+        - Swagger
+        - Serilog
+        - Entity Framework
+        - MediatR
+        - AutoMapper
+        - FluentValidation
+        - FluentAssertions
+        - xUnit
+        - Moq
+        - ...
 - Implement CI/CD?
 - Refactor docker compose naming conventions
 - Implement more tests
-  - General
-  - Architecture
+    - General
+    - Architecture
 - View Integration tests
 - Create example project

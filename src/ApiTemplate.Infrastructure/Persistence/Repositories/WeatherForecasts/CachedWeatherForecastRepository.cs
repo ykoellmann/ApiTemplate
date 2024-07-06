@@ -5,7 +5,8 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace ApiTemplate.Infrastructure.Persistence.Repositories.WeatherForecasts;
 
-public class CachedWeatherForecastRepository : CachedRepository<WeatherForecast, WeatherForecastId>, IWeatherForecastRepository
+public class CachedWeatherForecastRepository : CachedRepository<WeatherForecast, WeatherForecastId>,
+    IWeatherForecastRepository
 {
     public CachedWeatherForecastRepository(
         IRepository<WeatherForecast, WeatherForecastId> decorated, IDistributedCache cache,

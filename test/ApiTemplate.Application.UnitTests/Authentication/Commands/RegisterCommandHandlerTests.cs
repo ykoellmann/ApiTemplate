@@ -3,7 +3,6 @@ using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Domain.Common.Specification;
 using ApiTemplate.Domain.Users;
-using ApiTemplate.Domain.Users.Specifications;
 using ApiTemplate.Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Errors = ApiTemplate.Domain.Users.Errors.Errors;
@@ -12,10 +11,10 @@ namespace ApiTemplate.Application.UnitTests.Authentication.Commands;
 
 public class RegisterCommandHandlerTests
 {
-    private readonly Mock<IUserRepository> _userRepository = new();
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessor = new();
     private readonly Mock<IJwtTokenProvider> _jwtTokenProvider = new();
     private readonly Mock<IRefreshTokenRepository> _refreshTokenRepository = new();
-    private readonly Mock<IHttpContextAccessor> _httpContextAccessor = new();
+    private readonly Mock<IUserRepository> _userRepository = new();
 
     [Fact]
     public async Task Handle_Returns_RefreshTokenExpired_Error_When_ActiveRefreshToken_Is_Expired()
@@ -43,7 +42,7 @@ public class RegisterCommandHandlerTests
         result.IsError.Should().BeTrue();
         result.FirstError.Should().Be(Errors.Authentication.RefreshTokenExpired);
     }
-    
+
     [Fact]
     public async Task Handle_Returns_UserNotFound_Error_When_User_Is_Not_Found()
     {
@@ -67,7 +66,7 @@ public class RegisterCommandHandlerTests
         result.IsError.Should().BeTrue();
         result.FirstError.Should().Be(Errors.User.UserNotFound);
     }
-    
+
     [Fact]
     public async Task Handle_Returns_Success_When_ActiveRefreshToken_Is_Not_Expired()
     {

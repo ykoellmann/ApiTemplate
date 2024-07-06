@@ -1,9 +1,7 @@
 using ApiTemplate.Api;
 using ApiTemplate.Application;
-using ApiTemplate.Application.Common.Interfaces.Security;
 using ApiTemplate.Infrastructure;
 using Serilog;
-using Endpoint = Microsoft.AspNetCore.Http.Endpoint;
 
 var builder = WebApplication.CreateBuilder(args);
 {

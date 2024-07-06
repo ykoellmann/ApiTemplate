@@ -9,21 +9,13 @@ namespace ApiTemplate.Infrastructure.Persistence.Repositories.Users;
 
 public class CachedUserRepository : CachedRepository<User, UserId>, IUserRepository
 {
-    private readonly IUserRepository _decorated;
     private readonly IDistributedCache _cache;
+    private readonly IUserRepository _decorated;
 
     public CachedUserRepository(IUserRepository decorated, IDistributedCache cache) : base(decorated, cache)
     {
         _decorated = decorated;
         _cache = cache;
-    }
-
-    protected override async IAsyncEnumerable<CacheKey<User>> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
-    {
-        yield return new CacheKey<User>(nameof(GetByEmailAsync),
-            changedEvent.Changed.Email);
-        yield return new CacheKey<User>(nameof(IsEmailUniqueAsync),
-            changedEvent.Changed.Email);
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken ct)
@@ -57,5 +49,13 @@ public class CachedUserRepository : CachedRepository<User, UserId>, IUserReposit
         CancellationToken ct)
     {
         throw new NotImplementedException("This method is replaced by its overload");
+    }
+
+    protected override async IAsyncEnumerable<CacheKey<User>> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
+    {
+        yield return new CacheKey<User>(nameof(GetByEmailAsync),
+            changedEvent.Changed.Email);
+        yield return new CacheKey<User>(nameof(IsEmailUniqueAsync),
+            changedEvent.Changed.Email);
     }
 }

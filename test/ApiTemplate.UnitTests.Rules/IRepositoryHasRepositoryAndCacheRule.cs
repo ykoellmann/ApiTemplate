@@ -5,11 +5,10 @@ using NetArchTest.Rules;
 
 namespace ApiTemplate.UnitTests.Rules;
 
-
 public class IRepositoryHasRepositoryAndCacheRule : ICustomRule
 {
     private readonly Assembly _infrastructureAssembly = typeof(Repository<,>).Assembly;
-        
+
     public bool MeetsRule(TypeDefinition type)
     {
         var typeReference = type.Resolve()!;
@@ -17,10 +16,10 @@ public class IRepositoryHasRepositoryAndCacheRule : ICustomRule
 
         var repositories = _infrastructureAssembly
             .GetTypes()
-            .Where(type => type.IsClass 
-                           && !type.IsAbstract 
+            .Where(type => type.IsClass
+                           && !type.IsAbstract
                            && type.GetInterfaces().Contains(interfaceType));
-         
+
         return repositories.Count() == 2;
     }
 }
