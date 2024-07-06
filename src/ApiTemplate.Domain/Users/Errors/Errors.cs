@@ -10,7 +10,7 @@ public partial class Errors
             Error.Conflict("Idempotent.RequestAlreadyProcessed", "Request has already been processed");
         
         public static Error RequestIdInvalid =>
-            Error.Conflict("Idempotent.RequestIdInvalid", "Request id is invalid");
+            Error.Conflict("Idempotent.RequestIdInvalid", "Request id has to be a valid guid");
         
         public static Error RequestIdMissing =>
             Error.Validation("Idempotent.RequestIdMissing", "Request id is missing");
