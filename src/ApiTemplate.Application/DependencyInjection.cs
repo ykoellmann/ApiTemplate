@@ -41,11 +41,14 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddScoped(typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>));
-
+        
         services.AddScoped(typeof(IPipelineBehavior<,>),
             typeof(LoggingBehaviour<,>));
 
         services.AddScoped(typeof(IPipelineBehavior<,>),
             typeof(AuthorizationBehavior<,>));
+
+        services.AddScoped(typeof(IPipelineBehavior<,>),
+            typeof(IdempotentBehaviour<,>));
     }
 }

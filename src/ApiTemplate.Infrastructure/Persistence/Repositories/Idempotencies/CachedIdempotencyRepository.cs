@@ -20,7 +20,8 @@ public class CachedIdempotencyRepository : CachedRepository<Idempotency, Idempot
 
     protected override async IAsyncEnumerable<CacheKey<Idempotency>> GetCacheKeysAsync<TChanged>(TChanged changedEvent)
     {
-        yield break;
+        yield return new CacheKey<Idempotency>(nameof(RequestExistsAsync),
+            changedEvent.Changed.Id.ToString());
     }
 
     public async Task<bool> RequestExistsAsync(IdempotencyId idempotencyId, CancellationToken ct)

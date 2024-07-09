@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ApiTemplate.Application.Common.Behaviours;
 
-public class AuthorizationBehavior<TRequest, TResponse>
+public sealed class AuthorizationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : IErrorOr

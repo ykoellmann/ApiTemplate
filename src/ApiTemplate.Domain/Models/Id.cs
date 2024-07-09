@@ -29,4 +29,9 @@ public class Id<TIdObject> : ValueObject
     {
         return new Id<TIdObject>(value);
     }
+
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
 }

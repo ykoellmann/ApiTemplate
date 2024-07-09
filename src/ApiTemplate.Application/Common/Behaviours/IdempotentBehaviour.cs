@@ -1,7 +1,6 @@
 ﻿using ApiTemplate.Application.Common.Interfaces.MediatR.Requests;
 using ApiTemplate.Application.Common.Interfaces.Persistence;
 using ApiTemplate.Application.Common.Interfaces.Security;
-using ApiTemplate.Application.Common.Interfaces.Services;
 using ApiTemplate.Domain.Idempotencies;
 using ApiTemplate.Domain.Idempotencies.ValueObjects;
 using ApiTemplate.Domain.Users.Errors;
@@ -11,15 +10,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApiTemplate.Application.Common.Behaviours;
 
-internal sealed class IdempotentCommandPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IIdempotentCommand<TResponse>
+public sealed class IdempotentBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IIdempotentCommand
     where TResponse : IErrorOr
 {
     private readonly IIdempotencyRepository _idempotencyRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICurrentUserProvider _currentUserProvider;
 
-    public IdempotentCommandPipelineBehaviour(IIdempotencyRepository idempotencyRepository, IHttpContextAccessor httpContextAccessor, ICurrentUserProvider currentUserProvider)
+    public IdempotentBehaviour(IIdempotencyRepository idempotencyRepository, IHttpContextAccessor httpContextAccessor, ICurrentUserProvider currentUserProvider)
     {
         _idempotencyRepository = idempotencyRepository;
         _httpContextAccessor = httpContextAccessor;
@@ -40,9 +39,7 @@ internal sealed class IdempotentCommandPipelineBehaviour<TRequest, TResponse> : 
         if (await _idempotencyRepository.RequestExistsAsync(idempotencyId, ct))
             return (dynamic)Errors.Idempotent.RequestAlreadyProcessed;
         
-        var user = _currentUserProvider.GetCurrentUser();
-        
-        await _idempotencyRepository.AddAsync(new Idempotency(idempotencyId, typeof(TRequest).Name), user.Id, ct);
+        await _idempotencyRepository.AddAsync(new Idempotency(idempotencyId, typeof(TRequest).Name), null, ct);
         
         return await next(); 
     }

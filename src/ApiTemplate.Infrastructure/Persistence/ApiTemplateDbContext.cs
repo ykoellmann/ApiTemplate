@@ -1,4 +1,5 @@
-﻿using ApiTemplate.Domain.Models;
+﻿using ApiTemplate.Domain.Idempotencies;
+using ApiTemplate.Domain.Models;
 using ApiTemplate.Domain.Users;
 using ApiTemplate.Domain.Users.ValueObjects;
 using ApiTemplate.Infrastructure.Persistence.Interceptors;
@@ -24,6 +25,8 @@ public class ApiTemplateDbContext : DbContext
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<UserRole> UserRoles { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+    
+    public DbSet<Idempotency> Idempotencies { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

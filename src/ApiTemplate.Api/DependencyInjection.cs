@@ -28,7 +28,7 @@ public static class DependencyInjection
                 Name = "Authorization",
                 Type = SecuritySchemeType.Http,
                 BearerFormat = "JWT",
-                Scheme = "Bearer"
+                Scheme = "Bearer",
             });
             option.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -44,6 +44,7 @@ public static class DependencyInjection
                     Array.Empty<string>()
                 }
             });
+            option.OperationFilter<IdempotencyRequestHeaderFilter>();
         });
 
         services.AddSingleton<ProblemDetailsFactory, ApiTemplateProblemDetailsFactory>();

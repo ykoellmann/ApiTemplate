@@ -16,7 +16,7 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
 
 
     [Column(Order = 0)] 
-    public TId Id { get; }
+    public TId Id { get; protected set; }
 
     [Column(Order = 9996)] 
     public virtual UserId CreatedBy { get; set; } = null!;

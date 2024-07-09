@@ -27,7 +27,7 @@ public class ApiController : ControllerBase
 
     protected IActionResult Problem(List<Error> errors)
     {
-        if (errors.Count > 0)
+        if (errors.Count == 0)
             return Problem();
 
         if (errors.TrueForAll(error => error.Type == ErrorType.Validation)) return ValidationProblem(errors);
