@@ -1,6 +1,8 @@
 using ApiTemplate.Api;
 using ApiTemplate.Application;
 using ApiTemplate.Infrastructure;
+using Hangfire;
+using Hangfire.Dashboard;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,5 +31,9 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.UseHangfireDashboard("/hangfire", new DashboardOptions
+    {
+        Authorization = new IDashboardAuthorizationFilter[]{ new DashboardAuthorizationFilter() }
+    });
     app.Run();
 }

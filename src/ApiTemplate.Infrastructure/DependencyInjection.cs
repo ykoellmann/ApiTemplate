@@ -14,6 +14,8 @@ using ApiTemplate.Infrastructure.Security;
 using ApiTemplate.Infrastructure.Services;
 using ApiTemplate.Infrastructure.Settings.Jwt;
 using FluentValidation;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace ApiTemplate.Infrastructure;
 
@@ -39,6 +42,8 @@ public static class DependencyInjection
         services.AddDbContext<ApiTemplateDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DbConnection")));
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+        services.AddHangfire(configuration);
 
         services.AddRepositories();
 
@@ -148,6 +153,27 @@ public static class DependencyInjection
             //Add headers, etc.
         });
         collection.AddTransient<IExampleHttpService, ExampleHttpService>();
+
+        return collection;
+    }
+
+    private static IServiceCollection AddHangfire(this IServiceCollection collection, IConfiguration configuration)
+    {
+        collection.AddHangfire(config =>
+        {
+            config.UsePostgreSqlStorage(options =>
+            {
+                options.UseNpgsqlConnection(configuration.GetConnectionString("DbConnection"));
+            });
+            config.UseSerilogLogProvider();
+            config.UseSerializerSettings(new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                
+            });
+        });
+
+        collection.AddHangfireServer();
 
         return collection;
     }

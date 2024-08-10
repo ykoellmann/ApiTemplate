@@ -29,9 +29,9 @@ services:
     - "C:\\Users\\Yannik\\.nuget\\packages:/root/.nuget/packages"
     - "C:\\Users\\Yannik\\RiderProjects\\ApiTemplate\\src\\ApiTemplate.Api:/app:rw"
     - "C:\\Users\\Yannik\\RiderProjects\\ApiTemplate:/src:rw"
-    - "C:\\Users\\Yannik\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.1.4\\\
+    - "C:\\Users\\Yannik\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2024.1.5\\\
       Linux64:/opt/rider-debugger"
     - "C:\\Users\\Yannik\\AppData\\Local\\Programs\\Rider 2\\bin:/etc/opt/rider-debugger/backend-log.xml"
     - "C:\\Users\\Yannik\\AppData\\Local\\JetBrains\\Rider2024.1\\log\\DebuggerWorker\\\
-      JetBrains.Debugger.Worker.2024_7_09_19_31_29:/var/opt/rider-debugger:rw"
+      JetBrains.Debugger.Worker.2024_8_10_22_54_23:/var/opt/rider-debugger:rw"
     working_dir: "/app"

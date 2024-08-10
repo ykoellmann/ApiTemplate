@@ -54,7 +54,22 @@ services:
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
-      - JwtSettings__Audience=ApiTemplate
+      - JwtSettings__Audience=ApiTemplate  - Serilog__MinimumLevel__Override__Microsoft=Warning
+      - Serilog__MinimumLevel__Override__System=Warning
+      - Serilog__Enrich__0=FromLogContext
+      - Serilog__Enrich__1__Name=WithProperty
+      - Serilog__Enrich__1__Args__name=MachineName
+      - Serilog__Enrich__1__Args__value=${HOSTNAME}
+      - Serilog__WriteTo__0__Name=Console
+      - Serilog__WriteTo__1__Name=File
+      - Serilog__WriteTo__1__Args__formatter=Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact
+      - Serilog__WriteTo__1__Args__path=/var/logs/log.txt
+      - Serilog__WriteTo__1__Args__rollingInterval=Day
+      - Serilog__WriteTo__2__Name=Seq
+      - Serilog__WriteTo__2__Args__serverUrl=http://apitemplate.seq:5341
+      - Serilog__Enrich__2__Name=WithProperty
+      - Serilog__Enrich__2__Args__name=Application
+      - Serilog__Enrich__2__Args__value=WebApi
     ports:
       #      - "${ADDRESS}:8100:80"
       - 8100:80
@@ -64,6 +79,8 @@ services:
       - apitemplate.seq
     networks:
       - apitemplate-backend
+    volumes:
+      - logdata:/var/logs
 #  apitemplate.api.blue:
 #    container_name: apitemplate.api.blue
 #    image: apitemplate.api
@@ -148,3 +165,9 @@ services:
 
 volumes:
   appdata:
+  logdata:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: 'C:/Log/ApiTemplate'
