@@ -5,6 +5,7 @@ using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Authentication.Queries.Login;
+using Hangfire;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,11 +21,13 @@ public class AuthenticationController : ApiController
 {
     private readonly IMapper _mapper;
     private readonly ISender _mediator;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
-    public AuthenticationController(ISender mediator, IMapper mapper)
+    public AuthenticationController(ISender mediator, IMapper mapper, IBackgroundJobClient backgroundJobClient)
     {
         _mediator = mediator;
         _mapper = mapper;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     [HttpPost("register")]
@@ -82,5 +85,14 @@ public class AuthenticationController : ApiController
         Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
 
         return Ok(_mapper.Map<AuthenticationResponse>(authResult));
+    }
+
+    [HttpGet("test")]
+    [AllowAnonymous]
+    public IActionResult Test(CancellationToken ct)
+    {
+        _backgroundJobClient.Enqueue((ISender mediator) =>
+            mediator.Send(new LoginQuery("testo@pesto.de", "test1234"), ct));
+        return Ok("Test");
     }
 }

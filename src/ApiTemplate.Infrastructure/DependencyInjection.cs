@@ -58,6 +58,7 @@ public static class DependencyInjection
         services.AddOptionsWithFluentValidation<JwtSettings>(JwtSettings.SectionName);
 
         services.AddSingleton<IJwtTokenProvider, JwtTokenProvider>();
+        services.AddSingleton<IPasswordHashProvider, PasswordHashProvider>();
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
 

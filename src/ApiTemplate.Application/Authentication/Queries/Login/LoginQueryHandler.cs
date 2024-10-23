@@ -14,13 +14,15 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
     private readonly IJwtTokenProvider _jwtTokenProvider;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHashProvider _passwordHashProvider;
 
     public LoginQueryHandler(IJwtTokenProvider jwtTokenProvider, IUserRepository userRepository,
-        IRefreshTokenRepository refreshTokenRepository)
+        IRefreshTokenRepository refreshTokenRepository, IPasswordHashProvider passwordHashProvider)
     {
         _jwtTokenProvider = jwtTokenProvider;
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
+        _passwordHashProvider = passwordHashProvider;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken ct)
@@ -30,7 +32,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
         if (await _userRepository.GetByEmailAsync(query.Email, ct) is not User user)
             return Errors.Authentication.InvalidCredentials;
 
-        if (!user.Password.Equals(query.Password))
+        if (_passwordHashProvider.VerifyPassword(query.Password, user.Password))
             return Errors.Authentication.InvalidCredentials;
 
         user = await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization);
