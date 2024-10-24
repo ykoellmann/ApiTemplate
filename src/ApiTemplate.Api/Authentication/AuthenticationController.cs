@@ -5,7 +5,9 @@ using ApiTemplate.Application.Authentication.Commands.Refresh;
 using ApiTemplate.Application.Authentication.Commands.Register;
 using ApiTemplate.Application.Authentication.Common;
 using ApiTemplate.Application.Authentication.Queries.Login;
+using ApiTemplate.Domain.Users.ValueObjects;
 using Hangfire;
+using Hangfire.States;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -91,8 +93,7 @@ public class AuthenticationController : ApiController
     [AllowAnonymous]
     public IActionResult Test(CancellationToken ct)
     {
-        _backgroundJobClient.Enqueue((ISender mediator) =>
-            mediator.Send(new LoginQuery("testo@pesto.de", "test1234"), ct));
+        _backgroundJobClient.Enqueue((ISender sender) => sender.Send(new RefreshTokenCommand("", new UserId()), new CancellationToken()));
         return Ok("Test");
     }
 }

@@ -31,9 +31,5 @@ var app = builder.Build();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    app.UseHangfireDashboard("/hangfire", new DashboardOptions
-    {
-        Authorization = new IDashboardAuthorizationFilter[]{ new DashboardAuthorizationFilter() }
-    });
     app.Run();
 }

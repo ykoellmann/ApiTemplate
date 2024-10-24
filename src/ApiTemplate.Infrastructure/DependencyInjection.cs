@@ -170,11 +170,15 @@ public static class DependencyInjection
             config.UseSerializerSettings(new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                
             });
+            
+            config.UseFilter(new QueueFilter());
         });
 
-        collection.AddHangfireServer();
+        collection.AddHangfireServer(provider =>
+        {
+            provider.Queues = ["apitemplate"];
+        });
 
         return collection;
     }
