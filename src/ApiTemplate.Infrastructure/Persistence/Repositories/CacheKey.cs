@@ -33,10 +33,10 @@ public class CacheKey<TEntity>
     public override string ToString()
     {
         if (Value is null)
-            return $"{typeof(TEntity).Name}:{Usage}";
+            return $"ApiTemplate:{typeof(TEntity).Name}:{Usage}";
 
         return Dto is null
-            ? $"{typeof(TEntity).Name}:{Usage}:{Value}"
-            : $"{typeof(TEntity).Name}:{Dto}:{Usage}:{Value}";
+            ? $"ApiTemplate:{typeof(TEntity).Name}:{Usage}:{Value}"
+            : $"ApiTemplate:{typeof(TEntity).Name}:{Dto}:{Usage}:{Value}";
     }
 }

@@ -3,15 +3,6 @@
     name: apitemplate-backend
 
 services:
-  apitemplate.redis:
-    container_name: apitemplate.redis
-    image: redis:latest
-    restart: always
-    ports:
-      #      - "${ADDRESS}:8003:6379"
-      - 8003:6379
-    networks:
-      - apitemplate-backend
   apitemplate.seq:
     container_name: apitemplate.seq
     image: datalust/seq:latest
@@ -35,7 +26,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
       - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=192.168.178.41;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=apitemplate.redis:6379
+      - ConnectionStrings__Redis=192.168.178.41:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
@@ -59,7 +50,6 @@ services:
       #      - "${ADDRESS}:8100:80"
       - 8100:80
     depends_on:
-      - apitemplate.redis
       - apitemplate.seq
     networks:
       - apitemplate-backend

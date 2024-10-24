@@ -27,12 +27,10 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken ct)
     {
-        var t = await _userRepository.GetListAsync(ct, Specifications.User.IncludeAuthorization);
-
         if (await _userRepository.GetByEmailAsync(query.Email, ct) is not User user)
             return Errors.Authentication.InvalidCredentials;
 
-        if (_passwordHashProvider.VerifyPassword(query.Password, user.Password))
+        if (!_passwordHashProvider.VerifyPassword(query.Password, user.Password))
             return Errors.Authentication.InvalidCredentials;
 
         user = await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization);
