@@ -1,14 +1,14 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /
 COPY ["src/ApiTemplate.LoadBalancer/ApiTemplate.LoadBalancer.csproj", "src/ApiTemplate.LoadBalancer/"]
 RUN dotnet restore "src/ApiTemplate.LoadBalancer/ApiTemplate.LoadBalancer.csproj"
 COPY . .
-WORKDIR "/src/src/ApiTemplate.LoadBalancer"
+WORKDIR "/src/ApiTemplate.LoadBalancer"
 RUN dotnet build "ApiTemplate.LoadBalancer.csproj" -c Release -o /app/build
 
 FROM build AS publish

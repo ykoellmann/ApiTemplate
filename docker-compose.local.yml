@@ -1,8 +1,35 @@
 ﻿networks:
   apitemplate-backend:
     name: apitemplate-backend
+  backend:
+    name: backend
+    external: true
 
 services:
+  apitemplate.redis:
+    container_name: apitemplate.redis
+    image: redis:latest
+    restart: always
+    ports:
+      #      - "${ADDRESS}:8003:6379"
+      - 8003:6379
+    networks:
+      - apitemplate-backend
+  apitemplate.db:
+    container_name: apitemplate.db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    image: postgres:latest
+    restart: always
+    volumes:
+      - appdata:/var/lib/postgresql/data
+    ports:
+      #      - "${ADDRESS}:8002:5432"
+      - 8002:5432
+    networks:
+      - apitemplate-backend
   apitemplate.seq:
     container_name: apitemplate.seq
     image: datalust/seq:latest
@@ -21,16 +48,17 @@ services:
     image: apitemplate.api
     build:
       context: .
-      dockerfile: src/apitemplate.Api/Dockerfile
+      dockerfile: src/ApiTemplate.Api/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
-      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=192.168.178.41;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=192.168.178.41:6379
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=apitemplate.db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=apitemplate.redis:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
-      - JwtSettings__Audience=ApiTemplate  - Serilog__MinimumLevel__Override__Microsoft=Warning
+      - JwtSettings__Audience=ApiTemplate  
+      - Serilog__MinimumLevel__Override__Microsoft=Warning
       - Serilog__MinimumLevel__Override__System=Warning
       - Serilog__Enrich__0=FromLogContext
       - Serilog__Enrich__1__Name=WithProperty
@@ -45,14 +73,13 @@ services:
       - Serilog__WriteTo__2__Args__serverUrl=http://apitemplate.seq:5341
       - Serilog__Enrich__2__Name=WithProperty
       - Serilog__Enrich__2__Args__name=Application
-      - Serilog__Enrich__2__Args__value=WebApi
+      - Serilog__Enrich__2__Args__value=ApiTemplate
     ports:
       #      - "${ADDRESS}:8100:80"
       - 8100:80
-    depends_on:
-      - apitemplate.seq
     networks:
       - apitemplate-backend
+      - backend
     volumes:
       - logdata:/var/logs
 #  apitemplate.api.blue:

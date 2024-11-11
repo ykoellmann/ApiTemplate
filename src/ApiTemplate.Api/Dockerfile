@@ -1,14 +1,13 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0.4 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.4 AS build
-WORKDIR /src
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /
 COPY ["src/ApiTemplate.Api/ApiTemplate.Api.csproj", "src/ApiTemplate.Api/"]
 COPY ["src/ApiTemplate.Domain/ApiTemplate.Domain.csproj", "src/ApiTemplate.Domain/"]
 COPY ["src/ApiTemplate.Application/ApiTemplate.Application.csproj", "src/ApiTemplate.Application/"]
-COPY ["src/ApiTemplate.Contracts/ApiTemplate.Contracts.csproj", "src/ApiTemplate.Contracts/"]
 COPY ["src/ApiTemplate.Infrastructure/ApiTemplate.Infrastructure.csproj", "src/ApiTemplate.Infrastructure/"]
 RUN dotnet restore "src/ApiTemplate.Api/ApiTemplate.Api.csproj"
 COPY . .
