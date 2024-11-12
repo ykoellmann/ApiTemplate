@@ -43,6 +43,8 @@ services:
       - 8004:80
     networks:
       - apitemplate-backend
+    volumes:
+      - logdata:/data
   apitemplate.api.green:
     container_name: apitemplate.api.green
     image: apitemplate.api
