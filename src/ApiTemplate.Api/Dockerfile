@@ -9,6 +9,8 @@ COPY ["src/ApiTemplate.Api/ApiTemplate.Api.csproj", "src/ApiTemplate.Api/"]
 COPY ["src/ApiTemplate.Domain/ApiTemplate.Domain.csproj", "src/ApiTemplate.Domain/"]
 COPY ["src/ApiTemplate.Application/ApiTemplate.Application.csproj", "src/ApiTemplate.Application/"]
 COPY ["src/ApiTemplate.Infrastructure/ApiTemplate.Infrastructure.csproj", "src/ApiTemplate.Infrastructure/"]
+COPY ["src/SourceGenerators/SourceGenerators/SourceGenerators.csproj", "src/SourceGenerators/SourceGenerators/"]
+COPY ["src/ApiTemplate.Infrastructure/ApiTemplate.Infrastructure.csproj", "src/ApiTemplate.Infrastructure/"]
 RUN dotnet restore "src/ApiTemplate.Api/ApiTemplate.Api.csproj"
 COPY . .
 WORKDIR "/src/ApiTemplate.Api"

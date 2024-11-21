@@ -11,7 +11,6 @@ services:
     image: redis:latest
     restart: always
     ports:
-      #      - "${ADDRESS}:8003:6379"
       - 8003:6379
     networks:
       - apitemplate-backend
@@ -26,7 +25,6 @@ services:
     volumes:
       - appdata:/var/lib/postgresql/data
     ports:
-      #      - "${ADDRESS}:8002:5432"
       - 8002:5432
     networks:
       - apitemplate-backend
@@ -37,8 +35,6 @@ services:
     environment:
       - ACCEPT_EULA=Y
     ports:
-      #      - "${ADDRESS}:5341:5341"
-      #      - "${ADDRESS}:8004:80"
       - 5341:5341
       - 8004:80
     networks:
@@ -77,7 +73,6 @@ services:
       - Serilog__Enrich__2__Args__name=Application
       - Serilog__Enrich__2__Args__value=ApiTemplate
     ports:
-      #      - "${ADDRESS}:8100:80"
       - 8100:80
     networks:
       - apitemplate-backend
