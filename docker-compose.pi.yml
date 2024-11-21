@@ -8,7 +8,7 @@
 services:
   apitemplate.api.green:
     container_name: apitemplate.api.green
-    image: apitemplate.api
+    image: ghcr.io/ykoellmann/apitemplate.api:arm64
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
@@ -117,7 +117,7 @@ services:
 #      - logdata:/var/logs
   apitemplate.loadbalancer:
     container_name: apitemplate.loadbalancer
-    image: apitemplate.loadbalancer
+    image: ghcr.io/ykoellmann/apitemplate.loadbalancer:arm64
     restart: always
     ports:
 #      - "${ADDRESS}:8001:80"
