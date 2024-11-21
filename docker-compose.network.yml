@@ -1,9 +1,6 @@
 ﻿networks:
   apitemplate-backend:
     name: apitemplate-backend
-  backend:
-    name: backend
-    external: true
 
 services:
   apitemplate.api.green:
@@ -15,8 +12,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://*:80
-      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=applepi-db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=redis-stack:6379
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=192.168.178.41;Port=8002;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=192.168.178.41:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate
@@ -33,7 +30,7 @@ services:
       - Serilog__WriteTo__1__Args__path=/var/logs/log.txt
       - Serilog__WriteTo__1__Args__rollingInterval=Day
       - Serilog__WriteTo__2__Name=Seq
-      - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341
+      - Serilog__WriteTo__2__Args__serverUrl=http://192.168.178.41:5341
       - Serilog__Enrich__2__Name=WithProperty
       - Serilog__Enrich__2__Args__name=Application
       - Serilog__Enrich__2__Args__value=ApiTemplate
@@ -41,7 +38,6 @@ services:
       - 8100:80
     networks:
       - apitemplate-backend
-      - backend
     volumes:
       - logdata:/var/logs
 #  apitemplate.api.blue:
@@ -137,8 +133,8 @@ services:
       - ReverseProxy__Clusters__api__LoadBalancingPolicy=RoundRobin
       - ReverseProxy__Routes__api__ClusterId=api
       - ReverseProxy__Routes__api__Match__Path={**catch-all}
-      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=applepi-db;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
-      - ConnectionStrings__Redis=redis-stack:6379
+      - ConnectionStrings__DbConnection=User Id=postgres;Password=postgres;Server=192.168.178.41;Port=8002;Database=postgres;Integrated Security=true;Pooling=true;
+      - ConnectionStrings__Redis=192.168.178.41:6379
       - JwtSettings__Secret=0ba697edfae041c1c756547c88f737db379231f94cf1f89092698877d87e54a2
       - JwtSettings__ExpiryMinutes=10
       - JwtSettings__Issuer=ApiTemplate

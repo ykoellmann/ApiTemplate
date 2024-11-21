@@ -143,6 +143,7 @@ services:
 #      - apitemplate.api.white
     networks:
       - apitemplate-backend
+      - backend
 
 volumes:
   appdata:
