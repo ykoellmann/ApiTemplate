@@ -39,6 +39,7 @@ services:
     networks:
       - apitemplate-backend
       - backend
+    restart: unless-stopped
     volumes:
       - logdata:/var/logs
 #  apitemplate.api.blue:
@@ -118,7 +119,7 @@ services:
   apitemplate.loadbalancer:
     container_name: apitemplate.loadbalancer
     image: ghcr.io/ykoellmann/apitemplate.loadbalancer:arm64
-    restart: always
+    restart: unless-stopped
     ports:
 #      - "${ADDRESS}:8001:80"
       - 8080:80
