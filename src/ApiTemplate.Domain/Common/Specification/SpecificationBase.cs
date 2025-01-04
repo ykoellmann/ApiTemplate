@@ -18,7 +18,7 @@ public class SpecificationBase<TEntity, TId>
         return null;
     }
 
-    protected virtual IOrderedSpecification<TEntity> Order(IOrderedSpecification<User> ordered)
+    protected virtual IOrderedSpecification<TEntity> Order(IOrderedSpecification<TEntity> ordered)
     {
         return null;
     }
