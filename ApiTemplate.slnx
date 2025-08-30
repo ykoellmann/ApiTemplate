@@ -1,0 +1,27 @@
+﻿<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".template.config\template.json" />
+    <File Path="docker-compose.local.yml" />
+    <File Path=".env" />
+    <File Path="README.md" />
+    <File Path="qodana.yaml" />
+    <File Path="docker-compose.network.yml" />
+    <File Path="docker-compose.pi.yml" />
+    <File Path=".gitignore" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src\ApiTemplate.Api\ApiTemplate.Api.csproj" Type="Classic C#" />
+    <Project Path="src\ApiTemplate.Application\ApiTemplate.Application.csproj" Type="Classic C#" />
+    <Project Path="src\ApiTemplate.Domain\ApiTemplate.Domain.csproj" Type="Classic C#" />
+    <Project Path="src\ApiTemplate.Infrastructure\ApiTemplate.Infrastructure.csproj" Type="Classic C#" />
+    <Project Path="src\ApiTemplate.LoadBalancer\ApiTemplate.LoadBalancer.csproj" Type="Classic C#" />
+    <Project Path="src\SourceGenerators\SourceGenerators.Tests\SourceGenerators.Tests.csproj" Type="Classic C#" />
+    <Project Path="src\SourceGenerators\SourceGenerators\SourceGenerators.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test\ApiTemplate.Api.UnitTests\ApiTemplate.Api.UnitTests.csproj" Type="Classic C#" />
+    <Project Path="test\ApiTemplate.Application.UnitTests\ApiTemplate.Application.UnitTests.csproj" Type="Classic C#" />
+    <Project Path="test\ApiTemplate.Infrastructure.UnitTests\ApiTemplate.Infrastructure.UnitTests.csproj" Type="Classic C#" />
+    <Project Path="test\ApiTemplate.UnitTests.Rules\ApiTemplate.UnitTests.Rules.csproj" Type="Classic C#" />
+  </Folder>
+</Solution>
