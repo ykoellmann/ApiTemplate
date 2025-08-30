@@ -33,7 +33,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, AuthenticationResul
         if (!_passwordHashProvider.VerifyPassword(query.Password, user.Password))
             return Errors.Authentication.InvalidCredentials;
 
-        user = await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization);
+        user = (await _userRepository.GetByIdAsync(user.Id, ct, Specifications.User.IncludeAuthorization))!;
 
         var token = _jwtTokenProvider.GenerateToken(user);
         var newRefreshToken =

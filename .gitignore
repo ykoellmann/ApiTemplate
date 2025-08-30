@@ -397,5 +397,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-.idea/*
+*.idea/*
+*src/ApiTemplate.Api/.idea/*
 docker-compose.generated.override.yml

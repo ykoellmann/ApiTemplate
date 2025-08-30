@@ -65,7 +65,7 @@ services:
       - Serilog__WriteTo__0__Name=Console
       - Serilog__WriteTo__1__Name=File
       - Serilog__WriteTo__1__Args__formatter=Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact
-      - Serilog__WriteTo__1__Args__path=/var/logs/log.txt
+      - Serilog__WriteTo__1__Args__path=/var/log/api/log-.txt
       - Serilog__WriteTo__1__Args__rollingInterval=Day
       - Serilog__WriteTo__2__Name=Seq
       - Serilog__WriteTo__2__Args__serverUrl=http://apitemplate.seq:5341

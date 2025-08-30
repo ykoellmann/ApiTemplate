@@ -6,4 +6,9 @@ public static class Specifications
     {
         public static UserIncludeAuthorizationSpecification IncludeAuthorization => new();
     }
+
+    public static class UserDtos
+    {
+        public static UserNameDtoSpecification UserName => new();
+    }
 }

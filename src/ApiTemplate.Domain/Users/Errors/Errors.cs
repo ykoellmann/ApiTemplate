@@ -13,6 +13,6 @@ public partial class Errors
             Error.Conflict("Idempotent.RequestIdInvalid", "Request id has to be a valid guid");
         
         public static Error RequestIdMissing =>
-            Error.Validation("Idempotent.RequestIdMissing", "Request id is missing");
+            Error.Validation("Idempotent.RequestIdMissing", "Request id X-Request-Id is missing");
     }
 }

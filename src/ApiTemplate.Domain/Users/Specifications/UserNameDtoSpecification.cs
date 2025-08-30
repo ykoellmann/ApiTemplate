@@ -4,10 +4,10 @@ using ApiTemplate.Domain.Users.ValueObjects;
 
 namespace ApiTemplate.Domain.Users.Specifications;
 
-public partial class tmp : Specification<User, UserId, UserNameDto>
+public partial class UserNameDtoSpecification : Specification<User, UserId, UserNameDto>
 {
     protected override Expression<Func<User, UserNameDto>> Map()
     {
-        throw new NotImplementedException();
+        return user => new UserNameDto(user.Id, user.FirstName, user.LastName);
     }
 }
